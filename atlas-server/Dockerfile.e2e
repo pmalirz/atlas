@@ -1,0 +1,37 @@
+# API Server for E2E tests (runs persistently)
+FROM node:20-slim
+
+WORKDIR /app
+
+# Install OpenSSL for Prisma and curl for health check
+RUN apt-get update -y && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
+
+# Copy package files for dependency installation
+COPY package.json package-lock.json ./
+COPY atlas-shared/package.json ./atlas-shared/
+COPY atlas-server/package.json ./atlas-server/
+
+# Install dependencies
+RUN npm ci --include=dev
+
+# Copy source code
+COPY atlas-shared ./atlas-shared
+COPY atlas-server ./atlas-server
+
+# Build shared library
+RUN npm run build -w atlas-shared
+
+# Generate Prisma client (must be before server build for type definitions)
+RUN npx prisma generate --schema=atlas-server/prisma/schema.prisma
+
+# Build server (requires Prisma types)
+RUN npm run build -w atlas-server
+
+# Expose API port
+EXPOSE 3000
+
+# Run migrations, seed with EAP data, then start the server
+# Run migrations (creates triggers), seed with E2E data, then start the server
+CMD npx prisma migrate deploy --schema=atlas-server/prisma/schema.prisma && \
+    npm run db:seed:e2e -w atlas-server && \
+    npm run start:prod -w atlas-server

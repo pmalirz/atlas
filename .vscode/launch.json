@@ -1,0 +1,62 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug UI (Vite)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/atlas-ui",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "restart": true
+    },
+    {
+      "name": "Debug Server (NestJS)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "start:dev"
+      ],
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/atlas-server",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "restart": true,
+      "outFiles": [
+        "${workspaceFolder}/atlas-server/dist/**/*.js"
+      ]
+    },
+    {
+      "name": "Seed DB: EAP",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "db:seed:eap"
+      ],
+      "cwd": "${workspaceFolder}/atlas-server",
+      "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Full Stack",
+      "configurations": [
+        "Debug Server (NestJS)",
+        "Debug UI (Vite)"
+      ],
+      "stopAll": true
+    }
+  ]
+}

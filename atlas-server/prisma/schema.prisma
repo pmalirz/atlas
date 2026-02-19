@@ -1,0 +1,262 @@
+// Prisma schema for App Atlas
+// Following the generic entities + relations approach from BACKEND_DATABASE_PLAN.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// Core Tables
+// =============================================================================
+
+/// Generic entity table - stores all entity types (Application, ITAsset, etc.)
+/// New entity types require no schema changes - just a new entity_type value.
+/// New fields require no schema changes - stored in JSONB attributes.
+model Entity {
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entityType  String @map("entity_type")
+  name        String
+  description String @default("")
+  attributes  Json   @default("{}")
+
+  // Multi-tenancy (future-ready)
+  tenantId String? @map("tenant_id") @db.Uuid
+
+  // Audit fields
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  updatedBy String?  @map("updated_by")
+
+  // Soft delete
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+  deletedBy String?   @map("deleted_by")
+
+  // Relations
+  relationsFrom Relation[]   @relation("FromEntity")
+  relationsTo   Relation[]   @relation("ToEntity")
+  auditEvents   AuditEvent[]
+
+  @@index([entityType, deletedAt], name: "entities_type_deleted_idx")
+  @@index([updatedAt], name: "entities_updated_at_idx")
+  @@map("entities")
+}
+
+/// Generic relation table - stores typed links between entities
+/// New relation types require no schema changes - just a new relation_type value.
+model Relation {
+  id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  relationType String @map("relation_type")
+  fromEntityId String @map("from_entity_id") @db.Uuid
+  toEntityId   String @map("to_entity_id") @db.Uuid
+  attributes   Json   @default("{}")
+
+  // Audit fields
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  updatedBy String?  @map("updated_by")
+
+  // Soft delete
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+  deletedBy String?   @map("deleted_by")
+
+  // Foreign keys
+  fromEntity Entity @relation("FromEntity", fields: [fromEntityId], references: [id], onDelete: Cascade)
+  toEntity   Entity @relation("ToEntity", fields: [toEntityId], references: [id], onDelete: Cascade)
+
+  @@index([fromEntityId], name: "relations_from_idx")
+  @@index([toEntityId], name: "relations_to_idx")
+  @@index([relationType, fromEntityId], name: "relations_type_from_idx")
+  @@index([relationType, toEntityId], name: "relations_type_to_idx")
+  @@map("relations")
+}
+
+// =============================================================================
+// Authentication & Users
+// =============================================================================
+
+/// User accounts for authentication
+/// Supports multiple auth providers (native, clerk, logto, sso)
+model User {
+  id            String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  externalId    String? @map("external_id") // ID from external provider
+  provider      String  @default("native") // 'native', 'clerk', 'logto', 'sso'
+  email         String  @unique
+  emailVerified Boolean @default(false) @map("email_verified")
+  passwordHash  String? @map("password_hash") // Only for native provider
+  name          String?
+  avatarUrl     String? @map("avatar_url")
+
+  // Multi-tenancy
+  tenantId String @map("tenant_id") @db.Uuid
+
+  // Audit fields
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  lastLoginAt DateTime? @map("last_login_at") @db.Timestamptz
+
+  // Token relations
+  passwordResetTokens     PasswordResetToken[]
+  emailVerificationTokens EmailVerificationToken[]
+
+  @@unique([provider, externalId])
+  @@index([email], name: "users_email_idx")
+  @@index([tenantId], name: "users_tenant_idx")
+  @@map("users")
+}
+
+/// Password reset tokens for forgot password flow
+model PasswordResetToken {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  token     String    @unique
+  expiresAt DateTime  @map("expires_at") @db.Timestamptz
+  usedAt    DateTime? @map("used_at") @db.Timestamptz
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token], name: "password_reset_tokens_token_idx")
+  @@index([userId], name: "password_reset_tokens_user_idx")
+  @@map("password_reset_tokens")
+}
+
+/// Email verification tokens for confirming email addresses
+model EmailVerificationToken {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  token     String    @unique
+  expiresAt DateTime  @map("expires_at") @db.Timestamptz
+  usedAt    DateTime? @map("used_at") @db.Timestamptz
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token], name: "email_verification_tokens_token_idx")
+  @@index([userId], name: "email_verification_tokens_user_idx")
+  @@map("email_verification_tokens")
+}
+
+// =============================================================================
+// Audit & Compliance
+// =============================================================================
+
+/// Append-only audit log for compliance (DORA / CRA)
+model AuditEvent {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  occurredAt DateTime @default(now()) @map("occurred_at") @db.Timestamptz
+  actor      String?
+  action     String // 'create' | 'update' | 'delete' | 'restore'
+  objectKind String   @map("object_kind") // 'entity' | 'relation'
+  objectId   String   @map("object_id") @db.Uuid
+  objectType String   @map("object_type") // entity_type or relation_type
+  before     Json?
+  after      Json?
+  requestId  String?  @map("request_id")
+  source     String?
+
+  // Optional link to entity (for queries on entity audit events only)
+  // Note: This is nullable and has no FK constraint to support relation audit events
+  entityId String? @map("entity_id") @db.Uuid
+  entity   Entity? @relation(fields: [entityId], references: [id], onDelete: SetNull)
+
+  @@index([objectKind, objectId, occurredAt], name: "audit_events_object_idx")
+  @@index([occurredAt], name: "audit_events_occurred_at_idx")
+  @@index([actor], name: "audit_events_actor_idx")
+  @@map("audit_events")
+}
+
+// =============================================================================
+// Metadata Tables (Optional - for UI generation and validation)
+// =============================================================================
+
+/// Reusable type definitions (enums, validation rules)
+model TypeDefinition {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  typeKey     String   @unique @map("type_key")
+  displayName String   @map("display_name")
+  baseType    String   @map("base_type") // string | text | number | decimal | date | datetime | enum
+  options     Json? // for enum: ["HTTP", "HTTPS", ...]
+  validation  Json? // min/max, regex, etc.
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("type_definitions")
+}
+
+/// Entity definitions (field metadata for validation)
+/// Note: Relation attribute definitions are in RelationDefinition.attributeSchema
+model EntityDefinition {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entityType      String   @unique @map("entity_type") // e.g., "application", "user"
+  displayName     String   @map("display_name")
+  attributeSchema Json     @default("[]") @map("attribute_schema") // array of attribute descriptors
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("entity_definitions")
+}
+
+/// Relation type definitions (allowed from/to entity types)
+model RelationDefinition {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  relationType    String   @unique @map("relation_type")
+  displayName     String   @map("display_name")
+  fromEntityType  String?  @map("from_entity_type")
+  toEntityType    String?  @map("to_entity_type")
+  isDirectional   Boolean  @default(true) @map("is_directional")
+  attributeSchema Json?    @map("attribute_schema") // field definitions for relation attributes
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("relation_definitions")
+}
+
+// =============================================================================
+// UI Configuration (optional - for atlas-ui dynamic pages)
+// =============================================================================
+
+/// UI configuration per entity type for dynamic page rendering
+/// Stores configuration for browse and detail pages
+model UIEntityConfig {
+  id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entityType String @unique @map("entity_type") // e.g., "application", "interface"
+  version    Int    @default(1)
+
+  // Browse page configuration (tile/table views, filters, sorting)
+  browseConfig Json @default("{}") @map("browse_config")
+
+  // Detail page configuration (sections, fields, layouts)
+  detailConfig Json @default("{}") @map("detail_config")
+
+  // Optional: Create/Edit form configuration
+  formConfig Json? @map("form_config")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  updatedBy String?  @map("updated_by")
+
+  @@map("ui_entity_config")
+}
+
+/// Global UI configuration (singleton pattern - one record)
+/// Stores menu configuration and other global UI settings
+model UIGlobalConfig {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  version Int    @default(1)
+
+  // Menu configuration as JSON array of items
+  // Each item: { entityType, displayName, icon?, visible }
+  // Array order determines menu order
+  menuConfig Json @default("{}") @map("menu_config")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  updatedBy String?  @map("updated_by")
+
+  @@map("ui_global_config")
+}

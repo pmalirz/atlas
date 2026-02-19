@@ -1,0 +1,87 @@
+services:
+  postgres-test:
+    image: postgres:16-alpine
+    container_name: atlas-test-db
+    environment:
+      POSTGRES_USER: atlas
+      POSTGRES_PASSWORD: atlas_dev_password
+      POSTGRES_DB: app_atlas_test
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U atlas -d app_atlas_test" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+
+  # Mailpit - local SMTP server for email testing
+  mailpit:
+    image: axllent/mailpit
+    container_name: atlas-mailpit
+    ports:
+      - "8025:8025" # Web UI and API
+      - "1025:1025" # SMTP
+    environment:
+      MP_MAX_MESSAGES: 5000
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "--spider", "http://localhost:8025/api/v1/messages" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  # API Server - runs persistently for tests to call
+  api-server:
+    build:
+      context: .
+      dockerfile: atlas-server/Dockerfile.e2e
+    container_name: atlas-api-server
+    environment:
+      DATABASE_URL: postgresql://atlas:atlas_dev_password@postgres-test:5432/app_atlas_test?schema=public
+      NODE_ENV: test
+      PORT: 3000
+      AUTH_PROVIDER: native
+      JWT_SECRET: e2e-test-secret-key-do-not-use-in-production
+      JWT_EXPIRES_IN: 7d
+      THROTTLE_LIMIT: 100000 # Effectively disable rate limiting for E2E tests
+      THROTTLE_AUTH_LIMIT: 100000 # Effectively disable auth rate limiting for E2E tests
+      # Email configuration - use Mailpit
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_SECURE: "false"
+      SMTP_FROM: noreply@atlas.test
+      APP_URL: http://localhost:8081
+      APP_NAME: Atlas
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      mailpit:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/api/health" ]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  # E2E Test Runner - runs API and UI tests against live api-server
+  e2e-test-runner:
+    build:
+      context: .
+      dockerfile: atlas-e2e/Dockerfile
+    command: npm run test -w atlas-e2e
+    container_name: atlas-e2e-runner
+    environment:
+      CI: "true"
+      API_BASE_URL: http://api-server:3000
+      # Use /api proxy path (not direct URL) so cookies work on same origin
+      VITE_API_URL: /api
+      # Mailpit API URL for email verification in tests
+      MAILPIT_API_URL: http://mailpit:8025/api/v1
+      DATABASE_URL: postgresql://atlas:atlas_dev_password@postgres-test:5432/app_atlas_test?schema=public
+    depends_on:
+      api-server:
+        condition: service_healthy
+    volumes:
+      - ./atlas-e2e/playwright-report:/app/atlas-e2e/playwright-report

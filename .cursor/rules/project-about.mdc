@@ -1,0 +1,32 @@
+{{ ... }}
+---
+trigger: always_on
+---
+# About the Project
+
+Enterprise application portfolio (EAP) for asset inventory management.
+Supports regulatory needs including acts like DORA, European Cyber Resiliency Act (CRA), Cyber Security and CIA compliance.
+Whenever you create or modify model always think about compliance with regulatory needs and make suggestions
+if something is not compliant (e.g. if the BIA attributes are at the right model / entity).
+The target is to deliver comprehensive EA tool that combines EAP, CMDB, Vendor / License / Contract Management for the holistic view.
+This is not the ticketing or ITSM tool in the current stage.
+The tool should bring the modern ideas that simplify to the maximum the way people could look after the quality of the inventory.
+
+## Important Design and Code considerations
+
+* **Security First**: Implement OWASP Top 10 protections, input validation, JWT auth, RBAC, and data encryption
+* **TypeScript Excellence**: Strict mode enabled, proper typing, no `any`, comprehensive error handling
+* **React Best Practices**: Functional components with hooks, proper state management, memoization, accessibility
+* **NestJS Standards**: Dependency injection, guards, interceptors, validation pipes, proper error handling
+* **Multi-tenancy Ready**: Tenant isolation at database level, tenant-aware middleware, secure data segregation
+* High code quality with ergonomic UX and consistent patterns
+* Prefer @/components/ui over custom components, avoid duplication
+* Avoid hardcoding model lists - prepare for dynamic changes
+
+## Database Design
+
+* Use PostgreSQL with JSONB for dynamic fields
+* Follow the hybrid approach with core columns and JSONB attributes
+* Ensure proper indexing on JSONB fields for query performance
+* Multi-tenant architecture with tenant_id column for data isolation
+* Row Level Security (RLS) policies for tenant data protection

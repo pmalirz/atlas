@@ -1,0 +1,22 @@
+{
+    "name": "atlas-e2e",
+    "private": true,
+    "version": "0.0.1",
+    "scripts": {
+        "test:api": "jest --config jest-e2e.json --runInBand",
+        "test:ui": "playwright test",
+        "test:ui:headed": "playwright test --headed",
+        "test": "npm run test:api && npm run test:ui"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.57.0",
+        "@types/jest": "^29.5.14",
+        "@types/pg": "^8.16.0",
+        "@types/supertest": "^6.0.2",
+        "jest": "^29.7.0",
+        "jest-html-reporter": "^4.3.0",
+        "pg": "^8.17.2",
+        "supertest": "^7.0.0",
+        "ts-jest": "^29.2.5"
+    }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "app-atlas",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "workspaces": [
+    "atlas-shared",
+    "atlas-ui",
+    "atlas-server",
+    "atlas-e2e"
+  ],
+  "scripts": {
+    "dev:ui": "npm run dev -w atlas-ui",
+    "dev:server": "npm run start:dev -w atlas-server",
+    "build:ui": "npm run build -w atlas-ui",
+    "build:server": "npm run build -w atlas-server",
+    "build:shared": "npm run build -w atlas-shared",
+    "build:all": "npm run build:shared && npm run build:ui && npm run build:server",
+    "lint:ui": "npm run lint -w atlas-ui",
+    "lint:server": "npm run lint -w atlas-server",
+    "test:e2e": "docker compose -f docker-compose.e2e.yml up --build --abort-on-container-exit --exit-code-from e2e-test-runner",
+    "clean:test:e2e": "docker compose -f docker-compose.e2e.yml down -v",
+    "test:e2e:clean": "npm run clean:test:e2e && npm run test:e2e"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.32.0",
+    "@types/node": "^22.16.5",
+    "eslint": "^9.32.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.26",
+    "globals": "^17.0.0",
+    "prettier": "^3.3.0",
+    "rimraf": "^5.0.0",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.38.0"
+  }
+}

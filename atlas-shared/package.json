@@ -1,0 +1,49 @@
+{
+  "name": "atlas-shared",
+  "version": "1.0.0",
+  "description": "Zod validation schemas for the dynamic App Atlas model",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.cts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./zod": {
+      "import": {
+        "types": "./dist/schemas/zod.d.mts",
+        "default": "./dist/schemas/zod.mjs"
+      },
+      "require": {
+        "types": "./dist/schemas/zod.d.cts",
+        "default": "./dist/schemas/zod.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "build:watch": "tsdown --watch",
+    "clean": "rimraf dist",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {
+    "zod": "^4.3.5"
+  },
+  "devDependencies": {
+    "tsdown": "^0.18.1",
+    "vitest": "^2.1.0",
+    "zod": "^4.3.5"
+  },
+  "files": [
+    "dist",
+    "src"
+  ]
+}
