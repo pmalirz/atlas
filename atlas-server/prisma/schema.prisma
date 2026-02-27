@@ -11,6 +11,39 @@ datasource db {
 }
 
 // =============================================================================
+// Multi-Tenancy
+// =============================================================================
+
+/// Tenant (workspace) — the root isolation boundary for all data.
+/// New tenants are provisioned by inserting a row; no code changes needed.
+model Tenant {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String  @unique // machine-readable, no whitespace
+  displayName String  @map("display_name")
+  description String  @default("")
+  slug        String  @unique // URL path segment, defaults to name
+  isActive    Boolean @default(true) @map("is_active")
+
+  // Audit fields
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  // Relations
+  users               User[]
+  entities            Entity[]
+  relations           Relation[]
+  auditEvents         AuditEvent[]
+  typeDefinitions     TypeDefinition[]
+  entityDefinitions   EntityDefinition[]
+  relationDefinitions RelationDefinition[]
+  uiEntityConfigs     UIEntityConfig[]
+  uiGlobalConfigs     UIGlobalConfig[]
+
+  @@index([slug], name: "tenants_slug_idx")
+  @@map("tenants")
+}
+
+// =============================================================================
 // Core Tables
 // =============================================================================
 
@@ -24,8 +57,9 @@ model Entity {
   description String @default("")
   attributes  Json   @default("{}")
 
-  // Multi-tenancy (future-ready)
-  tenantId String? @map("tenant_id") @db.Uuid
+  // Multi-tenancy
+  tenantId String @map("tenant_id") @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   // Audit fields
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
@@ -41,7 +75,7 @@ model Entity {
   relationsTo   Relation[]   @relation("ToEntity")
   auditEvents   AuditEvent[]
 
-  @@index([entityType, deletedAt], name: "entities_type_deleted_idx")
+  @@index([tenantId, entityType, deletedAt], name: "entities_tenant_type_deleted_idx")
   @@index([updatedAt], name: "entities_updated_at_idx")
   @@map("entities")
 }
@@ -54,6 +88,10 @@ model Relation {
   fromEntityId String @map("from_entity_id") @db.Uuid
   toEntityId   String @map("to_entity_id") @db.Uuid
   attributes   Json   @default("{}")
+
+  // Multi-tenancy
+  tenantId String @map("tenant_id") @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   // Audit fields
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
@@ -68,6 +106,7 @@ model Relation {
   fromEntity Entity @relation("FromEntity", fields: [fromEntityId], references: [id], onDelete: Cascade)
   toEntity   Entity @relation("ToEntity", fields: [toEntityId], references: [id], onDelete: Cascade)
 
+  @@index([tenantId], name: "relations_tenant_idx")
   @@index([fromEntityId], name: "relations_from_idx")
   @@index([toEntityId], name: "relations_to_idx")
   @@index([relationType, fromEntityId], name: "relations_type_from_idx")
@@ -85,7 +124,7 @@ model User {
   id            String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   externalId    String? @map("external_id") // ID from external provider
   provider      String  @default("native") // 'native', 'clerk', 'logto', 'sso'
-  email         String  @unique
+  email         String
   emailVerified Boolean @default(false) @map("email_verified")
   passwordHash  String? @map("password_hash") // Only for native provider
   name          String?
@@ -93,6 +132,7 @@ model User {
 
   // Multi-tenancy
   tenantId String @map("tenant_id") @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   // Audit fields
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
@@ -103,6 +143,7 @@ model User {
   passwordResetTokens     PasswordResetToken[]
   emailVerificationTokens EmailVerificationToken[]
 
+  @@unique([email, tenantId], name: "users_email_tenant_unique")
   @@unique([provider, externalId])
   @@index([email], name: "users_email_idx")
   @@index([tenantId], name: "users_tenant_idx")
@@ -159,72 +200,97 @@ model AuditEvent {
   requestId  String?  @map("request_id")
   source     String?
 
+  // Multi-tenancy
+  tenantId String @map("tenant_id") @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   // Optional link to entity (for queries on entity audit events only)
   // Note: This is nullable and has no FK constraint to support relation audit events
   entityId String? @map("entity_id") @db.Uuid
   entity   Entity? @relation(fields: [entityId], references: [id], onDelete: SetNull)
 
-  @@index([objectKind, objectId, occurredAt], name: "audit_events_object_idx")
+  @@index([tenantId, objectKind, objectId, occurredAt], name: "audit_events_tenant_object_idx")
   @@index([occurredAt], name: "audit_events_occurred_at_idx")
   @@index([actor], name: "audit_events_actor_idx")
   @@map("audit_events")
 }
 
 // =============================================================================
-// Metadata Tables (Optional - for UI generation and validation)
+// Metadata Tables (Tenant-scoped — for UI generation and validation)
 // =============================================================================
 
 /// Reusable type definitions (enums, validation rules)
 model TypeDefinition {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  typeKey     String   @unique @map("type_key")
-  displayName String   @map("display_name")
-  baseType    String   @map("base_type") // string | text | number | decimal | date | datetime | enum
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  typeKey     String @map("type_key")
+  displayName String @map("display_name")
+  baseType    String @map("base_type") // string | text | number | decimal | date | datetime | enum
   options     Json? // for enum: ["HTTP", "HTTPS", ...]
   validation  Json? // min/max, regex, etc.
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 
+  // Multi-tenancy
+  tenantId String @map("tenant_id") @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([typeKey, tenantId], name: "type_definitions_key_tenant_unique")
+  @@index([tenantId], name: "type_definitions_tenant_idx")
   @@map("type_definitions")
 }
 
 /// Entity definitions (field metadata for validation)
 /// Note: Relation attribute definitions are in RelationDefinition.attributeSchema
 model EntityDefinition {
-  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  entityType      String   @unique @map("entity_type") // e.g., "application", "user"
-  displayName     String   @map("display_name")
-  attributeSchema Json     @default("[]") @map("attribute_schema") // array of attribute descriptors
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  id              String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entityType      String @map("entity_type") // e.g., "application", "user"
+  displayName     String @map("display_name")
+  attributeSchema Json   @default("[]") @map("attribute_schema") // array of attribute descriptors
 
+  // Multi-tenancy
+  tenantId String @map("tenant_id") @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([entityType, tenantId], name: "entity_definitions_type_tenant_unique")
+  @@index([tenantId], name: "entity_definitions_tenant_idx")
   @@map("entity_definitions")
 }
 
 /// Relation type definitions (allowed from/to entity types)
 model RelationDefinition {
-  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  relationType    String   @unique @map("relation_type")
-  displayName     String   @map("display_name")
-  fromEntityType  String?  @map("from_entity_type")
-  toEntityType    String?  @map("to_entity_type")
-  isDirectional   Boolean  @default(true) @map("is_directional")
-  attributeSchema Json?    @map("attribute_schema") // field definitions for relation attributes
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  id              String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  relationType    String  @map("relation_type")
+  displayName     String  @map("display_name")
+  fromEntityType  String? @map("from_entity_type")
+  toEntityType    String? @map("to_entity_type")
+  isDirectional   Boolean @default(true) @map("is_directional")
+  attributeSchema Json?   @map("attribute_schema") // field definitions for relation attributes
 
+  // Multi-tenancy
+  tenantId String @map("tenant_id") @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([relationType, tenantId], name: "relation_definitions_type_tenant_unique")
+  @@index([tenantId], name: "relation_definitions_tenant_idx")
   @@map("relation_definitions")
 }
 
 // =============================================================================
-// UI Configuration (optional - for atlas-ui dynamic pages)
+// UI Configuration (Tenant-scoped — for atlas-ui dynamic pages)
 // =============================================================================
 
 /// UI configuration per entity type for dynamic page rendering
 /// Stores configuration for browse and detail pages
 model UIEntityConfig {
   id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  entityType String @unique @map("entity_type") // e.g., "application", "interface"
+  entityType String @map("entity_type") // e.g., "application", "interface"
   version    Int    @default(1)
 
   // Browse page configuration (tile/table views, filters, sorting)
@@ -236,14 +302,20 @@ model UIEntityConfig {
   // Optional: Create/Edit form configuration
   formConfig Json? @map("form_config")
 
+  // Multi-tenancy
+  tenantId String @map("tenant_id") @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
   updatedBy String?  @map("updated_by")
 
+  @@unique([entityType, tenantId], name: "ui_entity_config_type_tenant_unique")
+  @@index([tenantId], name: "ui_entity_config_tenant_idx")
   @@map("ui_entity_config")
 }
 
-/// Global UI configuration (singleton pattern - one record)
+/// Global UI configuration (one record per tenant)
 /// Stores menu configuration and other global UI settings
 model UIGlobalConfig {
   id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -254,9 +326,14 @@ model UIGlobalConfig {
   // Array order determines menu order
   menuConfig Json @default("{}") @map("menu_config")
 
+  // Multi-tenancy
+  tenantId String @map("tenant_id") @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
   updatedBy String?  @map("updated_by")
 
+  @@index([tenantId], name: "ui_global_config_tenant_idx")
   @@map("ui_global_config")
 }

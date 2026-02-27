@@ -13,6 +13,7 @@ import {
     TypeDefinitionResponse,
     RelationDefinitionResponse
 } from './types';
+import { TenantContextService } from '../../common/services/tenant-context.service';
 
 // Export types for consumers that might still import from service (though they should use types.ts)
 export {
@@ -31,14 +32,19 @@ export {
 
 @Injectable()
 export class DefinitionsService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly tenantContext: TenantContextService,
+    ) { }
 
     // ─────────────────────────────────────────────────────────────
     // Entity Definitions
     // ─────────────────────────────────────────────────────────────
 
     async getAllEntityDefinitions(): Promise<EntityDefinitionResponse[]> {
+        const tenantId = this.tenantContext.getTenantId();
         const definitions = await this.prisma.entityDefinition.findMany({
+            where: { tenantId },
             orderBy: { displayName: 'asc' },
         });
 
@@ -46,8 +52,9 @@ export class DefinitionsService {
     }
 
     async getEntityDefinition(entityType: string): Promise<EntityDefinitionResponse> {
+        const tenantId = this.tenantContext.getTenantId();
         const definition = await this.prisma.entityDefinition.findUnique({
-            where: { entityType },
+            where: { entity_definitions_type_tenant_unique: { entityType, tenantId } },
         });
 
         if (!definition) {
@@ -121,7 +128,9 @@ export class DefinitionsService {
     // ─────────────────────────────────────────────────────────────
 
     async getAllTypeDefinitions(): Promise<TypeDefinitionResponse[]> {
+        const tenantId = this.tenantContext.getTenantId();
         const types = await this.prisma.typeDefinition.findMany({
+            where: { tenantId },
             orderBy: { displayName: 'asc' },
         });
 
@@ -136,8 +145,9 @@ export class DefinitionsService {
     }
 
     async getTypeDefinition(typeKey: string): Promise<TypeDefinitionResponse> {
+        const tenantId = this.tenantContext.getTenantId();
         const type = await this.prisma.typeDefinition.findUnique({
-            where: { typeKey },
+            where: { type_definitions_key_tenant_unique: { typeKey, tenantId } },
         });
 
         if (!type) {
@@ -159,7 +169,9 @@ export class DefinitionsService {
     // ─────────────────────────────────────────────────────────────
 
     async getAllRelationDefinitions(): Promise<RelationDefinitionResponse[]> {
+        const tenantId = this.tenantContext.getTenantId();
         const definitions = await this.prisma.relationDefinition.findMany({
+            where: { tenantId },
             orderBy: { displayName: 'asc' },
         });
 
@@ -175,8 +187,9 @@ export class DefinitionsService {
     }
 
     async getRelationDefinition(relationType: string): Promise<RelationDefinitionResponse> {
+        const tenantId = this.tenantContext.getTenantId();
         const definition = await this.prisma.relationDefinition.findUnique({
-            where: { relationType },
+            where: { relation_definitions_type_tenant_unique: { relationType, tenantId } },
         });
 
         if (!definition) {

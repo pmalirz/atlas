@@ -64,7 +64,7 @@ export function ResetPasswordPage() {
                                 This password reset link is invalid or has expired.
                             </p>
                         </div>
-                        <Link to="/forgot-password">
+                        <Link to="../forgot-password">
                             <Button variant="outline" className="w-full">
                                 Request a new link
                             </Button>
@@ -85,7 +85,7 @@ export function ResetPasswordPage() {
                             </p>
                         </div>
                         <Button
-                            onClick={() => navigate('/login', { replace: true })}
+                            onClick={() => navigate('../login', { replace: true })}
                             className="w-full h-12 text-base font-semibold"
                             data-testid="reset-password-login-btn"
                         >
@@ -106,7 +106,7 @@ export function ResetPasswordPage() {
                                 This password reset link has expired. Please request a new one.
                             </p>
                         </div>
-                        <Link to="/forgot-password">
+                        <Link to="../forgot-password">
                             <Button variant="outline" className="w-full">
                                 Request a new link
                             </Button>
@@ -174,7 +174,7 @@ export function ResetPasswordPage() {
                         </form>
 
                         <div className="text-center">
-                            <Link to="/login" className="text-sm font-medium text-primary hover:underline underline-offset-4">
+                            <Link to="../login" className="text-sm font-medium text-primary hover:underline underline-offset-4">
                                 <ArrowLeft className="inline w-4 h-4 mr-1" />
                                 Back to login
                             </Link>

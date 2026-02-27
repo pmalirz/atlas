@@ -5,19 +5,41 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 interface RequestOptions extends RequestInit {
     params?: Record<string, string>;
     skipAuth?: boolean; // For public endpoints (still sends cookies but won't redirect on 401)
+    skipTenantPrefix?: boolean; // For platform-level endpoints that don't need slug
 }
 
 class ApiClient {
     private baseUrl: string;
+    private tenantSlug: string | null = null;
 
     constructor(baseUrl: string) {
         this.baseUrl = baseUrl;
     }
 
-    private async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-        const { params, skipAuth, ...init } = options;
+    /**
+     * Set the current tenant slug for API requests.
+     * All subsequent requests will be prefixed with /{slug}/
+     */
+    setTenantSlug(slug: string | null): void {
+        this.tenantSlug = slug;
+    }
 
-        let url = `${this.baseUrl}${endpoint}`;
+    /**
+     * Get the current tenant slug
+     */
+    getTenantSlug(): string | null {
+        return this.tenantSlug;
+    }
+
+    private async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
+        const { params, skipAuth, skipTenantPrefix, ...init } = options;
+
+        // Prepend tenant slug to endpoint if available and not skipped
+        const prefixedEndpoint = (!skipTenantPrefix && this.tenantSlug)
+            ? `/${this.tenantSlug}${endpoint}`
+            : endpoint;
+
+        let url = `${this.baseUrl}${prefixedEndpoint}`;
 
         if (params) {
             const searchParams = new URLSearchParams(params);
@@ -43,7 +65,9 @@ class ApiClient {
 
             // Only redirect if not already on login page
             if (!window.location.pathname.includes('/login')) {
-                window.location.href = '/login';
+                // Redirect to tenant-scoped login if slug is available
+                const loginPath = this.tenantSlug ? `/${this.tenantSlug}/login` : '/login';
+                window.location.href = loginPath;
             }
 
             throw new Error('Authentication required');
@@ -100,4 +124,18 @@ class ApiClient {
 
 export const apiClient = new ApiClient(API_BASE_URL);
 
+/**
+ * Helper to get the tenant slug for use in auth.api.ts (which uses raw fetch)
+ */
+export function getTenantSlug(): string | null {
+    return apiClient.getTenantSlug();
+}
 
+/**
+ * Helper to build a tenant-prefixed URL for raw fetch calls
+ */
+export function buildTenantUrl(path: string): string {
+    const slug = apiClient.getTenantSlug();
+    const prefix = slug ? `/${slug}` : '';
+    return `${API_BASE_URL}${prefix}${path}`;
+}

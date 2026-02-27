@@ -3,13 +3,14 @@ import {
     UIEntityConfigDataSchema,
     MenuConfigSchema
 } from 'atlas-shared/zod';
+import { DEFAULT_TENANT_ID } from '../default-tenant';
 
 
 /**
  * Seed UI Configuration for atlas-ui dynamic pages
  * Showcases all UI engine capabilities: layouts, sections, value styles, etc.
  */
-export async function seedUI(prisma: PrismaClient) {
+export async function seedUI(prisma: PrismaClient, tenantId: string = DEFAULT_TENANT_ID) {
     console.log('🎨 Seeding UI Configuration...');
 
     // Cleanup UI Configs
@@ -919,13 +920,13 @@ export async function seedUI(prisma: PrismaClient) {
         UIEntityConfigDataSchema.parse(config);
 
         await prisma.uIEntityConfig.upsert({
-            where: { entityType: config.entityType },
+            where: { ui_entity_config_type_tenant_unique: { entityType: config.entityType, tenantId } },
             update: {
                 version: config.version,
                 browseConfig: config.browseConfig as any,
                 detailConfig: config.detailConfig as any,
             },
-            create: config as any,
+            create: { ...config, tenantId } as any,
         });
     }
 
@@ -952,7 +953,7 @@ export async function seedUI(prisma: PrismaClient) {
     MenuConfigSchema.parse(menuConfig);
 
     // Singleton pattern - upsert by finding first or creating
-    const existingConfig = await prisma.uIGlobalConfig.findFirst();
+    const existingConfig = await prisma.uIGlobalConfig.findFirst({ where: { tenantId } });
     if (existingConfig) {
         await prisma.uIGlobalConfig.update({
             where: { id: existingConfig.id },
@@ -960,7 +961,7 @@ export async function seedUI(prisma: PrismaClient) {
         });
     } else {
         await prisma.uIGlobalConfig.create({
-            data: { menuConfig: menuConfig as any, version: 1 },
+            data: { menuConfig: menuConfig as any, version: 1, tenantId },
         });
     }
 

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { UIEntityConfig } from '@prisma/client';
+import { TenantContextService } from '../../common/services/tenant-context.service';
 
 // ─────────────────────────────────────────────────────────────
 // Response Types
@@ -124,14 +125,19 @@ export interface UIGlobalConfigResponse {
 
 @Injectable()
 export class UIConfigService {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly tenantContext: TenantContextService,
+    ) { }
 
     // ─────────────────────────────────────────────────────────────
     // UI Entity Configs
     // ─────────────────────────────────────────────────────────────
 
     async getAllUIEntityConfigs(): Promise<UIEntityConfigResponse[]> {
+        const tenantId = this.tenantContext.getTenantId();
         const configs = await this.prisma.uIEntityConfig.findMany({
+            where: { tenantId },
             orderBy: { entityType: 'asc' },
         });
 
@@ -139,8 +145,9 @@ export class UIConfigService {
     }
 
     async getUIEntityConfig(entityType: string): Promise<UIEntityConfigResponse> {
+        const tenantId = this.tenantContext.getTenantId();
         const config = await this.prisma.uIEntityConfig.findUnique({
-            where: { entityType },
+            where: { ui_entity_config_type_tenant_unique: { entityType, tenantId } },
         });
 
         if (!config) {
@@ -177,7 +184,10 @@ export class UIConfigService {
     // ─────────────────────────────────────────────────────────────
 
     async getGlobalConfig(): Promise<UIGlobalConfigResponse | null> {
-        const config = await this.prisma.uIGlobalConfig.findFirst();
+        const tenantId = this.tenantContext.getTenantId();
+        const config = await this.prisma.uIGlobalConfig.findFirst({
+            where: { tenantId },
+        });
 
         if (!config) {
             return null;
@@ -201,8 +211,11 @@ export class UIConfigService {
      * Falls back to building menu from UIEntityConfigs if no config exists.
      */
     async getMenuConfig(): Promise<MenuConfig> {
-        // Try to get config from UIGlobalConfig (singleton - first record)
-        const config = await this.prisma.uIGlobalConfig.findFirst();
+        // Try to get config from UIGlobalConfig (one per tenant)
+        const tenantId = this.tenantContext.getTenantId();
+        const config = await this.prisma.uIGlobalConfig.findFirst({
+            where: { tenantId },
+        });
 
         if (config?.menuConfig) {
             const menuConfig = config.menuConfig as { items?: MenuItem[] };

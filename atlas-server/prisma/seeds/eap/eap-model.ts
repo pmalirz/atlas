@@ -4,28 +4,32 @@ import {
   AttributeDefinitionArraySchema,
   RelationDefinitionDataSchema
 } from 'atlas-shared/zod';
+import { DEFAULT_TENANT_ID } from '../default-tenant';
 
 
 let prisma: PrismaClient;
+let tenantId: string;
 
-export async function seedModel(client: PrismaClient) {
+export async function seedModel(client: PrismaClient, tid: string = DEFAULT_TENANT_ID) {
   prisma = client;
+  tenantId = tid;
   console.log('🌱 Starting database seed...\n');
 
-  // Clear existing data
+  // Clear existing data (using raw TRUNCATE CASCADE to bypass FK constraint & trigger issues)
   console.log('🗑️  Clearing existing data...');
-  // Delete in order to avoid FK constraints
-  // 1. Logs & Compliance
-  await prisma.auditEvent.deleteMany({});
-
-  // 2. Instance Data (Relations first, then Entities)
-  await prisma.relation.deleteMany({});
-  await prisma.entity.deleteMany({});
-
-  // 3. Definitions & Configs
-  await prisma.entityDefinition.deleteMany({});
-  await prisma.relationDefinition.deleteMany({});
-  await prisma.typeDefinition.deleteMany({});
+  // Truncate entities and relations first, this cascades to many other things.
+  // We use TRUNCATE with CASCADE to avoid the foreign key constraint from audit_events
+  // which gets inserted by DB triggers for deleted rows.
+  await client.$executeRawUnsafe(`
+    TRUNCATE TABLE 
+      audit_events, 
+      relations, 
+      entities, 
+      entity_definitions, 
+      relation_definitions, 
+      type_definitions 
+    CASCADE;
+  `);
 
   console.log('✓ Data cleared\n');
 
@@ -369,7 +373,7 @@ async function seedTypeDefinitions() {
       TypeDefinitionDataSchema.parse(t);
 
       return prisma.typeDefinition.upsert({
-        where: { typeKey: t.typeKey },
+        where: { type_definitions_key_tenant_unique: { typeKey: t.typeKey, tenantId } },
         update: {
           displayName: t.displayName,
           baseType: t.baseType as any,
@@ -380,6 +384,7 @@ async function seedTypeDefinitions() {
           displayName: t.displayName,
           baseType: t.baseType as any,
           options: t.options,
+          tenantId,
         },
       });
     }),
@@ -586,7 +591,7 @@ async function seedEntityDefinitions() {
       AttributeDefinitionArraySchema.parse(d.attributeSchema);
 
       return prisma.entityDefinition.upsert({
-        where: { entityType: d.entityType },
+        where: { entity_definitions_type_tenant_unique: { entityType: d.entityType, tenantId } },
         update: {
           displayName: d.displayName,
           attributeSchema: d.attributeSchema,
@@ -595,6 +600,7 @@ async function seedEntityDefinitions() {
           entityType: d.entityType,
           displayName: d.displayName,
           attributeSchema: d.attributeSchema,
+          tenantId,
         },
       });
     }),
@@ -719,7 +725,7 @@ async function seedRelationDefinitions() {
       RelationDefinitionDataSchema.parse(d);
 
       return prisma.relationDefinition.upsert({
-        where: { relationType: d.relationType },
+        where: { relation_definitions_type_tenant_unique: { relationType: d.relationType, tenantId } },
         update: {
           displayName: d.displayName,
           fromEntityType: d.fromEntityType,
@@ -734,6 +740,7 @@ async function seedRelationDefinitions() {
           toEntityType: d.toEntityType,
           isDirectional: d.isDirectional,
           attributeSchema: d.attributeSchema as any,
+          tenantId,
         },
       });
     }),
@@ -853,6 +860,7 @@ async function seedUsers() {
           description: user.description,
           attributes: user.attributes,
           updatedBy: 'seed',
+          tenantId,
         },
       }),
     ),
@@ -1001,6 +1009,7 @@ async function seedTechnologies() {
           description: tech.description,
           attributes: tech.attributes,
           updatedBy: 'seed',
+          tenantId,
         },
       }),
     ),
@@ -1108,6 +1117,7 @@ async function seedITAssets() {
           description: asset.description,
           attributes: asset.attributes,
           updatedBy: 'seed',
+          tenantId,
         },
       }),
     ),
@@ -1167,6 +1177,7 @@ async function seedBusinessCapabilities() {
           description: cap.description,
           attributes: cap.attributes,
           updatedBy: 'seed',
+          tenantId,
         },
       }),
     ),
@@ -1289,6 +1300,7 @@ async function seedDataObjects() {
           description: obj.description,
           attributes: obj.attributes,
           updatedBy: 'seed',
+          tenantId,
         },
       }),
     ),
@@ -1356,6 +1368,7 @@ async function seedInterfaces() {
           description: iface.description,
           attributes: iface.attributes,
           updatedBy: 'seed',
+          tenantId,
         },
       }),
     ),
@@ -1450,6 +1463,7 @@ async function seedProcesses() {
           description: proc.description,
           attributes: proc.attributes,
           updatedBy: 'seed',
+          tenantId,
         },
       }),
     ),
@@ -1656,6 +1670,7 @@ async function seedApplications() {
           description: app.description,
           attributes: app.attributes,
           updatedBy: 'seed',
+          tenantId,
         },
       }),
     ),
@@ -1780,6 +1795,7 @@ async function seedRelations(
           toEntityId: toEntity.id,
           attributes: rel.attr || {},
           updatedBy: 'seed',
+          tenantId,
         },
       });
       count++;

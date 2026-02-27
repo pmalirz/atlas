@@ -18,7 +18,10 @@ function EntityNodeComponent({ data }: NodeProps<EntityNode>) {
 
     const handleClick = () => {
         if (!data.isCenterNode) {
-            navigate(`/${data.entityType}/${data.id}`);
+            // Navigate using absolute path with slug from current URL
+            const slugMatch = window.location.pathname.match(/^\/([^/]+)/);
+            const slug = slugMatch ? slugMatch[1] : '';
+            navigate(`/${slug}/${data.entityType}/${data.id}`);
         }
     };
 

@@ -8,11 +8,6 @@
 export const AUTH_PROVIDER = Symbol('AUTH_PROVIDER');
 
 /**
- * Default tenant ID for single-tenant deployments
- */
-export const DEFAULT_TENANT_ID = '00000000-0000-0000-0000-000000000001';
-
-/**
  * Auth cookie name
  */
 export const AUTH_COOKIE_NAME = 'atlas_auth_token';

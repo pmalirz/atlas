@@ -3,11 +3,12 @@ import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcrypt';
 import type { AuthUser, LoginRequest, RegisterRequest, AuthResponse, AuthConfig, AuthProvider } from '@app-atlas/shared';
-import { AUTH_PROVIDER, DEFAULT_TENANT_ID } from './constants';
+import { AUTH_PROVIDER } from './constants';
 import type { IAuthProvider } from './providers/auth-provider.interface';
 import { PrismaService } from '../../database';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from '../email';
+import { TenantContextService } from '../../common/services/tenant-context.service';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,7 @@ export class AuthService {
         private readonly prisma: PrismaService,
         private readonly configService: ConfigService,
         private readonly emailService: EmailService,
+        private readonly tenantContext: TenantContextService,
     ) { }
 
     /**
@@ -105,9 +107,10 @@ export class AuthService {
         });
 
         if (!user) {
-            // Check if user exists with same email (for linking accounts)
+            // Check if user exists with same email in this tenant (for linking accounts)
+            const tenantId = this.tenantContext.getTenantId();
             const existingByEmail = await this.prisma.user.findUnique({
-                where: { email: data.email },
+                where: { users_email_tenant_unique: { email: data.email, tenantId } },
             });
 
             if (existingByEmail) {
@@ -133,7 +136,7 @@ export class AuthService {
                         name: data.name,
                         avatarUrl: data.avatarUrl,
                         emailVerified: data.emailVerified ?? false,
-                        tenantId: DEFAULT_TENANT_ID,
+                        tenantId: this.tenantContext.getTenantId(),
                         lastLoginAt: new Date(),
                     },
                 });
@@ -242,8 +245,9 @@ export class AuthService {
      * Request password reset - creates token and sends email
      */
     async requestPasswordReset(email: string): Promise<void> {
+        const tenantId = this.tenantContext.getTenantId();
         const user = await this.prisma.user.findUnique({
-            where: { email },
+            where: { users_email_tenant_unique: { email, tenantId } },
         });
 
         // Don't reveal if user exists

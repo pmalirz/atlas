@@ -4,6 +4,7 @@ import { AttributeDefinition } from './validation/type-validators';
 import { AttributeValues } from '@app-atlas/shared';
 import { EntityRecord } from '../../database/entity.repository';
 import { SchemaValidatorService } from './validation/schema-validator.service';
+import { TenantContextService } from '../../common/services/tenant-context.service';
 
 /**
  * Relation data as stored/returned
@@ -28,7 +29,8 @@ export class EntityRelationsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly schemaValidator: SchemaValidatorService,
-  ) {}
+    private readonly tenantContext: TenantContextService,
+  ) { }
 
   /**
    * Get all relation-type fields for an entity type
@@ -116,6 +118,7 @@ export class EntityRelationsService {
             toEntityId: item.targetId,
             attributes: this.extractRelationAttributes(item) as object,
             updatedBy: actor,
+            tenantId: this.tenantContext.getTenantId(),
           })),
         });
       }

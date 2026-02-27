@@ -27,7 +27,7 @@ import { EntityResponse, PaginatedResponse } from './dto/entity-response.dto';
 import { EntityAccessGuard } from './guards/entity-access.guard';
 
 @ApiTags('entities')
-@Controller('entities/:entityType')
+@Controller(':slug/entities/:entityType')
 @UseGuards(EntityAccessGuard)
 @ApiParam({ name: 'entityType', description: 'Entity type (e.g., application, it_asset)' })
 export class EntitiesController {

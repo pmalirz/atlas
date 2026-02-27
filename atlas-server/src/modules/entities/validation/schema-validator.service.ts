@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException, OnModuleInit, Logger } from '@nestjs/common';
 import { z } from 'zod';
 import { PrismaService } from '../../../database/prisma.service';
+import { TenantContextService } from '../../../common/services/tenant-context.service';
 import { ZodSchemaFactory } from './zod-schema-factory';
 import {
   AttributeDefinition,
@@ -69,7 +70,10 @@ export class SchemaValidatorService implements OnModuleInit {
   // Core entity fields that are stored in columns, not in JSONB attributes
   private static readonly CORE_FIELDS = new Set(['name', 'description']);
 
-  constructor(private readonly prisma: PrismaService) {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly tenantContext: TenantContextService,
+  ) {
     this.schemaFactory = new ZodSchemaFactory();
   }
 
@@ -264,8 +268,9 @@ export class SchemaValidatorService implements OnModuleInit {
       return cached.data;
     }
 
+    const tenantId = this.tenantContext.getTenantId();
     const definition = await this.prisma.entityDefinition.findUnique({
-      where: { entityType },
+      where: { entity_definitions_type_tenant_unique: { entityType, tenantId } },
     });
 
     if (!definition) {

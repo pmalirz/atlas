@@ -9,7 +9,7 @@ export default defineConfig({
         port: 8081,
         proxy: {
             '/api': {
-                target: process.env.API_BASE_URL || 'http://localhost:3000',
+                target: process.env.API_BASE_URL || 'http://localhost:3001',
                 changeOrigin: true,
             },
         },
@@ -19,7 +19,7 @@ export default defineConfig({
         port: 4173,
         proxy: {
             '/api': {
-                target: process.env.API_BASE_URL || 'http://localhost:3000',
+                target: process.env.API_BASE_URL || 'http://localhost:3001',
                 changeOrigin: true,
             },
         },

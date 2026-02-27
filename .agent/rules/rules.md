@@ -66,6 +66,7 @@ Implemented in the `atlas-ui` folder.
 - **Indexing**: Ensure proper GIN/BTREE indexing on JSONB fields used in filters.
 - **Multi-tenant**: Always include `tenant_id` for data isolation.
 - **Row Level Security (RLS)**: Use PostgreSQL RLS to protect tenant data.
+- **Changes to the model**: when providing changes to the prisma model remember to update triggers and other sql fuctions
 
 ## Maintenance
 

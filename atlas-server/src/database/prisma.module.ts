@@ -4,6 +4,7 @@ import { ClsService, ClsModule } from 'nestjs-cls';
 import { PrismaService } from './prisma.service';
 import { EntityRepository } from './entity.repository';
 import { RelationRepository } from './relation.repository';
+import { TenantContextService } from '../common/services/tenant-context.service';
 
 @Global()
 @Module({
@@ -79,7 +80,8 @@ import { RelationRepository } from './relation.repository';
     },
     EntityRepository,
     RelationRepository,
+    TenantContextService,
   ],
-  exports: [PrismaService, EntityRepository, RelationRepository],
+  exports: [PrismaService, EntityRepository, RelationRepository, TenantContextService],
 })
 export class PrismaModule { }

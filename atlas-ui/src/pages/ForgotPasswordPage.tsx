@@ -54,7 +54,7 @@ export function ForgotPasswordPage() {
                                 <Button variant="outline" onClick={() => setIsSuccess(false)}>
                                     Try another email
                                 </Button>
-                                <Link to="/login" className="text-sm font-medium text-primary hover:underline underline-offset-4">
+                                <Link to="../login" className="text-sm font-medium text-primary hover:underline underline-offset-4">
                                     <ArrowLeft className="inline w-4 h-4 mr-1" />
                                     Back to login
                                 </Link>
@@ -103,7 +103,7 @@ export function ForgotPasswordPage() {
                             </form>
 
                             <div className="text-center">
-                                <Link to="/login" className="text-sm font-medium text-primary hover:underline underline-offset-4">
+                                <Link to="../login" className="text-sm font-medium text-primary hover:underline underline-offset-4">
                                     <ArrowLeft className="inline w-4 h-4 mr-1" />
                                     Back to login
                                 </Link>

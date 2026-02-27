@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { LayoutGrid, Table as TableIcon, Plus, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTenant } from '@/auth';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -17,6 +18,7 @@ interface DynamicBrowsePageProps {
 }
 
 export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
+    const { slug } = useTenant();
     // Fetch UI entity config from backend
     const { config: uiConfig, loading: configLoading, error: configError } = useUIEntityConfig(entityType);
 
@@ -130,7 +132,7 @@ export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
                     {/* Create button */}
                     {browseConfig.allowCreate && (
                         <Button asChild data-testid="create-entity-btn">
-                            <Link to={`/${entityType}/create`}>
+                            <Link to={`/${slug}/${entityType}/create`}>
                                 <Plus className="h-4 w-4 mr-2" />
                                 Create {entityType}
                             </Link>
@@ -169,7 +171,7 @@ export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
                     <p>No {entityType}s found</p>
                     {browseConfig.allowCreate && (
                         <Button variant="outline" className="mt-4" asChild data-testid="create-first-entity-btn">
-                            <Link to={`/${entityType}/create`}>
+                            <Link to={`/${slug}/${entityType}/create`}>
                                 <Plus className="h-4 w-4 mr-2" />
                                 Create your first {entityType}
                             </Link>

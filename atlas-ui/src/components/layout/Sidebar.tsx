@@ -4,11 +4,12 @@ import { menuConfigApi } from '@/api/ui-schema.api';
 import { cn, toLucideIcon } from '@/lib/utils';
 import { LayoutDashboard, LogOut, User } from 'lucide-react';
 import { ThemeSwitcher } from './ThemeSwitcher';
-import { useAuth } from '@/auth';
+import { useAuth, useTenant } from '@/auth';
 import { Button } from '@/components/ui/button';
 
 export function Sidebar() {
     const { user, logout } = useAuth();
+    const { slug } = useTenant();
     const { data: menuConfig, isLoading } = useQuery({
         queryKey: ['menu-config'],
         queryFn: menuConfigApi.getMenuConfig,
@@ -30,7 +31,7 @@ export function Sidebar() {
 
             <nav className="atlas-sidebar-content flex-1 space-y-1">
                 <NavLink
-                    to="/"
+                    to={`/${slug}`}
                     className={({ isActive }) =>
                         cn(
                             "atlas-sidebar-item",
@@ -56,7 +57,7 @@ export function Sidebar() {
                         return (
                             <NavLink
                                 key={item.entityType}
-                                to={`/${item.entityType}`}
+                                to={`/${slug}/${item.entityType}`}
                                 className={({ isActive }) =>
                                     cn(
                                         "atlas-sidebar-item",

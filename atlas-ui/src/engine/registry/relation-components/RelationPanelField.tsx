@@ -9,6 +9,7 @@
 
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { getTenantSlug } from '@/api/client';
 import { Plus, ExternalLink, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -114,7 +115,7 @@ export function RelationPanelField({
                             </div>
                         </div>
                         <Link
-                            to={`/${linkedEntityType}/${item.targetId}`}
+                            to={`/${getTenantSlug()}/${linkedEntityType}/${item.targetId}`}
                             className="text-primary hover:text-primary/80"
                         >
                             <ExternalLink className="h-4 w-4" />
@@ -144,7 +145,7 @@ export function RelationPanelField({
                         asChild
                         className="gap-1"
                     >
-                        <Link to={`/${linkedEntityType}/new?linkTo=${entityType}&linkToId=${entityId}`}>
+                        <Link to={`/${getTenantSlug()}/${linkedEntityType}/new?linkTo=${entityType}&linkToId=${entityId}`}>
                             <Plus className="h-4 w-4" />
                             Create New
                         </Link>
@@ -175,7 +176,7 @@ export function RelationPanelField({
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <Link
-                                            to={`/${linkedEntityType}/${item.targetId}`}
+                                            to={`/${getTenantSlug()}/${linkedEntityType}/${item.targetId}`}
                                             className="font-medium hover:underline"
                                         >
                                             {item.targetName}
@@ -198,7 +199,7 @@ export function RelationPanelField({
                                 </div>
                             </div>
                             <Link
-                                to={`/${linkedEntityType}/${item.targetId}`}
+                                to={`/${getTenantSlug()}/${linkedEntityType}/${item.targetId}`}
                                 className="text-primary hover:text-primary/80"
                             >
                                 <ExternalLink className="h-4 w-4" />

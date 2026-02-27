@@ -4,6 +4,7 @@ import {
     AttributeDefinitionArraySchema,
     RelationDefinitionDataSchema
 } from 'atlas-shared/zod';
+import { DEFAULT_TENANT_ID } from '../default-tenant';
 
 /**
  * E2E Test Model Seed
@@ -17,9 +18,11 @@ import {
  */
 
 let prisma: PrismaClient;
+let tenantId: string;
 
-export async function seedModel(client: PrismaClient) {
+export async function seedModel(client: PrismaClient, tid: string = DEFAULT_TENANT_ID) {
     prisma = client;
+    tenantId = tid;
     console.log('🌱 Seeding E2E test model...\n');
 
     // Clear existing data
@@ -142,7 +145,7 @@ async function seedTypeDefinitions() {
         types.map((t) => {
             TypeDefinitionDataSchema.parse(t);
             return prisma.typeDefinition.upsert({
-                where: { typeKey: t.typeKey },
+                where: { type_definitions_key_tenant_unique: { typeKey: t.typeKey, tenantId } },
                 update: {
                     displayName: t.displayName,
                     baseType: t.baseType as any,
@@ -153,6 +156,7 @@ async function seedTypeDefinitions() {
                     displayName: t.displayName,
                     baseType: t.baseType as any,
                     options: t.options,
+                    tenantId,
                 },
             });
         }),
@@ -238,7 +242,7 @@ async function seedEntityDefinitions() {
         definitions.map((d) => {
             AttributeDefinitionArraySchema.parse(d.attributeSchema);
             return prisma.entityDefinition.upsert({
-                where: { entityType: d.entityType },
+                where: { entity_definitions_type_tenant_unique: { entityType: d.entityType, tenantId } },
                 update: {
                     displayName: d.displayName,
                     attributeSchema: d.attributeSchema,
@@ -247,6 +251,7 @@ async function seedEntityDefinitions() {
                     entityType: d.entityType,
                     displayName: d.displayName,
                     attributeSchema: d.attributeSchema,
+                    tenantId,
                 },
             });
         }),
@@ -287,7 +292,7 @@ async function seedRelationDefinitions() {
         definitions.map((d) => {
             RelationDefinitionDataSchema.parse(d);
             return prisma.relationDefinition.upsert({
-                where: { relationType: d.relationType },
+                where: { relation_definitions_type_tenant_unique: { relationType: d.relationType, tenantId } },
                 update: {
                     displayName: d.displayName,
                     fromEntityType: d.fromEntityType,
@@ -302,6 +307,7 @@ async function seedRelationDefinitions() {
                     toEntityType: d.toEntityType,
                     isDirectional: d.isDirectional,
                     attributeSchema: d.attributeSchema as any,
+                    tenantId,
                 },
             });
         }),
@@ -400,6 +406,7 @@ async function seedBooks() {
                     description: b.description,
                     entityType: b.entityType,
                     attributes: b.attributes,
+                    tenantId,
                 },
             }),
         ),
@@ -483,6 +490,7 @@ async function seedAuthors() {
                     description: a.description,
                     entityType: a.entityType,
                     attributes: a.attributes,
+                    tenantId,
                 },
             }),
         ),
@@ -557,6 +565,7 @@ async function seedRelations(
                     fromEntityId: r.fromEntityId,
                     toEntityId: r.toEntityId,
                     attributes: r.attributes,
+                    tenantId,
                 },
             }),
         ),

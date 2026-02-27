@@ -171,7 +171,7 @@ export function LoginPage() {
                                             Remember me
                                         </span>
                                     </Label>
-                                    <Link to="/forgot-password" className="text-sm font-medium underline-offset-4 hover:underline" data-testid="forgot-password-link">
+                                    <Link to="../forgot-password" className="text-sm font-medium underline-offset-4 hover:underline" data-testid="forgot-password-link">
                                         Forgot password
                                     </Link>
                                 </div>

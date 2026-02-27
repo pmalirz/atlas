@@ -11,7 +11,7 @@ import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { AUTH_COOKIE_NAME, getAuthCookieOptions } from './constants';
 
 @ApiTags('auth')
-@Controller('auth')
+@Controller(':slug/auth')
 export class AuthController {
     private readonly isProduction: boolean;
 

@@ -3,14 +3,13 @@
  * Uses HttpOnly cookies for secure token storage
  */
 import type { AuthConfig, AuthResponse, LoginRequest, RegisterRequest, AuthUser } from '@app-atlas/shared';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+import { buildTenantUrl } from './client';
 
 /**
  * Get auth configuration from server
  */
 export async function getAuthConfig(): Promise<AuthConfig> {
-    const response = await fetch(`${API_BASE_URL}/auth/config`, {
+    const response = await fetch(buildTenantUrl('/auth/config'), {
         credentials: 'include', // Include cookies
     });
     if (!response.ok) {
@@ -24,7 +23,7 @@ export async function getAuthConfig(): Promise<AuthConfig> {
  * Server sets HttpOnly cookie on success
  */
 export async function login(credentials: LoginRequest): Promise<AuthResponse> {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const response = await fetch(buildTenantUrl('/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
@@ -44,7 +43,7 @@ export async function login(credentials: LoginRequest): Promise<AuthResponse> {
  * Server sets HttpOnly cookie on success
  */
 export async function register(data: RegisterRequest): Promise<AuthResponse> {
-    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    const response = await fetch(buildTenantUrl('/auth/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -63,7 +62,7 @@ export async function register(data: RegisterRequest): Promise<AuthResponse> {
  * Get current user (uses HttpOnly cookie automatically)
  */
 export async function getCurrentUser(): Promise<AuthUser> {
-    const response = await fetch(`${API_BASE_URL}/auth/me`, {
+    const response = await fetch(buildTenantUrl('/auth/me'), {
         credentials: 'include', // Send HttpOnly cookie
     });
 
@@ -78,7 +77,7 @@ export async function getCurrentUser(): Promise<AuthUser> {
  * Logout - Server clears HttpOnly cookie
  */
 export async function logout(): Promise<void> {
-    await fetch(`${API_BASE_URL}/auth/logout`, {
+    await fetch(buildTenantUrl('/auth/logout'), {
         method: 'POST',
         credentials: 'include', // Send cookie to clear it
     });
@@ -92,7 +91,7 @@ export async function logout(): Promise<void> {
  * Request password reset email
  */
 export async function forgotPassword(email: string): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+    const response = await fetch(buildTenantUrl('/auth/forgot-password'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -110,7 +109,7 @@ export async function forgotPassword(email: string): Promise<{ message: string }
  * Reset password with token
  */
 export async function resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+    const response = await fetch(buildTenantUrl('/auth/reset-password'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, newPassword }),
@@ -132,7 +131,7 @@ export async function resetPassword(token: string, newPassword: string): Promise
  * Verify email with token
  */
 export async function verifyEmail(token: string): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/auth/verify-email`, {
+    const response = await fetch(buildTenantUrl('/auth/verify-email'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token }),
@@ -150,7 +149,7 @@ export async function verifyEmail(token: string): Promise<{ message: string }> {
  * Resend verification email
  */
 export async function resendVerification(): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/auth/resend-verification`, {
+    const response = await fetch(buildTenantUrl('/auth/resend-verification'), {
         method: 'POST',
         credentials: 'include', // Requires auth
     });

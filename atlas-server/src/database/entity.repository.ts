@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { PrismaService } from './prisma.service';
 import { Entity as PrismaEntity, Prisma } from '@prisma/client';
 import { AttributeValues } from '@app-atlas/shared';
+import { TenantContextService } from '../common/services/tenant-context.service';
 
 export interface EntityRecord {
   id: string;
@@ -22,7 +23,6 @@ export interface CreateEntityInput {
   name: string;
   description?: string;
   attributes?: AttributeValues;
-  tenantId?: string;
   updatedBy?: string;
 }
 
@@ -36,7 +36,6 @@ export interface UpdateEntityInput {
 export interface FindEntitiesOptions {
   entityType?: string;
   includeDeleted?: boolean;
-  tenantId?: string;
   attributeFilters?: Record<string, unknown>;
   search?: string;
   skip?: number;
@@ -47,16 +46,20 @@ export interface FindEntitiesOptions {
 
 @Injectable()
 export class EntityRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly tenantContext: TenantContextService,
+  ) { }
 
   async create(input: CreateEntityInput): Promise<EntityRecord> {
+    const tenantId = this.tenantContext.getTenantId();
     const entity = await this.prisma.entity.create({
       data: {
         entityType: input.entityType,
         name: input.name,
         description: input.description ?? '',
         attributes: (input.attributes ?? {}) as object,
-        tenantId: input.tenantId,
+        tenantId,
         updatedBy: input.updatedBy,
       },
     });
@@ -68,9 +71,11 @@ export class EntityRepository {
     id: string,
     options: { includeDeleted?: boolean; entityType?: string } = {},
   ): Promise<EntityRecord | null> {
+    const tenantId = this.tenantContext.getTenantId();
     const entity = await this.prisma.entity.findFirst({
       where: {
         id,
+        tenantId,
         ...(options.entityType && { entityType: options.entityType }),
         ...(options.includeDeleted ? {} : { deletedAt: null }),
       },
@@ -94,7 +99,6 @@ export class EntityRepository {
     const {
       entityType,
       includeDeleted = false,
-      tenantId,
       attributeFilters,
       search,
       skip,
@@ -102,6 +106,7 @@ export class EntityRepository {
       orderBy = 'name',
       orderDirection = 'asc',
     } = options;
+    const tenantId = this.tenantContext.getTenantId();
 
     const where = this.buildWhereClause({
       entityType,
@@ -193,7 +198,8 @@ export class EntityRepository {
   }
 
   async count(options: Omit<FindEntitiesOptions, 'skip' | 'take' | 'orderBy' | 'orderDirection'> = {}): Promise<number> {
-    const { entityType, includeDeleted = false, tenantId, search, attributeFilters } = options;
+    const { entityType, includeDeleted = false, search, attributeFilters } = options;
+    const tenantId = this.tenantContext.getTenantId();
 
     const where = this.buildWhereClause({
       entityType,

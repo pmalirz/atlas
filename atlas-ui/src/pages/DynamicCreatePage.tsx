@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowLeft, Save, Plus, AlertCircle, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTenant } from '@/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,6 +18,7 @@ interface DynamicCreatePageProps {
 
 export function DynamicCreatePage({ entityType }: DynamicCreatePageProps) {
     const navigate = useNavigate();
+    const { slug } = useTenant();
 
     // Fetch UI entity config from backend for display name
     const { config: uiConfig, loading: configLoading, error: configError } = useUIEntityConfig(entityType);
@@ -50,7 +52,7 @@ export function DynamicCreatePage({ entityType }: DynamicCreatePageProps) {
             {
                 onSuccess: (newEntity) => {
                     toast.success(`${entityDisplayName} created successfully`);
-                    navigate(`/${entityType}/${newEntity.id}`);
+                    navigate(`/${slug}/${entityType}/${newEntity.id}`);
                 },
                 onError: (error) => {
                     toast.error(`Failed to create: ${error.message}`);
@@ -88,7 +90,7 @@ export function DynamicCreatePage({ entityType }: DynamicCreatePageProps) {
                 <p className="text-muted-foreground mt-2">{configError.message}</p>
                 <div className="flex gap-2 mt-4">
                     <Button variant="outline" asChild>
-                        <Link to={`/${entityType}`}>Go Back</Link>
+                        <Link to={`/${slug}/${entityType}`}>Go Back</Link>
                     </Button>
                     <Button variant="outline" onClick={() => window.location.reload()}>
                         Try Again
