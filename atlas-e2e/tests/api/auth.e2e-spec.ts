@@ -8,6 +8,7 @@
  */
 import request from 'supertest';
 import { createAuthenticatedApi } from './helpers/auth-helper';
+import { withTenantApiPath } from '../utils/tenant-paths';
 
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
 const api = createAuthenticatedApi();
@@ -24,7 +25,7 @@ describe('AuthController (e2e)', () => {
     describe('GET /api/auth/config', () => {
         it('should return auth configuration', async () => {
             const response = await request(API_BASE_URL)
-                .get('/api/auth/config')
+                .get(withTenantApiPath('/api/auth/config'))
                 .expect(200);
 
             expect(response.body.provider).toBeDefined();
@@ -36,7 +37,7 @@ describe('AuthController (e2e)', () => {
     describe('POST /api/auth/register', () => {
         it('should register a new user and return JWT', async () => {
             const response = await request(API_BASE_URL)
-                .post('/api/auth/register')
+                .post(withTenantApiPath('/api/auth/register'))
                 .send({
                     email: uniqueEmail,
                     password: testPassword,
@@ -64,7 +65,7 @@ describe('AuthController (e2e)', () => {
 
             // First registration should succeed
             const firstResponse = await request(API_BASE_URL)
-                .post('/api/auth/register')
+                .post(withTenantApiPath('/api/auth/register'))
                 .send({
                     email: duplicateTestEmail,
                     password: testPassword,
@@ -74,7 +75,7 @@ describe('AuthController (e2e)', () => {
 
             // Second registration with same email should fail
             const secondResponse = await request(API_BASE_URL)
-                .post('/api/auth/register')
+                .post(withTenantApiPath('/api/auth/register'))
                 .send({
                     email: duplicateTestEmail, // Same email
                     password: testPassword,
@@ -87,7 +88,7 @@ describe('AuthController (e2e)', () => {
 
         it('should reject registration with invalid email', async () => {
             const response = await request(API_BASE_URL)
-                .post('/api/auth/register')
+                .post(withTenantApiPath('/api/auth/register'))
                 .send({
                     email: 'not-an-email',
                     password: testPassword,
@@ -103,7 +104,7 @@ describe('AuthController (e2e)', () => {
         // but not enforced on the register endpoint DTO
         it.skip('should reject registration with short password', async () => {
             const response = await request(API_BASE_URL)
-                .post('/api/auth/register')
+                .post(withTenantApiPath('/api/auth/register'))
                 .send({
                     email: `short-pass-${Date.now()}@example.com`,
                     password: 'short', // Less than 8 characters
@@ -118,7 +119,7 @@ describe('AuthController (e2e)', () => {
     describe('POST /api/auth/login', () => {
         it('should login with valid credentials and return JWT', async () => {
             const response = await request(API_BASE_URL)
-                .post('/api/auth/login')
+                .post(withTenantApiPath('/api/auth/login'))
                 .send({
                     email: uniqueEmail,
                     password: testPassword,
@@ -136,7 +137,7 @@ describe('AuthController (e2e)', () => {
 
         it('should reject login with wrong password', async () => {
             const response = await request(API_BASE_URL)
-                .post('/api/auth/login')
+                .post(withTenantApiPath('/api/auth/login'))
                 .send({
                     email: uniqueEmail,
                     password: 'wrongpassword',
@@ -148,7 +149,7 @@ describe('AuthController (e2e)', () => {
 
         it('should reject login with non-existent email', async () => {
             const response = await request(API_BASE_URL)
-                .post('/api/auth/login')
+                .post(withTenantApiPath('/api/auth/login'))
                 .send({
                     email: 'nonexistent@example.com',
                     password: testPassword,
@@ -162,7 +163,7 @@ describe('AuthController (e2e)', () => {
     describe('GET /api/auth/me', () => {
         it('should return 401 without token', async () => {
             const response = await request(API_BASE_URL)
-                .get('/api/auth/me')
+                .get(withTenantApiPath('/api/auth/me'))
                 .expect(401);
 
             expect(response.body.message).toContain('Authentication required');
@@ -170,7 +171,7 @@ describe('AuthController (e2e)', () => {
 
         it('should return 401 with invalid token', async () => {
             const response = await request(API_BASE_URL)
-                .get('/api/auth/me')
+                .get(withTenantApiPath('/api/auth/me'))
                 .set('Authorization', 'Bearer invalid-token')
                 .expect(401);
 
@@ -179,7 +180,7 @@ describe('AuthController (e2e)', () => {
 
         it('should return user data with valid token', async () => {
             const response = await request(API_BASE_URL)
-                .get('/api/auth/me')
+                .get(withTenantApiPath('/api/auth/me'))
                 .set('Authorization', `Bearer ${accessToken}`)
                 .expect(200);
 
@@ -194,13 +195,13 @@ describe('AuthController (e2e)', () => {
     describe('POST /api/auth/logout', () => {
         it('should return 401 without token', async () => {
             await request(API_BASE_URL)
-                .post('/api/auth/logout')
+                .post(withTenantApiPath('/api/auth/logout'))
                 .expect(401);
         });
 
         it('should return 204 with valid token', async () => {
             await request(API_BASE_URL)
-                .post('/api/auth/logout')
+                .post(withTenantApiPath('/api/auth/logout'))
                 .set('Authorization', `Bearer ${accessToken}`)
                 .expect(204);
         });
@@ -217,7 +218,7 @@ describe('AuthController (e2e)', () => {
 
         it('GET /api/auth/config should remain public (no auth required)', async () => {
             const response = await request(API_BASE_URL)
-                .get('/api/auth/config')
+                .get(withTenantApiPath('/api/auth/config'))
                 .expect(200);
 
             expect(response.body.provider).toBeDefined();
@@ -225,7 +226,7 @@ describe('AuthController (e2e)', () => {
 
         it('GET /api/definitions/entities should require auth (returns 401 without token)', async () => {
             await request(API_BASE_URL)
-                .get('/api/definitions/entities')
+                .get(withTenantApiPath('/api/definitions/entities'))
                 .expect(401);
         });
     });

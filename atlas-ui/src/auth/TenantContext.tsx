@@ -46,9 +46,6 @@ export function TenantProvider({ children }: TenantProviderProps) {
         if (slug) {
             apiClient.setTenantSlug(slug);
         }
-        return () => {
-            apiClient.setTenantSlug(null);
-        };
     }, [slug]);
 
     if (!slug) {

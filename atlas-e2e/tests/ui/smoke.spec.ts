@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { waitForPageLoad, navigateToEntity, selectFirstEntity, waitForToast, loginTestUser } from './utils/test-helpers';
+import { withTenantUiPath } from '../utils/tenant-paths';
 
 /**
  * UI Smoke Tests
@@ -30,7 +31,7 @@ test.describe('Application Smoke Tests', () => {
                 }
             });
 
-            await page.goto('/');
+            await page.goto(withTenantUiPath('/'));
             await waitForPageLoad(page);
 
             // Verify page loaded
@@ -45,7 +46,7 @@ test.describe('Application Smoke Tests', () => {
         });
 
         test('should display sidebar navigation', async ({ page }) => {
-            await page.goto('/');
+            await page.goto(withTenantUiPath('/'));
             await waitForPageLoad(page);
 
             // Sidebar should be visible
@@ -58,7 +59,7 @@ test.describe('Application Smoke Tests', () => {
         });
 
         test('should navigate to Books page', async ({ page }) => {
-            await page.goto('/');
+            await page.goto(withTenantUiPath('/'));
             await waitForPageLoad(page);
 
             await navigateToEntity(page, 'Books');
@@ -69,7 +70,7 @@ test.describe('Application Smoke Tests', () => {
         });
 
         test('should navigate to Authors page', async ({ page }) => {
-            await page.goto('/');
+            await page.goto(withTenantUiPath('/'));
             await waitForPageLoad(page);
 
             await navigateToEntity(page, 'Authors');
@@ -83,7 +84,7 @@ test.describe('Application Smoke Tests', () => {
     test.describe('Entity Listing (Browse Page)', () => {
 
         test.beforeEach(async ({ page }) => {
-            await page.goto('/book');
+            await page.goto(withTenantUiPath('/book'));
             await waitForPageLoad(page);
         });
 
@@ -132,7 +133,7 @@ test.describe('Application Smoke Tests', () => {
     test.describe('Entity Details Page', () => {
 
         test.beforeEach(async ({ page }) => {
-            await page.goto('/book');
+            await page.goto(withTenantUiPath('/book'));
             await waitForPageLoad(page);
             await selectFirstEntity(page);
         });
@@ -147,7 +148,7 @@ test.describe('Application Smoke Tests', () => {
 
             // Back button should exist
             const backButton = page.getByRole('link', { name: /back/i }).or(
-                page.locator('a[href="/book"]')
+                page.locator(`a[href="${withTenantUiPath('/book')}"]`)
             );
             await expect(backButton.first()).toBeVisible();
         });
@@ -178,7 +179,7 @@ test.describe('Application Smoke Tests', () => {
     test.describe('Field Interactions', () => {
 
         test.beforeEach(async ({ page }) => {
-            await page.goto('/book');
+            await page.goto(withTenantUiPath('/book'));
             await waitForPageLoad(page);
             await selectFirstEntity(page);
         });
@@ -253,7 +254,7 @@ test.describe('Application Smoke Tests', () => {
     test.describe('Author Entity Details', () => {
 
         test.beforeEach(async ({ page }) => {
-            await page.goto('/author');
+            await page.goto(withTenantUiPath('/author'));
             await waitForPageLoad(page);
             await selectFirstEntity(page);
         });
@@ -288,7 +289,7 @@ test.describe('Application Smoke Tests', () => {
     test.describe('Data Persistence', () => {
 
         test('should persist changes after page refresh', async ({ page }) => {
-            await page.goto('/book');
+            await page.goto(withTenantUiPath('/book'));
             await waitForPageLoad(page);
             await selectFirstEntity(page);
 

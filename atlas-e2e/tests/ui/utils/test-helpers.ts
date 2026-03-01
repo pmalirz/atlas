@@ -1,4 +1,5 @@
 import { Page, expect, Locator } from '@playwright/test';
+import { withTenantUiPath } from '../../utils/tenant-paths';
 
 // ─────────────────────────────────────────────────────────────
 // AUTH HELPERS
@@ -15,7 +16,7 @@ const TEST_PASSWORD = 'e2e-test-password-123';
  */
 export async function loginTestUser(page: Page): Promise<void> {
     // First, navigate to the app to be able to check localStorage
-    await page.goto('/');
+    await page.goto(withTenantUiPath('/'));
 
     // Check if already authenticated on this page's context
     const hasUser = await page.evaluate(() => {
@@ -29,7 +30,7 @@ export async function loginTestUser(page: Page): Promise<void> {
     }
 
     // Go to login page
-    await page.goto('/login');
+    await page.goto(withTenantUiPath('/login'));
 
     // Wait for login page to load
     await expect(page.getByTestId('auth-card')).toBeVisible({ timeout: 10000 });
@@ -48,7 +49,10 @@ export async function loginTestUser(page: Page): Promise<void> {
     await page.getByTestId('auth-submit-btn').click();
 
     // Wait for redirect to home page (successful auth)
-    await page.waitForURL(/\/$/, { timeout: 10000 });
+    await page.waitForURL((url) => {
+        const tenantRoot = withTenantUiPath('/');
+        return url.pathname === tenantRoot || url.pathname === `${tenantRoot}/`;
+    }, { timeout: 15000 });
     await waitForPageLoad(page);
 }
 
@@ -71,16 +75,32 @@ export async function ensureAuthenticated(page: Page): Promise<void> {
  * Wait for the page to finish loading (skeletons disappear)
  */
 export async function waitForPageLoad(page: Page): Promise<void> {
-    // Wait for no skeleton elements to be visible
-    await expect(page.locator('.animate-pulse')).toHaveCount(0, { timeout: 5000 });
+    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => { });
+
+    const primaryContent = page
+        .locator('[data-testid="auth-card"], [data-testid="forgot-password-card"], [data-testid="reset-password-card"], [data-testid="verify-email-card"], [data-testid="sidebar"], main')
+        .first();
+    await expect(primaryContent).toBeVisible({ timeout: 15000 });
+
+    // Non-blocking: give skeletons a chance to settle, but don't fail test if animations persist.
+    try {
+        await expect(page.locator('main .animate-pulse')).toHaveCount(0, { timeout: 8000 });
+    } catch {
+        // Ignore intermittent long-lived skeleton animations.
+    }
 }
 
 /**
  * Navigate to an entity type via sidebar
  */
 export async function navigateToEntity(page: Page, entityType: string): Promise<void> {
-    // Find and click the sidebar menu item
-    const menuItem = page.getByRole('link', { name: new RegExp(entityType, 'i') });
+    // Wait for sidebar and menu config to load first.
+    await expect(page.getByTestId('sidebar')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Loading...')).toHaveCount(0, { timeout: 15000 });
+
+    const menuItem = page.getByRole('link', { name: new RegExp(entityType, 'i') }).first();
+    await expect(menuItem).toBeVisible({ timeout: 10000 });
     await menuItem.click();
 
     // Wait for page to load

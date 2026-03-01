@@ -5,6 +5,7 @@
  * Creates a test user and provides authenticated request helper.
  */
 import request from 'supertest';
+import { withTenantApiPath } from '../../utils/tenant-paths';
 
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
 
@@ -30,7 +31,7 @@ export async function getAuthToken(): Promise<string> {
     // Try to register a new test user
     try {
         const registerResponse = await request(API_BASE_URL)
-            .post('/api/auth/register')
+            .post(withTenantApiPath('/api/auth/register'))
             .send({
                 email: testEmail,
                 password: testPassword,
@@ -54,7 +55,7 @@ export async function getAuthToken(): Promise<string> {
     try {
         console.log(`[Auth Helper] Trying login...`);
         const loginResponse = await request(API_BASE_URL)
-            .post('/api/auth/login')
+            .post(withTenantApiPath('/api/auth/login'))
             .send({
                 email: testEmail,
                 password: testPassword,
@@ -100,19 +101,19 @@ export function createAuthenticatedApi() {
         },
 
         get(url: string) {
-            return request(API_BASE_URL).get(url).set('Authorization', `Bearer ${token}`);
+            return request(API_BASE_URL).get(withTenantApiPath(url)).set('Authorization', `Bearer ${token}`);
         },
 
         post(url: string) {
-            return request(API_BASE_URL).post(url).set('Authorization', `Bearer ${token}`);
+            return request(API_BASE_URL).post(withTenantApiPath(url)).set('Authorization', `Bearer ${token}`);
         },
 
         patch(url: string) {
-            return request(API_BASE_URL).patch(url).set('Authorization', `Bearer ${token}`);
+            return request(API_BASE_URL).patch(withTenantApiPath(url)).set('Authorization', `Bearer ${token}`);
         },
 
         delete(url: string) {
-            return request(API_BASE_URL).delete(url).set('Authorization', `Bearer ${token}`);
+            return request(API_BASE_URL).delete(withTenantApiPath(url)).set('Authorization', `Bearer ${token}`);
         },
     };
 }

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { waitForPageLoad, waitForToast, navigateToEntity, loginTestUser } from './utils/test-helpers';
+import { withTenantUiPath } from '../utils/tenant-paths';
 
 /**
  * Entity Creation Tests
@@ -18,7 +19,7 @@ test.describe('Entity Creation', () => {
     test.describe('Route Accessibility', () => {
 
         test('should load create page via direct URL', async ({ page }) => {
-            await page.goto('/book/create');
+            await page.goto(withTenantUiPath('/book/create'));
             await waitForPageLoad(page);
 
             // Create page should be visible with correct heading
@@ -34,7 +35,7 @@ test.describe('Entity Creation', () => {
         });
 
         test('should navigate to create page from browse page Create button', async ({ page }) => {
-            await page.goto('/book');
+            await page.goto(withTenantUiPath('/book'));
             await waitForPageLoad(page);
 
             // Click the Create button
@@ -51,7 +52,7 @@ test.describe('Entity Creation', () => {
     test.describe('Form Validation', () => {
 
         test('should show validation error when name is empty', async ({ page }) => {
-            await page.goto('/book/create');
+            await page.goto(withTenantUiPath('/book/create'));
             await waitForPageLoad(page);
 
             // Click Save & Edit without entering name
@@ -65,7 +66,7 @@ test.describe('Entity Creation', () => {
         });
 
         test('should clear validation error when name is entered', async ({ page }) => {
-            await page.goto('/book/create');
+            await page.goto(withTenantUiPath('/book/create'));
             await waitForPageLoad(page);
 
             // Trigger validation error
@@ -83,7 +84,7 @@ test.describe('Entity Creation', () => {
     test.describe('Save & Edit Flow', () => {
 
         test('should create entity and navigate to detail page', async ({ page }) => {
-            await page.goto('/book/create');
+            await page.goto(withTenantUiPath('/book/create'));
             await waitForPageLoad(page);
 
             const uniqueName = `E2E Test Book ${Date.now()}`;
@@ -110,7 +111,7 @@ test.describe('Entity Creation', () => {
     test.describe('Save & Create New Flow', () => {
 
         test('should create entity and reset form', async ({ page }) => {
-            await page.goto('/book/create');
+            await page.goto(withTenantUiPath('/book/create'));
             await waitForPageLoad(page);
 
             const uniqueName = `E2E Test Book New ${Date.now()}`;
@@ -134,7 +135,7 @@ test.describe('Entity Creation', () => {
         });
 
         test('should be able to create multiple entities in succession', async ({ page }) => {
-            await page.goto('/book/create');
+            await page.goto(withTenantUiPath('/book/create'));
             await waitForPageLoad(page);
 
             // Create first entity
@@ -156,7 +157,7 @@ test.describe('Entity Creation', () => {
     test.describe('Different Entity Types', () => {
 
         test('should work for Author entity', async ({ page }) => {
-            await page.goto('/author/create');
+            await page.goto(withTenantUiPath('/author/create'));
             await waitForPageLoad(page);
 
             // Should show Author in the heading
@@ -178,7 +179,7 @@ test.describe('Entity Creation', () => {
         test('should navigate back to browse page via Cancel', async ({ page }) => {
             // Navigate through /book first to establish browser history
             // since Cancel uses navigate(-1) which requires history
-            await page.goto('/book');
+            await page.goto(withTenantUiPath('/book'));
             await waitForPageLoad(page);
 
             // Click Create to go to /book/create
@@ -193,11 +194,11 @@ test.describe('Entity Creation', () => {
         });
 
         test('should navigate back to browse page via back arrow', async ({ page }) => {
-            await page.goto('/book/create');
+            await page.goto(withTenantUiPath('/book/create'));
             await waitForPageLoad(page);
 
             // Click back arrow (first link in header area pointing to entityType)
-            await page.locator('a[href="/book"]').first().click();
+            await page.locator(`a[href="${withTenantUiPath('/book')}"]`).first().click();
 
             // Should be back on browse page
             await expect(page).toHaveURL(/\/book$/);
