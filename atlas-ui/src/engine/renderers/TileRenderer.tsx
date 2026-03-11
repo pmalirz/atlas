@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { getTenantSlug } from '@/api/client';
 import { ArrowRight } from 'lucide-react';
 import type { TileViewSchema, TileFieldSchema, EntitySchema } from '../schema/types';
 import { formatRelativeTime } from '@/lib/utils';
@@ -23,6 +24,7 @@ export function TileRenderer({
     entityType
 }: TileRendererProps) {
     const id = entity.id as string;
+    const slug = getTenantSlug();
 
     // Extract fields by role
     const titleField = schema.fields.find(f => f.role === 'title');
@@ -33,7 +35,7 @@ export function TileRenderer({
 
     return (
         <Link
-            to={`/${entityType}/${id}`}
+            to={`/${slug}/${entityType}/${id}`}
             className="atlas-card block group"
             data-testid={testIds.tile(entityType, id)}
         >

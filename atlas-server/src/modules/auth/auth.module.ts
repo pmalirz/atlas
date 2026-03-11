@@ -12,6 +12,7 @@ import { ClerkProvider } from './providers/clerk.provider';
 import { LogtoProvider } from './providers/logto.provider';
 import { SsoProvider } from './providers/sso.provider';
 import { PrismaModule, PrismaService } from '../../database';
+import { TenantContextService } from '../../common/services/tenant-context.service';
 import type { AuthProvider } from '@app-atlas/shared';
 
 /**
@@ -58,6 +59,7 @@ export class AuthModule {
                         configService: ConfigService,
                         prisma: PrismaService,
                         jwtService: JwtService,
+                        tenantContext: TenantContextService,
                     ) => {
                         const provider = configService.get<AuthProvider>('AUTH_PROVIDER', 'native');
 
@@ -70,10 +72,10 @@ export class AuthModule {
                                 return new SsoProvider(configService);
                             case 'native':
                             default:
-                                return new AtlasNativeProvider(configService, prisma, jwtService);
+                                return new AtlasNativeProvider(configService, prisma, jwtService, tenantContext);
                         }
                     },
-                    inject: [ConfigService, PrismaService, JwtService],
+                    inject: [ConfigService, PrismaService, JwtService, TenantContextService],
                 },
             ],
             exports: [AuthService, AuthGuard, JwtModule, AUTH_PROVIDER],

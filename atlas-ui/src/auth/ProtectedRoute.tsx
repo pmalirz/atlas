@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -8,9 +8,11 @@ interface ProtectedRouteProps {
 
 /**
  * ProtectedRoute - Wrapper that redirects to login if not authenticated
+ * Uses the tenant slug from the URL to redirect to /:slug/login
  */
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
     const { isAuthenticated, isLoading } = useAuth();
+    const { slug } = useParams<{ slug: string }>();
     const location = useLocation();
 
     // Show loading state while checking auth
@@ -23,9 +25,10 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
         );
     }
 
-    // Redirect to login if not authenticated
+    // Redirect to tenant-scoped login if not authenticated
     if (!isAuthenticated) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
+        const loginPath = slug ? `/${slug}/login` : '/login';
+        return <Navigate to={loginPath} state={{ from: location }} replace />;
     }
 
     return <>{children}</>;

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { getTenantSlug } from '@/api/client';
 import { ExternalLink } from 'lucide-react';
 import type { FieldComponentProps } from '../component-registry';
 
@@ -51,7 +52,7 @@ function RelationLink({ item, fieldSchema }: RelationLinkProps) {
 
     return (
         <Link
-            to={`/${entityType}/${item.id}`}
+            to={`/${getTenantSlug()}/${entityType}/${item.id}`}
             className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
         >
             {label}

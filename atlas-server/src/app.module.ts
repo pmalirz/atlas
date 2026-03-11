@@ -11,9 +11,10 @@ import { UIConfigModule } from './modules/ui-config/ui-config.module';
 import { EntitiesModule } from './modules/entities/entities.module';
 import { AuthModule, AuthGuard } from './modules/auth';
 import { EmailModule } from './modules/email';
+import { TenantModule } from './modules/tenant';
 import { ClsModule } from 'nestjs-cls';
 import { randomUUID } from 'crypto';
-import { AuditContextInterceptor } from './common/interceptors';
+import { AuditContextInterceptor, TenantScopeInterceptor } from './common/interceptors';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { AuditContextInterceptor } from './common/interceptors';
     }),
     PrismaModule,
     EmailModule,
+    TenantModule,
     AuthModule.forRoot(),
     RelationsModule,
     DefinitionsModule,
@@ -74,7 +76,12 @@ import { AuditContextInterceptor } from './common/interceptors';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
-    // Capture user context for audit log (CLs)
+    // Resolve tenant from :slug route param and store in CLS
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TenantScopeInterceptor,
+    },
+    // Capture user context for audit log (CLS)
     {
       provide: APP_INTERCEPTOR,
       useClass: AuditContextInterceptor,

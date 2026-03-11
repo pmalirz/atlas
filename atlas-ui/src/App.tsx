@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useParams, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AuthProvider, ProtectedRoute } from '@/auth';
+import { AuthProvider, ProtectedRoute, TenantProvider } from '@/auth';
 
 // Lazy load components for code splitting
 const DashboardPage = React.lazy(() => import('@/pages/DashboardPage').then(module => ({ default: module.DashboardPage })));
@@ -14,91 +14,118 @@ const ForgotPasswordPage = React.lazy(() => import('@/pages/ForgotPasswordPage')
 const ResetPasswordPage = React.lazy(() => import('@/pages/ResetPasswordPage').then(module => ({ default: module.ResetPasswordPage })));
 const VerifyEmailPage = React.lazy(() => import('@/pages/VerifyEmailPage').then(module => ({ default: module.VerifyEmailPage })));
 
+const SuspenseFallback = () => (
+    <div className="p-6">
+        <Skeleton className="h-8 w-full mb-4" />
+        <Skeleton className="h-32 w-full" />
+    </div>
+);
+
 function App() {
     return (
         <BrowserRouter>
-            <AuthProvider>
-                <Routes>
-                    {/* Public route - Login */}
-                    <Route
-                        path="/login"
-                        element={
-                            <Suspense fallback={<div className="p-6"><Skeleton className="h-8 w-full mb-4" /><Skeleton className="h-32 w-full" /></div>}>
-                                <LoginPage />
-                            </Suspense>
-                        }
-                    />
+            <Routes>
+                {/* Root redirect - default tenant */}
+                <Route path="/" element={<Navigate to="/myatlas" replace />} />
 
-                    {/* Public route - Forgot Password */}
-                    <Route
-                        path="/forgot-password"
-                        element={
-                            <Suspense fallback={<div className="p-6"><Skeleton className="h-8 w-full mb-4" /><Skeleton className="h-32 w-full" /></div>}>
-                                <ForgotPasswordPage />
-                            </Suspense>
-                        }
-                    />
-
-                    {/* Public route - Reset Password */}
-                    <Route
-                        path="/reset-password"
-                        element={
-                            <Suspense fallback={<div className="p-6"><Skeleton className="h-8 w-full mb-4" /><Skeleton className="h-32 w-full" /></div>}>
-                                <ResetPasswordPage />
-                            </Suspense>
-                        }
-                    />
-
-                    {/* Public route - Verify Email */}
-                    <Route
-                        path="/verify-email"
-                        element={
-                            <Suspense fallback={<div className="p-6"><Skeleton className="h-8 w-full mb-4" /><Skeleton className="h-32 w-full" /></div>}>
-                                <VerifyEmailPage />
-                            </Suspense>
-                        }
-                    />
-
-                    {/* Protected routes - require authentication */}
-                    <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
-                        <Route
-                            path="/"
-                            element={
-                                <Suspense fallback={<div className="p-6"><Skeleton className="h-8 w-full mb-4" /><Skeleton className="h-32 w-full" /></div>}>
-                                    <DashboardPage />
-                                </Suspense>
-                            }
-                        />
-
-                        {/* Dynamic entity routes */}
-                        <Route
-                            path="/:entityType"
-                            element={
-                                <Suspense fallback={<div className="p-6"><Skeleton className="h-8 w-full mb-4" /><Skeleton className="h-32 w-full" /></div>}>
-                                    <DynamicBrowsePageWrapper />
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="/:entityType/create"
-                            element={
-                                <Suspense fallback={<div className="p-6"><Skeleton className="h-8 w-full mb-4" /><Skeleton className="h-32 w-full" /></div>}>
-                                    <DynamicCreatePageWrapper />
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="/:entityType/:entityId"
-                            element={
-                                <Suspense fallback={<div className="p-6"><Skeleton className="h-8 w-full mb-4" /><Skeleton className="h-32 w-full" /></div>}>
-                                    <DynamicDetailPageWrapper />
-                                </Suspense>
-                            }
-                        />
-                    </Route>
-                </Routes>
-            </AuthProvider>
+                {/* All tenant-scoped routes under /:slug */}
+                <Route path="/:slug/*" element={
+                    <TenantProvider>
+                        <AuthProvider>
+                            <TenantRoutes />
+                        </AuthProvider>
+                    </TenantProvider>
+                } />
+            </Routes>
         </BrowserRouter>
+    );
+}
+
+/**
+ * TenantRoutes - All routes scoped to a tenant slug.
+ * Renders inside TenantProvider which syncs the slug with ApiClient.
+ */
+function TenantRoutes() {
+    return (
+        <Routes>
+            {/* Public route - Login */}
+            <Route
+                path="/login"
+                element={
+                    <Suspense fallback={<SuspenseFallback />}>
+                        <LoginPage />
+                    </Suspense>
+                }
+            />
+
+            {/* Public route - Forgot Password */}
+            <Route
+                path="/forgot-password"
+                element={
+                    <Suspense fallback={<SuspenseFallback />}>
+                        <ForgotPasswordPage />
+                    </Suspense>
+                }
+            />
+
+            {/* Public route - Reset Password */}
+            <Route
+                path="/reset-password"
+                element={
+                    <Suspense fallback={<SuspenseFallback />}>
+                        <ResetPasswordPage />
+                    </Suspense>
+                }
+            />
+
+            {/* Public route - Verify Email */}
+            <Route
+                path="/verify-email"
+                element={
+                    <Suspense fallback={<SuspenseFallback />}>
+                        <VerifyEmailPage />
+                    </Suspense>
+                }
+            />
+
+            {/* Protected routes - require authentication */}
+            <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+                <Route
+                    index
+                    element={
+                        <Suspense fallback={<SuspenseFallback />}>
+                            <DashboardPage />
+                        </Suspense>
+                    }
+                />
+
+                {/* Dynamic entity routes */}
+                <Route
+                    path="/:entityType"
+                    element={
+                        <Suspense fallback={<SuspenseFallback />}>
+                            <DynamicBrowsePageWrapper />
+                        </Suspense>
+                    }
+                />
+                <Route
+                    path="/:entityType/create"
+                    element={
+                        <Suspense fallback={<SuspenseFallback />}>
+                            <DynamicCreatePageWrapper />
+                        </Suspense>
+                    }
+                />
+                <Route
+                    path="/:entityType/:entityId"
+                    element={
+                        <Suspense fallback={<SuspenseFallback />}>
+                            <DynamicDetailPageWrapper />
+                        </Suspense>
+                    }
+                />
+            </Route>
+        </Routes>
     );
 }
 
@@ -119,4 +146,3 @@ function DynamicDetailPageWrapper() {
 }
 
 export default App;
-

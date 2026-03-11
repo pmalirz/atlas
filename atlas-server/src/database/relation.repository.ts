@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Relation as PrismaRelation, Prisma } from '@prisma/client';
 import { AttributeValues } from '@app-atlas/shared';
+import { TenantContextService } from '../common/services/tenant-context.service';
 
 export interface RelationRecord {
   id: string;
@@ -46,15 +47,20 @@ export interface FindRelationsOptions {
 @Injectable()
 export class RelationRepository {
 
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly tenantContext: TenantContextService,
+  ) { }
 
   async create(input: CreateRelationInput): Promise<RelationRecord> {
+    const tenantId = this.tenantContext.getTenantId();
     const relation = await this.prisma.relation.create({
       data: {
         relationType: input.relationType,
         fromEntityId: input.fromEntityId,
         toEntityId: input.toEntityId,
         attributes: (input.attributes ?? {}) as object,
+        tenantId,
         updatedBy: input.updatedBy,
       },
     });
@@ -66,9 +72,11 @@ export class RelationRepository {
     id: string,
     options: { includeDeleted?: boolean } = {},
   ): Promise<RelationRecord | null> {
+    const tenantId = this.tenantContext.getTenantId();
     const relation = await this.prisma.relation.findFirst({
       where: {
         id,
+        tenantId,
         ...(options.includeDeleted ? {} : { deletedAt: null }),
       },
     });
@@ -203,8 +211,10 @@ export class RelationRepository {
     attributeFilters?: Record<string, unknown>;
   }): Prisma.RelationWhereInput {
     const { relationType, fromEntityId, toEntityId, entityId, includeDeleted, attributeFilters } = options;
+    const tenantId = this.tenantContext.getTenantId();
 
     const where: Prisma.RelationWhereInput = {
+      tenantId,
       ...(relationType && { relationType }),
       ...(fromEntityId && { fromEntityId }),
       ...(toEntityId && { toEntityId }),

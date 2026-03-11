@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { DEFAULT_TENANT_ID } from '../default-tenant';
 
 /**
  * E2E Auth Seeder
@@ -14,9 +15,6 @@ export const E2E_TEST_USER = {
     password: 'e2e-test-password-123',
     name: 'E2E Test User',
 };
-
-// Default tenant ID for E2E tests
-const E2E_TENANT_ID = '00000000-0000-0000-0000-000000000001';
 
 export async function seedAuth(prisma: PrismaClient) {
     console.log('🔐 Seeding E2E Auth user...\n');
@@ -37,7 +35,7 @@ export async function seedAuth(prisma: PrismaClient) {
             name: E2E_TEST_USER.name,
             provider: 'native',
             emailVerified: true,
-            tenantId: E2E_TENANT_ID,
+            tenantId: DEFAULT_TENANT_ID,
         },
     });
 

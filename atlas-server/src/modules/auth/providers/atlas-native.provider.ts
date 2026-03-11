@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 import type { AuthUser, LoginRequest, RegisterRequest, AuthResponse } from '@app-atlas/shared';
 import type { IAuthProvider } from './auth-provider.interface';
 import { PrismaService } from '../../../database';
-import { DEFAULT_TENANT_ID } from '../constants';
+import { TenantContextService } from '../../../common/services/tenant-context.service';
 
 const SALT_ROUNDS = 12;
 
@@ -23,6 +23,7 @@ export class AtlasNativeProvider implements IAuthProvider {
         private readonly configService: ConfigService,
         private readonly prisma?: PrismaService,
         private readonly jwtService?: JwtService,
+        private readonly tenantContext?: TenantContextService,
     ) { }
 
     /**
@@ -69,8 +70,13 @@ export class AtlasNativeProvider implements IAuthProvider {
             throw new Error('AtlasNativeProvider not properly initialized');
         }
 
+        const tenantId = this.tenantContext?.getTenantId();
+        if (!tenantId) {
+            throw new Error('Tenant context not available for login');
+        }
+
         const user = await this.prisma.user.findUnique({
-            where: { email: credentials.email },
+            where: { users_email_tenant_unique: { email: credentials.email, tenantId } },
         });
 
         if (!user || !user.passwordHash) {
@@ -118,9 +124,14 @@ export class AtlasNativeProvider implements IAuthProvider {
             throw new Error('AtlasNativeProvider not properly initialized');
         }
 
-        // Check if user already exists
+        const tenantId = this.tenantContext?.getTenantId();
+        if (!tenantId) {
+            throw new Error('Tenant context not available for registration');
+        }
+
+        // Check if user already exists in this tenant
         const existingUser = await this.prisma.user.findUnique({
-            where: { email: data.email },
+            where: { users_email_tenant_unique: { email: data.email, tenantId } },
         });
 
         if (existingUser) {
@@ -137,7 +148,7 @@ export class AtlasNativeProvider implements IAuthProvider {
                 passwordHash,
                 name: data.name,
                 provider: 'native',
-                tenantId: DEFAULT_TENANT_ID,
+                tenantId,
                 emailVerified: false,
                 lastLoginAt: new Date(),
             },

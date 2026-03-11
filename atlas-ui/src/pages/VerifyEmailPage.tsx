@@ -65,7 +65,7 @@ export function VerifyEmailPage() {
                             </p>
                         </div>
                         <Button
-                            onClick={() => navigate('/', { replace: true })}
+                            onClick={() => navigate('..', { replace: true })}
                             className="w-full h-12 text-base font-semibold"
                             data-testid="verify-email-continue-btn"
                         >
@@ -95,13 +95,13 @@ export function VerifyEmailPage() {
                                         alert('Verification email sent! Check your inbox.');
                                     } catch (err) {
                                         alert('Please log in to resend verification email.');
-                                        navigate('/login');
+                                        navigate('../login');
                                     }
                                 }}
                             >
                                 Resend Verification Email
                             </Button>
-                            <Link to="/login" className="text-sm font-medium text-primary hover:underline underline-offset-4">
+                            <Link to="../login" className="text-sm font-medium text-primary hover:underline underline-offset-4">
                                 Back to login
                             </Link>
                         </div>
@@ -120,7 +120,7 @@ export function VerifyEmailPage() {
                                 This email verification link is invalid.
                             </p>
                         </div>
-                        <Link to="/login">
+                        <Link to="../login">
                             <Button variant="outline" className="w-full">
                                 Go to Login
                             </Button>

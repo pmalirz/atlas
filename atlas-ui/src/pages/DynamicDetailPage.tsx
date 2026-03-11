@@ -1,5 +1,6 @@
 import { ArrowLeft, Trash2, AlertCircle, Loader2, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTenant } from '@/auth';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -28,6 +29,7 @@ interface DynamicDetailPageProps {
 
 export function DynamicDetailPage({ entityType, entityId }: DynamicDetailPageProps) {
     const navigate = useNavigate();
+    const { slug } = useTenant();
 
     // Fetch UI entity config from backend
     const { config: uiConfig, loading: uiConfigLoading, error: uiConfigError } = useUIEntityConfig(entityType);
@@ -74,7 +76,7 @@ export function DynamicDetailPage({ entityType, entityId }: DynamicDetailPagePro
             onSuccess: () => {
                 toast.success(`${entityDisplayName} deleted successfully`);
                 setDeleteDialogOpen(false);
-                navigate(`/${entityType}`);
+                navigate(`/${slug}/${entityType}`);
             },
             onError: (error) => {
                 toast.error(`Failed to delete: ${error.message}`);
@@ -102,7 +104,7 @@ export function DynamicDetailPage({ entityType, entityId }: DynamicDetailPagePro
                 <p className="text-muted-foreground mt-2">{error?.message}</p>
                 <div className="flex gap-2 mt-4">
                     <Button variant="outline" asChild>
-                        <Link to={`/${entityType}`}>Go Back</Link>
+                        <Link to={`/${slug}/${entityType}`}>Go Back</Link>
                     </Button>
                     <Button variant="outline" onClick={() => window.location.reload()}>
                         Try Again
@@ -135,7 +137,7 @@ export function DynamicDetailPage({ entityType, entityId }: DynamicDetailPagePro
             <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
                     <Button variant="ghost" size="icon" asChild>
-                        <Link to={`/${entityType}`}>
+                        <Link to={`/${slug}/${entityType}`}>
                             <ArrowLeft className="h-4 w-4" />
                         </Link>
                     </Button>
@@ -151,7 +153,7 @@ export function DynamicDetailPage({ entityType, entityId }: DynamicDetailPagePro
                         size="sm"
                         asChild
                     >
-                        <Link to={`/${entityType}/create`}>
+                        <Link to={`/${slug}/${entityType}/create`}>
                             <Plus className="h-4 w-4 mr-2" />
                             Create
                         </Link>

@@ -2,6 +2,7 @@ import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { TableViewSchema, EntitySchema, SortSchema } from '../schema/types';
 import { Link } from 'react-router-dom';
+import { getTenantSlug } from '@/api/client';
 import { testIds } from '../utils/testIdUtils';
 import { formatCellValue } from '../utils/formatters';
 
@@ -27,6 +28,7 @@ export function TableRenderer({
     sort,
     onSortChange
 }: TableRendererProps) {
+    const slug = getTenantSlug();
 
     const handleSort = (field: string) => {
         if (!onSortChange) return;
@@ -87,7 +89,7 @@ export function TableRenderer({
                             >
                                 {index === 0 ? (
                                     <Link
-                                        to={`/${entityType}/${entity.id}`}
+                                        to={`/${slug}/${entityType}/${entity.id}`}
                                         className="font-medium hover:text-primary hover:underline"
                                     >
                                         {formatCellValue(entity, column, entitySchema)}

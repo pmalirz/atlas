@@ -3,7 +3,7 @@ import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { UIConfigService } from './ui-config.service';
 
 @ApiTags('ui-config')
-@Controller('ui-config')
+@Controller(':slug/ui-config')
 export class UIConfigController {
     constructor(private readonly uiConfigService: UIConfigService) { }
 

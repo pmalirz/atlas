@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { waitForPageLoad, navigateToEntity, selectEntity, waitForToast, loginTestUser } from './utils/test-helpers';
+import { withTenantUiPath } from '../utils/tenant-paths';
 
 /**
  * Relation Dialog E2E Tests
@@ -21,7 +22,7 @@ test.describe('Relation Dialog (Attributes)', () => {
         // Login first (each test has its own browser context)
         await loginTestUser(page);
 
-        await page.goto('/');
+        await page.goto(withTenantUiPath('/'));
         await waitForPageLoad(page);
 
         // 1. Navigate to Clean Code book details

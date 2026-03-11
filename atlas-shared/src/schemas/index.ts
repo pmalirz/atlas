@@ -14,6 +14,8 @@ export * from './ui-schemas';
 // Authentication schemas (AuthUser, LoginRequest, etc.)
 export * from './auth-schemas';
 
+// Tenant schemas (Tenant, TenantSlug, etc.)
+export * from './tenant-schemas';
+
 // Re-export zod.ts (includes z export and all schemas)
 export * from './zod';
-

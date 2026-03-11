@@ -3,6 +3,7 @@ import {
     UIEntityConfigDataSchema,
     MenuConfigSchema
 } from 'atlas-shared/zod';
+import { DEFAULT_TENANT_ID } from '../default-tenant';
 
 /**
  * E2E Test UI Seed
@@ -14,7 +15,7 @@ import {
  * 
  * All field keys and section IDs are designed for stable test references.
  */
-export async function seedUI(prisma: PrismaClient) {
+export async function seedUI(prisma: PrismaClient, tenantId: string = DEFAULT_TENANT_ID) {
     console.log('🎨 Seeding E2E UI Configuration...');
 
     // Cleanup UI Configs
@@ -359,6 +360,7 @@ export async function seedUI(prisma: PrismaClient) {
                 version: config.version,
                 browseConfig: config.browseConfig as any,
                 detailConfig: config.detailConfig as any,
+                tenantId,
             },
         });
         console.log(`   ✓ Created UI config for ${config.entityType}`);
@@ -374,7 +376,7 @@ export async function seedUI(prisma: PrismaClient) {
 
     MenuConfigSchema.parse(menuConfig);
     await prisma.uIGlobalConfig.create({
-        data: { menuConfig: menuConfig as any, version: 1 },
+        data: { menuConfig: menuConfig as any, version: 1, tenantId },
     });
     console.log('   ✓ Created menu configuration');
 

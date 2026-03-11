@@ -21,7 +21,7 @@ import { RelationsService } from './relations.service';
 import { CreateRelationDto, UpdateRelationDto, GetRelationsDto, GetRelationGraphDto } from './dto';
 
 @ApiTags('relations')
-@Controller('relations')
+@Controller(':slug/relations')
 export class RelationsController {
   constructor(private readonly relationsService: RelationsService) { }
 
