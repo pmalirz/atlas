@@ -1,0 +1,26 @@
+[
+    {
+        "relationType": "book_written_by",
+        "fromEntityName": "Clean Code",
+        "toEntityName": "Robert C. Martin",
+        "attributes": { "role": "main-author", "contribution": 100 }
+    },
+    {
+        "relationType": "book_written_by",
+        "fromEntityName": "The Pragmatic Programmer",
+        "toEntityName": "David Thomas",
+        "attributes": { "role": "co-author", "contribution": 50 }
+    },
+    {
+        "relationType": "book_written_by",
+        "fromEntityName": "The Pragmatic Programmer",
+        "toEntityName": "Andrew Hunt",
+        "attributes": { "role": "co-author", "contribution": 50 }
+    },
+    {
+        "relationType": "book_written_by",
+        "fromEntityName": "Wzorce Projektowe",
+        "toEntityName": "David Thomas",
+        "attributes": { "role": "translator", "contribution": 100 }
+    }
+]

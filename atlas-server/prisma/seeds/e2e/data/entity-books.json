@@ -1,0 +1,78 @@
+[
+    {
+        "name": "Clean Code",
+        "description": "A Handbook of Agile Software Craftsmanship. This book is a must-read for any developer who wants to write clean, maintainable code.",
+        "entityType": "book",
+        "attributes": {
+            "isbn": "978-0132350884",
+            "publisher": "Prentice Hall",
+            "genre": "non-fiction",
+            "language": "en",
+            "status": "available",
+            "tags": ["programming", "best-practices", "classic"],
+            "publicationDate": "2008-08-01",
+            "pageCount": 464,
+            "price": 49.99,
+            "rating": 5,
+            "isAvailable": true,
+            "isEbook": true
+        }
+    },
+    {
+        "name": "The Pragmatic Programmer",
+        "description": "Your Journey to Mastery. A guide to software development that covers topics from personal responsibility to career development.",
+        "entityType": "book",
+        "attributes": {
+            "isbn": "978-0135957059",
+            "publisher": "Addison-Wesley",
+            "genre": "non-fiction",
+            "language": "en",
+            "status": "borrowed",
+            "tags": ["programming", "career", "best-practices"],
+            "publicationDate": "2019-09-13",
+            "pageCount": 352,
+            "price": 54.99,
+            "rating": 5,
+            "isAvailable": false,
+            "isEbook": true
+        }
+    },
+    {
+        "name": "Wzorce Projektowe",
+        "description": "Elementy oprogramowania obiektowego wielokrotnego użytku. Klasyczna książka o wzorcach projektowych w języku polskim.",
+        "entityType": "book",
+        "attributes": {
+            "isbn": "978-8324631766",
+            "publisher": "Helion",
+            "genre": "science",
+            "language": "pl",
+            "status": "available",
+            "tags": ["programming", "patterns", "classic"],
+            "publicationDate": "2010-01-01",
+            "pageCount": 376,
+            "price": 79.00,
+            "rating": 4,
+            "isAvailable": true,
+            "isEbook": false
+        }
+    },
+    {
+        "name": "Test Book Without Author",
+        "description": "A book used to test orphan entity handling.",
+        "entityType": "book",
+        "attributes": {
+            "isbn": "000-0000000000",
+            "publisher": "Test Publisher",
+            "genre": "fiction",
+            "language": "en",
+            "status": "archived",
+            "tags": ["test"],
+            "publicationDate": "2024-01-01",
+            "pageCount": 100,
+            "price": 9.99,
+            "rating": 3,
+            "isAvailable": false,
+            "isEbook": false
+        }
+    }
+]

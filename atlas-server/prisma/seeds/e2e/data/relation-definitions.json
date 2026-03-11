@@ -1,0 +1,23 @@
+[
+    {
+        "relationType": "book_written_by",
+        "displayName": "Written By",
+        "fromEntityType": "book",
+        "toEntityType": "author",
+        "isDirectional": true,
+        "attributeSchema": [
+            {
+                "key": "role",
+                "displayName": "Role",
+                "typeRef": "author_role",
+                "required": true
+            },
+            {
+                "key": "contribution",
+                "displayName": "Contribution %",
+                "type": "number",
+                "validation": { "min": 0, "max": 100 }
+            }
+        ]
+    }
+]

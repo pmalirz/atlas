@@ -30,10 +30,11 @@ Atlas uses a **Generic Entity-Relation model** — all business objects are stor
 | `atlas-server/prisma/migrations/` | Migration SQL (including triggers) |
 | `atlas-server/prisma/init.sql` | PostgreSQL extensions (pgcrypto, pg_trgm, citext) |
 | `atlas-server/prisma/seed.ts` | Seed runner (dispatches by name) |
-| `atlas-server/prisma/seeds/` | Seed data files |
+| `atlas-server/prisma/seeds/shared/` | **Shared seed loader** (convention-based) |
 | `atlas-server/prisma/seeds/eap/` | EAP seed (primary seed configuration) |
+| `atlas-server/prisma/seeds/e2e/` | E2E test seed |
 | `atlas-server/prisma/seeds/default-tenant.ts` | Default tenant constants & seeding |
-| `atlas-server/src/modules/` | NestJS modules (entities, relations, definitions, ui-config, auth, tenant) |
+| `atlas-server/src/modules/` | NestJS modules |
 | `atlas-shared/` | Shared types, DTOs, Zod schemas |
 | `docs/DATA_MODEL.md` | Data model documentation |
 | `docs/UI_ENGINE_GUIDE.md` | UI engine documentation |
@@ -172,71 +173,119 @@ v_after := v_after - 'password_hash';
 
 ### 3.3 Add a New Entity Type (Dynamic — No Schema Change)
 
-This only changes seed/metadata — no Prisma schema changes needed.
+This only changes seed JSON files — no Prisma schema changes needed.
 
-1. ☐ Add `TypeDefinition` entries for any new enums in `eap-model.ts` → `seedTypeDefinitions()`
-2. ☐ Add `EntityDefinition` entry with `attributeSchema` in `eap-model.ts` → `seedEntityDefinitions()`
-3. ☐ Add `RelationDefinition` entries if the new type participates in relations → `seedRelationDefinitions()`
-4. ☐ Add seed entity instances with proper `entityType`, `name`, `description`, `attributes` → create new `seed<TypeName>()` function
-5. ☐ Wire the new seed function into `seedModel()` and pass results to `seedRelations()` if needed
-6. ☐ Add `UIEntityConfig` in `eap-ui.ts` with `browseConfig` and `detailConfig`
-7. ☐ Add menu item in `UIGlobalConfig.menuConfig` in `eap-ui.ts`
+1. ☐ Add `TypeDefinition` entries for any new enums → `data/type-definitions.json`
+2. ☐ Add `EntityDefinition` entry with `attributeSchema` → `data/entity-definitions.json`
+3. ☐ Add `RelationDefinition` entries if the new type participates in relations → `data/relation-definitions.json`
+4. ☐ Create `data/entity-<type>.json` with seed instances (auto-discovered by shared loader)
+5. ☐ Add relation instances referencing new entities by name → `data/relations.json`
+6. ☐ Add `UIEntityConfig` → `data/ui-entity-configs.json`
+7. ☐ Add menu item → `data/ui-global-config.json`
 8. ☐ Validate with Zod schemas: `TypeDefinitionDataSchema`, `AttributeDefinitionArraySchema`, `RelationDefinitionDataSchema`
 
 ### 3.4 Add a New Relation Type (Dynamic — No Schema Change)
 
-1. ☐ Add `RelationDefinition` in `eap-model.ts` → `seedRelationDefinitions()` with `relationType`, `displayName`, `fromEntityType`, `toEntityType`, `isDirectional`
+1. ☐ Add `RelationDefinition` → `data/relation-definitions.json`
 2. ☐ If the relation has attributes, add `attributeSchema` array with attribute definitions (using `typeRef` for enum types)
-3. ☐ Add relation attribute descriptor in the source entity's `EntityDefinition.attributeSchema` with `type: 'relation'` and `relType: '<relation_type>'`
-4. ☐ Optionally add an incoming relation descriptor in the target entity's `EntityDefinition.attributeSchema`
-5. ☐ Add seed relation instances in `seedRelations()` function
+3. ☐ Add relation attribute descriptor in the source entity's `entity-definitions.json` with `type: 'relation'` and `relType: '<relation_type>'`
+4. ☐ Optionally add an incoming relation descriptor in the target entity's definition
+5. ☐ Add seed relation instances by entity name → `data/relations.json`
 6. ☐ Validate with `RelationDefinitionDataSchema`
-7. ☐ Update UI configs if the relation should appear in browse/detail views
+7. ☐ Update UI configs if the relation should appear in browse/detail views → `data/ui-entity-configs.json`
 
 ### 3.5 Add/Modify a TypeDefinition (Enum)
 
-1. ☐ Add/modify in `eap-model.ts` → `seedTypeDefinitions()` array with `typeKey`, `displayName`, `baseType`, `options[]`
+1. ☐ Add/modify in `data/type-definitions.json` with `typeKey`, `displayName`, `baseType`, `options[]`
 2. ☐ Each option: `{ key, displayName, description? }`
-3. ☐ Verify all `typeRef` references in `EntityDefinition.attributeSchema` and `RelationDefinition.attributeSchema` match the `typeKey`
+3. ☐ Verify all `typeRef` references in `entity-definitions.json` and `relation-definitions.json` match the `typeKey`
 4. ☐ Validate with `TypeDefinitionDataSchema`
 
 ---
 
 ## 4. Seed File Structure
 
-### EAP Seed Architecture
+### Seed Architecture (Shared Loader + JSON Data)
 
-```
+All seeds use a **shared convention-based loader** (`seeds/shared/seed-loader.ts`). Seed data lives in `data/` directories as JSON files. The loader auto-discovers `entity-*.json` files and resolves relations by entity name.
+
+```text
 prisma/seeds/
-├── default-tenant.ts          # DEFAULT_TENANT_ID, DEFAULT_TENANT_SLUG, seedDefaultTenant()
+├── shared/
+│   ├── seed-loader.ts         # Convention-based loader (seedModel, seedUI)
+│   └── seed-types.ts          # Shared TypeScript interfaces
+├── default-tenant.ts          # DEFAULT_TENANT_ID, seedDefaultTenant()
 ├── eap.ts                     # Re-exports seed() from eap/eap-index
 ├── eap/
-│   ├── eap-index.ts           # Orchestrator: seedDefaultTenant → seedModel → seedUI
-│   ├── eap-model.ts           # ~70KB — Type/Entity/Relation definitions + entity instances
-│   └── eap-ui.ts              # ~55KB — UIEntityConfig + UIGlobalConfig
-└── e2e/                       # E2E test seeds
+│   ├── eap-index.ts           # Orchestrator (calls shared loader)
+│   └── data/                  # JSON data files
+│       ├── type-definitions.json
+│       ├── entity-definitions.json
+│       ├── relation-definitions.json
+│       ├── entity-users.json
+│       ├── entity-applications.json
+│       ├── entity-*.json      # Auto-discovered by naming pattern
+│       ├── relations.json     # Name-based entity references
+│       ├── ui-entity-configs.json
+│       └── ui-global-config.json
+├── e2e.ts                     # Re-exports seed() from e2e/e2e-index
+├── e2e/
+│   ├── e2e-index.ts           # Orchestrator (calls shared loader + seedAuth)
+│   ├── e2e-auth.ts            # E2E-specific auth user (bcrypt, stays in TS)
+│   └── data/                  # JSON data files
+│       ├── type-definitions.json
+│       ├── entity-definitions.json
+│       ├── relation-definitions.json
+│       ├── entity-books.json
+│       ├── entity-authors.json
+│       ├── relations.json
+│       ├── ui-entity-configs.json
+│       └── ui-global-config.json
+└── ...
 ```
 
-### Seed Execution Order (Critical!)
+### Shared Loader API
 
+From any seed index file:
+
+```typescript
+import { seedModel, seedUI } from '../shared/seed-loader';
+const DATA_DIR = path.join(__dirname, 'data');
+
+await seedModel(prisma, tenantId, DATA_DIR);  // types → defs → entities → relations
+await seedUI(prisma, tenantId, DATA_DIR);     // UI configs → menu
 ```
-1. seedDefaultTenant()      → Tenant upsert
-2. seedModel()              → In order:
+
+The loader auto-discovers `entity-*.json` files (sorted alphabetically for deterministic order) and resolves `relations.json` entries by entity name.
+
+### Relation JSON Format (Name-Based Resolution)
+
+Relations use entity names (not UUIDs) — the loader resolves them at runtime:
+
+```json
+{
+    "relationType": "app_owned_by",
+    "fromEntityName": "Enterprise CRM",
+    "toEntityName": "John Smith",
+    "attributes": { "ownershipRole": "functional-owner" }
+}
+```
+
+### Seed Execution Order (Handled by Shared Loader)
+
+```text
+1. seedDefaultTenant()      → Tenant upsert (called by index)
+2. seedModel(prisma, tid, dataDir):
    a. TRUNCATE audit_events, relations, entities, entity_definitions,
       relation_definitions, type_definitions CASCADE
-   b. seedTypeDefinitions()        → TypeDefinition upserts
-   c. seedEntityDefinitions()      → EntityDefinition upserts
-   d. seedRelationDefinitions()    → RelationDefinition upserts
-   e. seedUsers()                  → Entity creates (entityType: 'user')
-   f. seedTechnologies()           → Entity creates (entityType: 'technology')
-   g. seedITAssets()               → Entity creates (entityType: 'it_asset')
-   h. seedBusinessCapabilities()   → Entity creates (entityType: 'business_capability')
-   i. seedDataObjects()            → Entity creates (entityType: 'data_object')
-   j. seedInterfaces()             → Entity creates (entityType: 'interface')
-   k. seedProcesses()              → Entity creates (entityType: 'process')
-   l. seedApplications()           → Entity creates (entityType: 'application')
-   m. seedRelations(all_entities)  → Relation creates
-3. seedUI()                 → UIEntityConfig + UIGlobalConfig upserts
+   b. type-definitions.json       → TypeDefinition upserts
+   c. entity-definitions.json     → EntityDefinition upserts
+   d. relation-definitions.json   → RelationDefinition upserts
+   e. entity-*.json (auto-discovered, sorted) → Entity creates
+   f. relations.json              → Relation creates (name → ID resolution)
+3. seedUI(prisma, tid, dataDir):
+   a. ui-entity-configs.json      → UIEntityConfig creates
+   b. ui-global-config.json       → UIGlobalConfig + menu
 ```
 
 ### Seed Patterns
@@ -298,63 +347,71 @@ prisma.entity.create({
 });
 ```
 
-**RelationDefinition pattern:**
-```typescript
+**RelationDefinition pattern** (in `relation-definitions.json`):
+
+```json
 {
-  relationType: 'app_owned_by',     // unique key
-  displayName: 'Owned By',
-  fromEntityType: 'application',    // source entity type
-  toEntityType: 'user',             // target entity type
-  isDirectional: true,
-  attributeSchema: [                // optional — fields on the relationship itself
-    { key: 'ownershipRole', displayName: 'Ownership Role', typeRef: 'ownership_role', required: true },
-  ],
+  "relationType": "app_owned_by",
+  "displayName": "Owned By",
+  "fromEntityType": "application",
+  "toEntityType": "user",
+  "isDirectional": true,
+  "attributeSchema": [
+    { "key": "ownershipRole", "displayName": "Ownership Role", "typeRef": "ownership_role", "required": true }
+  ]
 }
 ```
 
-**Relation instance pattern:**
-```typescript
-prisma.relation.create({
-  data: {
-    relationType: 'app_owned_by',   // must match a RelationDefinition
-    fromEntityId: applicationId,
-    toEntityId: userId,
-    attributes: { ownershipRole: 'functional-owner' },
-    updatedBy: 'seed',
-    tenantId,
-  },
-});
+**Relation instance pattern** (in `relations.json`):
+
+```json
+{
+  "relationType": "app_owned_by",
+  "fromEntityName": "Enterprise CRM",
+  "toEntityName": "John Smith",
+  "attributes": { "ownershipRole": "functional-owner" }
+}
 ```
 
 ---
 
 ## 5. Working with Large Seed Files
 
-The EAP seed files (`eap-model.ts` ~70KB, `eap-ui.ts` ~55KB) contain deeply nested TypeScript objects with JSONB data. Use these strategies:
+Seed data lives in `.json` files under `data/` directories. This makes bulk operations trivial.
 
 ### Strategy: Use `jq-json-processing` Skill for Bulk Operations
 
-When you need to add a field to all entities of a type, or modify all typeDefinition options, consider extracting the data as JSON, using `jq` to transform it, and writing it back:
+With data in JSON files, you can use `jq` directly — no extraction step needed:
 
 ```bash
-# Example: Extract all entity definitions to JSON for bulk editing
-# (Manually paste the array into a temp file, then use jq)
+# Add a new field to ALL entity definitions
+jq '.[].attributeSchema += [{"key": "newField", "displayName": "New Field", "type": "string", "group": "basic"}]' \
+  entity-definitions.json > tmp.json && mv tmp.json entity-definitions.json
 
-# Add a new field to all entity definitions
-jq '.[].attributeSchema += [{"key": "newField", "displayName": "New Field", "type": "string", "group": "basic"}]' entities.json
-
-# Rename a typeRef in all attribute schemas
-jq '.[].attributeSchema |= map(if .typeRef == "old_key" then .typeRef = "new_key" else . end)' entities.json
+# Rename a typeRef across all attribute schemas
+jq '.[].attributeSchema |= map(if .typeRef == "old_key" then .typeRef = "new_key" else . end)' \
+  entity-definitions.json > tmp.json && mv tmp.json entity-definitions.json
 
 # Add a new option to a type definition
-jq 'map(if .typeKey == "criticality" then .options += [{"key": "extreme", "displayName": "Extreme"}] else . end)' types.json
+jq 'map(if .typeKey == "criticality" then .options += [{"key": "extreme", "displayName": "Extreme"}] else . end)' \
+  type-definitions.json > tmp.json && mv tmp.json type-definitions.json
+
+# Add a field to all entities in a JSON file
+jq '.[].attributes += {"newField": "default-value"}' \
+  entity-books.json > tmp.json && mv tmp.json entity-books.json
+
+# Validate JSON syntax
+jq empty type-definitions.json  # exit code 0 = valid
 ```
 
 ### Strategy: Incremental Seed Editing
 
-For targeted changes, edit the TypeScript files directly:
-- **Adding a new entity instance**: Add to the appropriate `seed<Type>()` function's array
-- **Adding a new attribute to an existing type**: Add the field descriptor to the `attributeSchema` array in `seedEntityDefinitions()`, then add sample values to all instances in `seed<Type>()`
+For simple changes, edit the JSON files directly:
+
+- **Adding a new entity instance**: Add an object to the appropriate `data/entity-*.json` array
+- **Adding a new attribute to an existing type**: Add the field descriptor to `entity-definitions.json`, then add sample values to all `entity-*.json` files
+- **Adding a new entity type**: Create a new `data/entity-<type>.json` file — the shared loader auto-discovers it
+- **Adding a new relation**: Add an entry to `data/relations.json` referencing entities by name
 
 ### Important: Seed Data Validation
 
@@ -371,16 +428,16 @@ If you add new fields to these schemas, update both the Zod schema AND the seed 
 
 Use this matrix to identify ALL files that need updating for each change type:
 
-| Change Type | schema.prisma | Migration SQL | Trigger SQL | eap-model.ts | eap-ui.ts | atlas-shared | DATA_MODEL.md | NestJS Modules |
-|:------------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Add column to audited table | ✅ | ✅ | ⚠️ **CRITICAL** | Maybe | Maybe | Maybe | ✅ | Maybe |
-| Add column to non-audited table | ✅ | ✅ | ❌ | Maybe | ❌ | Maybe | ✅ | Maybe |
-| Add new audited table | ✅ | ✅ | ⚠️ **CRITICAL** | Maybe | Maybe | ✅ | ✅ | ✅ |
-| Add new entity type (dynamic) | ❌ | ❌ | ❌ | ✅ | ✅ | Maybe | ❌ | ❌ |
-| Add new relation type (dynamic) | ❌ | ❌ | ❌ | ✅ | Maybe | Maybe | ❌ | ❌ |
-| Add/modify TypeDefinition (enum) | ❌ | ❌ | ❌ | ✅ | Maybe | Maybe | ❌ | ❌ |
-| Rename table or column | ✅ | ✅ | ⚠️ **CRITICAL** | ✅ | Maybe | ✅ | ✅ | ✅ |
-| Add index | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Change Type | schema.prisma | Migration SQL | Trigger SQL | data/*.json | atlas-shared | DATA_MODEL.md | NestJS Modules |
+|:------------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Add column to audited table | ✅ | ✅ | ⚠️ **CRITICAL** | Maybe | Maybe | ✅ | Maybe |
+| Add column to non-audited table | ✅ | ✅ | ❌ | Maybe | Maybe | ✅ | Maybe |
+| Add new audited table | ✅ | ✅ | ⚠️ **CRITICAL** | Maybe | ✅ | ✅ | ✅ |
+| Add new entity type (dynamic) | ❌ | ❌ | ❌ | ✅ | Maybe | ❌ | ❌ |
+| Add new relation type (dynamic) | ❌ | ❌ | ❌ | ✅ | Maybe | ❌ | ❌ |
+| Add/modify TypeDefinition (enum) | ❌ | ❌ | ❌ | ✅ | Maybe | ❌ | ❌ |
+| Rename table or column | ✅ | ✅ | ⚠️ **CRITICAL** | ✅ | ✅ | ✅ | ✅ |
+| Add index | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 **Legend**: ✅ = Always update | ⚠️ = Must update (commonly forgotten!) | Maybe = Depends on change | ❌ = No update needed
 
