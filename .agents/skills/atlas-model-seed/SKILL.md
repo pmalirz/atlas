@@ -215,30 +215,16 @@ prisma/seeds/
 │   ├── seed-loader.ts         # Convention-based loader (seedModel, seedUI)
 │   └── seed-types.ts          # Shared TypeScript interfaces
 ├── default-tenant.ts          # DEFAULT_TENANT_ID, seedDefaultTenant()
-├── eap.ts                     # Re-exports seed() from eap/eap-index
-├── eap/
-│   ├── eap-index.ts           # Orchestrator (calls shared loader)
+├── <seed-name>.ts             # Re-exports seed() from <seed-name>/<seed-name>-index (e.g. eap.ts)
+├── <seed-name>/               # Individual seed directory (e.g. eap/, e2e/)
+│   ├── <seed-name>-index.ts   # Orchestrator (calls shared loader)
+│   ├── [custom-scripts].ts    # Optional seed-specific TS logic (e.g., e2e-auth.ts for bcrypt)
 │   └── data/                  # JSON data files
 │       ├── type-definitions.json
 │       ├── entity-definitions.json
 │       ├── relation-definitions.json
-│       ├── entity-users.json
-│       ├── entity-applications.json
-│       ├── entity-*.json      # Auto-discovered by naming pattern
+│       ├── entity-*.json      # Auto-discovered by naming pattern (e.g. entity-users.json)
 │       ├── relations.json     # Name-based entity references
-│       ├── ui-entity-configs.json
-│       └── ui-global-config.json
-├── e2e.ts                     # Re-exports seed() from e2e/e2e-index
-├── e2e/
-│   ├── e2e-index.ts           # Orchestrator (calls shared loader + seedAuth)
-│   ├── e2e-auth.ts            # E2E-specific auth user (bcrypt, stays in TS)
-│   └── data/                  # JSON data files
-│       ├── type-definitions.json
-│       ├── entity-definitions.json
-│       ├── relation-definitions.json
-│       ├── entity-books.json
-│       ├── entity-authors.json
-│       ├── relations.json
 │       ├── ui-entity-configs.json
 │       └── ui-global-config.json
 └── ...
