@@ -1,0 +1,40 @@
+name: Test Coverage
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test:
+    name: Run Tests and Upload Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run Server Tests
+      working-directory: ./atlas-server
+      run: npm run test:cov
+      
+    - name: Run UI Tests
+      working-directory: ./atlas-ui
+      run: npm run test:cov
+      
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: pmalirz/atlas
+        fail_ci_if_error: false
