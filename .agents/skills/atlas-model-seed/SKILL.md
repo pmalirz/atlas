@@ -429,7 +429,7 @@ If you add new fields to these schemas, update both the Zod schema AND the seed 
 Use this matrix to identify ALL files that need updating for each change type:
 
 | Change Type | schema.prisma | Migration SQL | Trigger SQL | data/*.json | atlas-shared | DATA_MODEL.md | NestJS Modules |
-|:------------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|:------------|:-------------:|:-------------:|:-----------:|:-----------:|:------------:|:-------------:|:--------------:|
 | Add column to audited table | ✅ | ✅ | ⚠️ **CRITICAL** | Maybe | Maybe | ✅ | Maybe |
 | Add column to non-audited table | ✅ | ✅ | ❌ | Maybe | Maybe | ✅ | Maybe |
 | Add new audited table | ✅ | ✅ | ⚠️ **CRITICAL** | Maybe | ✅ | ✅ | ✅ |

@@ -1,0 +1,180 @@
+[
+    {
+        "name": "React",
+        "description": "A JavaScript library for building user interfaces",
+        "entityType": "technology",
+        "attributes": {
+            "type": "framework",
+            "recommendation": "adopt",
+            "version": "18.x",
+            "vendor": "Meta",
+            "website": "https://react.dev",
+            "license": "MIT",
+            "tags": [
+                "frontend",
+                "ui",
+                "spa"
+            ]
+        }
+    },
+    {
+        "name": "Node.js",
+        "description": "JavaScript runtime built on Chrome V8 engine",
+        "entityType": "technology",
+        "attributes": {
+            "type": "runtime",
+            "recommendation": "adopt",
+            "version": "20.x LTS",
+            "vendor": "OpenJS Foundation",
+            "website": "https://nodejs.org",
+            "license": "MIT",
+            "tags": [
+                "backend",
+                "javascript",
+                "server"
+            ]
+        }
+    },
+    {
+        "name": "PostgreSQL",
+        "description": "Powerful, open source object-relational database system",
+        "entityType": "technology",
+        "attributes": {
+            "type": "database",
+            "recommendation": "adopt",
+            "version": "16.x",
+            "vendor": "PostgreSQL Global Development Group",
+            "website": "https://www.postgresql.org",
+            "license": "PostgreSQL License",
+            "tags": [
+                "sql",
+                "relational",
+                "acid"
+            ]
+        }
+    },
+    {
+        "name": "Java",
+        "description": "High-level, class-based, object-oriented programming language",
+        "entityType": "technology",
+        "attributes": {
+            "type": "language",
+            "recommendation": "adopt",
+            "version": "21 LTS",
+            "vendor": "Oracle",
+            "website": "https://www.java.com",
+            "license": "GPL-2.0",
+            "tags": [
+                "backend",
+                "enterprise",
+                "jvm"
+            ]
+        }
+    },
+    {
+        "name": "Spring Boot",
+        "description": "Java-based framework for microservices",
+        "entityType": "technology",
+        "attributes": {
+            "type": "framework",
+            "recommendation": "adopt",
+            "version": "3.x",
+            "vendor": "VMware",
+            "website": "https://spring.io/projects/spring-boot",
+            "license": "Apache-2.0",
+            "tags": [
+                "backend",
+                "java",
+                "microservices"
+            ]
+        }
+    },
+    {
+        "name": "Oracle Database",
+        "description": "Enterprise relational database management system",
+        "entityType": "technology",
+        "attributes": {
+            "type": "database",
+            "recommendation": "hold",
+            "version": "19c",
+            "vendor": "Oracle",
+            "website": "https://www.oracle.com/database/",
+            "license": "Commercial",
+            "tags": [
+                "sql",
+                "enterprise",
+                "legacy"
+            ]
+        }
+    },
+    {
+        "name": "TypeScript",
+        "description": "Typed superset of JavaScript",
+        "entityType": "technology",
+        "attributes": {
+            "type": "language",
+            "recommendation": "adopt",
+            "version": "5.x",
+            "vendor": "Microsoft",
+            "website": "https://www.typescriptlang.org",
+            "license": "Apache-2.0",
+            "tags": [
+                "frontend",
+                "backend",
+                "typed"
+            ]
+        }
+    },
+    {
+        "name": "Docker",
+        "description": "Container platform for application deployment",
+        "entityType": "technology",
+        "attributes": {
+            "type": "platform",
+            "recommendation": "adopt",
+            "version": "24.x",
+            "vendor": "Docker Inc.",
+            "website": "https://www.docker.com",
+            "license": "Apache-2.0",
+            "tags": [
+                "containers",
+                "devops",
+                "deployment"
+            ]
+        }
+    },
+    {
+        "name": "Kubernetes",
+        "description": "Container orchestration platform",
+        "entityType": "technology",
+        "attributes": {
+            "type": "platform",
+            "recommendation": "adopt",
+            "version": "1.28",
+            "vendor": "CNCF",
+            "website": "https://kubernetes.io",
+            "license": "Apache-2.0",
+            "tags": [
+                "containers",
+                "orchestration",
+                "cloud-native"
+            ]
+        }
+    },
+    {
+        "name": "COBOL",
+        "description": "Legacy programming language for mainframes",
+        "entityType": "technology",
+        "attributes": {
+            "type": "language",
+            "recommendation": "retire",
+            "version": "COBOL-85",
+            "vendor": "Various",
+            "license": "Various",
+            "tags": [
+                "legacy",
+                "mainframe"
+            ]
+        }
+    }
+]

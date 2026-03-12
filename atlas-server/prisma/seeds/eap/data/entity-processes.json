@@ -1,0 +1,89 @@
+[
+    {
+        "name": "Order to Cash",
+        "description": "End-to-end process from order placement to payment collection",
+        "entityType": "process",
+        "attributes": {
+            "type": "core",
+            "owner": "Sales",
+            "status": "active",
+            "automationLevel": "high",
+            "criticality": "critical",
+            "rto": 4,
+            "rpo": 1,
+            "mtpd": 24,
+            "businessImpact": "major",
+            "financialImpactPerHour": 50000,
+            "regulatoryScope": [
+                "SOX"
+            ],
+            "recoveryProcedureDoc": "https://wiki/otc-recovery",
+            "testingFrequency": "semi-annually"
+        }
+    },
+    {
+        "name": "Hire to Retire",
+        "description": "Employee lifecycle from hiring to retirement",
+        "entityType": "process",
+        "attributes": {
+            "type": "support",
+            "owner": "HR",
+            "status": "active",
+            "automationLevel": "medium",
+            "criticality": "high",
+            "rto": 24,
+            "rpo": 24,
+            "mtpd": 72,
+            "businessImpact": "moderate",
+            "financialImpactPerHour": 5000,
+            "regulatoryScope": [
+                "Labor Law"
+            ],
+            "recoveryProcedureDoc": "https://wiki/hr-recovery",
+            "testingFrequency": "annually"
+        }
+    },
+    {
+        "name": "Procure to Pay",
+        "description": "Procurement process from requisition to payment",
+        "entityType": "process",
+        "attributes": {
+            "type": "core",
+            "owner": "Finance",
+            "status": "active",
+            "automationLevel": "high",
+            "criticality": "high",
+            "rto": 8,
+            "rpo": 4,
+            "mtpd": 48,
+            "businessImpact": "major",
+            "financialImpactPerHour": 20000,
+            "regulatoryScope": [
+                "SOX"
+            ],
+            "testingFrequency": "annually"
+        }
+    },
+    {
+        "name": "Incident Management",
+        "description": "IT incident detection, response, and resolution",
+        "entityType": "process",
+        "attributes": {
+            "type": "support",
+            "owner": "IT",
+            "status": "active",
+            "automationLevel": "medium",
+            "criticality": "critical",
+            "rto": 1,
+            "rpo": 0,
+            "mtpd": 4,
+            "businessImpact": "catastrophic",
+            "financialImpactPerHour": 100000,
+            "regulatoryScope": [
+                "DORA"
+            ],
+            "recoveryProcedureDoc": "https://wiki/incident-response",
+            "testingFrequency": "quarterly"
+        }
+    }
+]

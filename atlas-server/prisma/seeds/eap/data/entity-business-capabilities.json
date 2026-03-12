@@ -1,0 +1,82 @@
+[
+    {
+        "name": "Customer Relationship Management",
+        "description": "Managing customer interactions and relationships",
+        "entityType": "business_capability",
+        "attributes": {
+            "level": 1,
+            "status": "active",
+            "domain": "Sales"
+        }
+    },
+    {
+        "name": "Financial Reporting",
+        "description": "Generating financial reports and analytics",
+        "entityType": "business_capability",
+        "attributes": {
+            "level": 1,
+            "status": "active",
+            "domain": "Finance"
+        }
+    },
+    {
+        "name": "Human Resource Management",
+        "description": "Managing employee lifecycle and HR processes",
+        "entityType": "business_capability",
+        "attributes": {
+            "level": 1,
+            "status": "active",
+            "domain": "HR"
+        }
+    },
+    {
+        "name": "Inventory Management",
+        "description": "Tracking and managing inventory levels",
+        "entityType": "business_capability",
+        "attributes": {
+            "level": 1,
+            "status": "active",
+            "domain": "Operations"
+        }
+    },
+    {
+        "name": "Marketing Automation",
+        "description": "Automating marketing campaigns and communications",
+        "entityType": "business_capability",
+        "attributes": {
+            "level": 1,
+            "status": "active",
+            "domain": "Marketing"
+        }
+    },
+    {
+        "name": "Order Processing",
+        "description": "Processing and fulfilling customer orders",
+        "entityType": "business_capability",
+        "attributes": {
+            "level": 2,
+            "status": "active",
+            "domain": "Sales"
+        }
+    },
+    {
+        "name": "Customer Support",
+        "description": "Providing customer service and support",
+        "entityType": "business_capability",
+        "attributes": {
+            "level": 2,
+            "status": "active",
+            "domain": "Service"
+        }
+    },
+    {
+        "name": "Lead Management",
+        "description": "Managing sales leads and opportunities",
+        "entityType": "business_capability",
+        "attributes": {
+            "level": 2,
+            "status": "active",
+            "domain": "Sales"
+        }
+    }
+]
