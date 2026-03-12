@@ -29,11 +29,12 @@ export async function seed(prisma: PrismaClient) {
     // Seed the default tenant first
     await seedDefaultTenant(prisma);
 
-    // Seed auth user first (for login during tests)
-    await seedAuth(prisma);
-
     // Seed the entity model (types, schemas, entities, relations)
+    // This will truncate all tables including users
     await seedModel(prisma, DEFAULT_TENANT_ID, DATA_DIR);
+
+    // Seed auth user AFTER seedModel because it truncates the users table
+    await seedAuth(prisma);
 
     // Then seed the UI schemas
     await seedUI(prisma, DEFAULT_TENANT_ID, DATA_DIR);
