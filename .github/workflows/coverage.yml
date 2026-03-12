@@ -27,6 +27,11 @@ jobs:
     - name: Patch SWC for Linux
       run: npm install -D @swc/core-linux-x64-gnu --no-save
 
+    - name: Build Shared Library
+      run: npm run build -w atlas-shared
+
+    - name: Generate Prisma Client
+      run: npm run db:generate -w atlas-server
 
     - name: Run Server Tests
       working-directory: ./atlas-server
