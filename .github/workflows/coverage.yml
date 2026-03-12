@@ -25,7 +25,7 @@ jobs:
       run: npm ci || npm install
 
     - name: Patch SWC for Linux
-      run: npm install -D @swc/core-linux-x64-gnu @swc/core-linux-x64-musl --no-save
+      run: npm install -D @swc/core-linux-x64-gnu --no-save
 
 
     - name: Run Server Tests
