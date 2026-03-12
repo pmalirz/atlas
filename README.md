@@ -9,11 +9,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/pmalirz/app-atlas/actions/workflows/ci.yml">
-    <img src="https://github.com/pmalirz/app-atlas/actions/workflows/ci.yml/badge.svg" alt="CI Status" />
+  <a href="https://github.com/pmalirz/atlas/actions/workflows/ci.yml">
+    <img src="https://github.com/pmalirz/atlas/actions/workflows/ci.yml/badge.svg" alt="CI Status" />
   </a>
-  <a href="https://github.com/pmalirz/app-atlas/actions/workflows/coverage.yml">
-    <img src="https://github.com/pmalirz/app-atlas/actions/workflows/coverage.yml/badge.svg" alt="Test Coverage" />
+  <a href="https://github.com/pmalirz/atlas/actions/workflows/coverage.yml">
+    <img src="https://github.com/pmalirz/atlas/actions/workflows/coverage.yml/badge.svg" alt="Test Coverage" />
   </a>
   <a href="https://codecov.io/gh/pmalirz/atlas">
     <img src="https://codecov.io/gh/pmalirz/atlas/graph/badge.svg" alt="Codecov" />
