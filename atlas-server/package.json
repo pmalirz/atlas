@@ -25,7 +25,7 @@
     "db:seed": "ts-node prisma/seed.ts",
     "db:seed:force": "ts-node prisma/seed.ts --force",
     "db:seed:eap": "npx ts-node prisma/seed.ts --seed eap --force",
-    "db:seed: e2e": "npx ts-node prisma/seed.ts --seed e2e --force",
+    "db:seed:e2e": "npx ts-node prisma/seed.ts --seed e2e --force",
     "db:reset": "prisma migrate reset --force"
   },
   "dependencies": {
