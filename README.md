@@ -9,8 +9,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/pmalirz/app-atlas/actions/workflows/ci.yml">
-    <img src="https://github.com/pmalirz/app-atlas/actions/workflows/ci.yml/badge.svg" alt="CI Status" />
+  <a href="https://github.com/pmalirz/atlas/actions/workflows/ci.yml">
+    <img src="https://github.com/pmalirz/atlas/actions/workflows/ci.yml/badge.svg" alt="CI Status" />
+  </a>
+  <a href="https://github.com/pmalirz/atlas/actions/workflows/coverage.yml">
+    <img src="https://github.com/pmalirz/atlas/actions/workflows/coverage.yml/badge.svg" alt="Test Coverage" />
+  </a>
+  <a href="https://codecov.io/gh/pmalirz/atlas">
+    <img src="https://codecov.io/gh/pmalirz/atlas/graph/badge.svg" alt="Codecov" />
   </a>
   <img src="https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white" alt="Node.js" />
   <img src="https://img.shields.io/badge/TypeScript-5.x-3178c6?logo=typescript&logoColor=white" alt="TypeScript" />
