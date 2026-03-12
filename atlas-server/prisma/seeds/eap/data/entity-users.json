@@ -1,0 +1,106 @@
+[
+    {
+        "name": "John Smith",
+        "description": "Functional Owner - Sales",
+        "entityType": "user",
+        "attributes": {
+            "firstName": "John",
+            "lastName": "Smith",
+            "email": "john.smith@company.com",
+            "role": "Functional Owner",
+            "avatarUrl": "https://i.pravatar.cc/150?u=john",
+            "lastLogin": "2026-01-01T00:00:00.000Z"
+        }
+    },
+    {
+        "name": "Sarah Johnson",
+        "description": "Functional Owner - HR",
+        "entityType": "user",
+        "attributes": {
+            "firstName": "Sarah",
+            "lastName": "Johnson",
+            "email": "sarah.johnson@company.com",
+            "role": "Functional Owner",
+            "avatarUrl": "https://i.pravatar.cc/150?u=sarah",
+            "lastLogin": "2026-01-01T00:00:00.000Z"
+        }
+    },
+    {
+        "name": "Michael Chen",
+        "description": "Technical Owner - CRM",
+        "entityType": "user",
+        "attributes": {
+            "firstName": "Michael",
+            "lastName": "Chen",
+            "email": "michael.chen@company.com",
+            "role": "Technical Owner",
+            "avatarUrl": "https://i.pravatar.cc/150?u=michael",
+            "lastLogin": "2026-01-01T00:00:00.000Z"
+        }
+    },
+    {
+        "name": "David Brown",
+        "description": "Developer",
+        "entityType": "user",
+        "attributes": {
+            "firstName": "David",
+            "lastName": "Brown",
+            "email": "david.brown@company.com",
+            "role": "Developer",
+            "avatarUrl": "https://i.pravatar.cc/150?u=david",
+            "lastLogin": "2026-01-01T00:00:00.000Z"
+        }
+    },
+    {
+        "name": "Emily Davis",
+        "description": "Product Owner",
+        "entityType": "user",
+        "attributes": {
+            "firstName": "Emily",
+            "lastName": "Davis",
+            "email": "emily.davis@company.com",
+            "role": "Product Owner",
+            "avatarUrl": "https://i.pravatar.cc/150?u=emily",
+            "lastLogin": "2026-01-01T00:00:00.000Z"
+        }
+    },
+    {
+        "name": "Alex Turner",
+        "description": "Solution Architect",
+        "entityType": "user",
+        "attributes": {
+            "firstName": "Alex",
+            "lastName": "Turner",
+            "email": "alex.turner@company.com",
+            "role": "Architect",
+            "avatarUrl": "https://i.pravatar.cc/150?u=alex",
+            "lastLogin": "2026-01-01T00:00:00.000Z"
+        }
+    },
+    {
+        "name": "Lisa Anderson",
+        "description": "QA Lead",
+        "entityType": "user",
+        "attributes": {
+            "firstName": "Lisa",
+            "lastName": "Anderson",
+            "email": "lisa.anderson@company.com",
+            "role": "QA Lead",
+            "avatarUrl": "https://i.pravatar.cc/150?u=lisa",
+            "lastLogin": "2026-01-01T00:00:00.000Z"
+        }
+    },
+    {
+        "name": "Robert Wilson",
+        "description": "Database Administrator",
+        "entityType": "user",
+        "attributes": {
+            "firstName": "Robert",
+            "lastName": "Wilson",
+            "email": "robert.wilson@company.com",
+            "role": "DBA",
+            "avatarUrl": "https://i.pravatar.cc/150?u=robert",
+            "lastLogin": "2026-01-01T00:00:00.000Z"
+        }
+    }
+]

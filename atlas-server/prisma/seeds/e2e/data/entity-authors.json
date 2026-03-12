@@ -1,0 +1,63 @@
+[
+    {
+        "name": "Robert C. Martin",
+        "description": "Robert Cecil Martin, colloquially called \"Uncle Bob\", is an American software engineer and author. He is a co-author of the Agile Manifesto.",
+        "entityType": "author",
+        "attributes": {
+            "nationality": "American",
+            "email": "unclebob@cleancoder.com",
+            "website": "https://cleancoder.com",
+            "status": "active",
+            "specializations": ["Clean Code", "SOLID Principles", "Agile"],
+            "birthDate": "1952-12-05",
+            "booksCount": 8,
+            "rating": 5,
+            "isVerified": true
+        }
+    },
+    {
+        "name": "David Thomas",
+        "description": "David Thomas is a programmer and author, best known for co-authoring \"The Pragmatic Programmer\" with Andrew Hunt.",
+        "entityType": "author",
+        "attributes": {
+            "nationality": "British",
+            "email": "dave@pragprog.com",
+            "website": "https://pragdave.me",
+            "status": "active",
+            "specializations": ["Ruby", "Agile", "Pragmatic Programming"],
+            "birthDate": "1956-01-01",
+            "booksCount": 5,
+            "rating": 5,
+            "isVerified": true
+        }
+    },
+    {
+        "name": "Andrew Hunt",
+        "description": "Andrew Hunt is a writer and software consultant. He co-authored \"The Pragmatic Programmer\" and co-founded the Pragmatic Bookshelf.",
+        "entityType": "author",
+        "attributes": {
+            "nationality": "American",
+            "email": "andy@pragprog.com",
+            "website": "https://toolshed.com",
+            "status": "active",
+            "specializations": ["Agile", "Pragmatic Programming", "Leadership"],
+            "birthDate": "1964-01-01",
+            "booksCount": 4,
+            "rating": 5,
+            "isVerified": true
+        }
+    },
+    {
+        "name": "Test Author Inactive",
+        "description": "An inactive author used for testing status filtering.",
+        "entityType": "author",
+        "attributes": {
+            "nationality": "Unknown",
+            "status": "inactive",
+            "specializations": ["Testing"],
+            "booksCount": 0,
+            "rating": 1,
+            "isVerified": false
+        }
+    }
+]

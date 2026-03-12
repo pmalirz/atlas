@@ -1,0 +1,600 @@
+[
+    {
+        "typeKey": "application_status",
+        "displayName": "Application Status",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "active",
+                "displayName": "Active",
+                "description": "Application is live and in production use"
+            },
+            {
+                "key": "deprecated",
+                "displayName": "Deprecated",
+                "description": "Scheduled for retirement, avoid new usage"
+            },
+            {
+                "key": "in-development",
+                "displayName": "In Development",
+                "description": "Currently being built or enhanced"
+            },
+            {
+                "key": "retired",
+                "displayName": "Retired",
+                "description": "No longer in use or supported"
+            }
+        ]
+    },
+    {
+        "typeKey": "criticality",
+        "displayName": "Criticality",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "low",
+                "displayName": "Low",
+                "description": "Minimal business impact if unavailable"
+            },
+            {
+                "key": "medium",
+                "displayName": "Medium",
+                "description": "Moderate business impact"
+            },
+            {
+                "key": "high",
+                "displayName": "High",
+                "description": "Significant business impact"
+            },
+            {
+                "key": "critical",
+                "displayName": "Critical",
+                "description": "Severe business impact, mission-critical"
+            }
+        ]
+    },
+    {
+        "typeKey": "cia_rating",
+        "displayName": "CIA Rating",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "low",
+                "displayName": "Low"
+            },
+            {
+                "key": "medium",
+                "displayName": "Medium"
+            },
+            {
+                "key": "high",
+                "displayName": "High"
+            },
+            {
+                "key": "critical",
+                "displayName": "Critical"
+            }
+        ]
+    },
+    {
+        "typeKey": "impact_severity",
+        "displayName": "Impact Severity",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "none",
+                "displayName": "None",
+                "description": "No impact on business operations"
+            },
+            {
+                "key": "minor",
+                "displayName": "Minor",
+                "description": "Slight inconvenience, easy workaround exists"
+            },
+            {
+                "key": "moderate",
+                "displayName": "Moderate",
+                "description": "Noticeable impact requiring attention"
+            },
+            {
+                "key": "major",
+                "displayName": "Major",
+                "description": "Significant disruption to operations"
+            },
+            {
+                "key": "catastrophic",
+                "displayName": "Catastrophic",
+                "description": "Complete failure, severe financial/legal impact"
+            }
+        ]
+    },
+    {
+        "typeKey": "testing_frequency",
+        "displayName": "Testing Frequency",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "monthly",
+                "displayName": "Monthly"
+            },
+            {
+                "key": "quarterly",
+                "displayName": "Quarterly"
+            },
+            {
+                "key": "semi-annually",
+                "displayName": "Semi-Annually"
+            },
+            {
+                "key": "annually",
+                "displayName": "Annually"
+            },
+            {
+                "key": "not-tested",
+                "displayName": "Not Tested"
+            }
+        ]
+    },
+    {
+        "typeKey": "time_classification",
+        "displayName": "TIME Classification",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "tolerate",
+                "displayName": "Tolerate",
+                "description": "Accept as-is, minimal investment"
+            },
+            {
+                "key": "invest",
+                "displayName": "Invest",
+                "description": "Strategic value, invest in enhancement"
+            },
+            {
+                "key": "migrate",
+                "displayName": "Migrate",
+                "description": "Replace with modern alternative"
+            },
+            {
+                "key": "eliminate",
+                "displayName": "Eliminate",
+                "description": "Decommission, no longer needed"
+            }
+        ]
+    },
+    {
+        "typeKey": "ownership_role",
+        "displayName": "Ownership Role",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "functional-owner",
+                "displayName": "Functional Owner",
+                "description": "Business owner responsible for requirements"
+            },
+            {
+                "key": "technical-owner",
+                "displayName": "Technical Owner",
+                "description": "IT owner responsible for technical decisions"
+            },
+            {
+                "key": "functional-delegate",
+                "displayName": "Functional Delegate",
+                "description": "Delegated business responsibility"
+            },
+            {
+                "key": "technical-delegate",
+                "displayName": "Technical Delegate",
+                "description": "Delegated technical responsibility"
+            }
+        ]
+    },
+    {
+        "typeKey": "dependency_type",
+        "displayName": "Dependency Type",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "runs-on",
+                "displayName": "Runs On",
+                "description": "Application runs on this infrastructure"
+            },
+            {
+                "key": "depends-on",
+                "displayName": "Depends On",
+                "description": "Runtime dependency"
+            },
+            {
+                "key": "hosting",
+                "displayName": "Hosting",
+                "description": "Provides hosting services"
+            },
+            {
+                "key": "network",
+                "displayName": "Network",
+                "description": "Network connectivity dependency"
+            }
+        ]
+    },
+    {
+        "typeKey": "asset_type",
+        "displayName": "Asset Type",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "server",
+                "displayName": "Server"
+            },
+            {
+                "key": "database",
+                "displayName": "Database"
+            },
+            {
+                "key": "storage",
+                "displayName": "Storage"
+            },
+            {
+                "key": "network",
+                "displayName": "Network"
+            },
+            {
+                "key": "cloud-service",
+                "displayName": "Cloud Service"
+            },
+            {
+                "key": "web-server",
+                "displayName": "Web Server"
+            },
+            {
+                "key": "middleware",
+                "displayName": "Middleware"
+            },
+            {
+                "key": "runtime",
+                "displayName": "Runtime"
+            }
+        ]
+    },
+    {
+        "typeKey": "asset_status",
+        "displayName": "Asset Status",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "online",
+                "displayName": "Online",
+                "description": "Operational and available"
+            },
+            {
+                "key": "offline",
+                "displayName": "Offline",
+                "description": "Not available"
+            },
+            {
+                "key": "maintenance",
+                "displayName": "Maintenance",
+                "description": "Undergoing planned maintenance"
+            }
+        ]
+    },
+    {
+        "typeKey": "hosting_type",
+        "displayName": "Hosting Type",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "on-premise",
+                "displayName": "On-Premise",
+                "description": "Hosted in own data center"
+            },
+            {
+                "key": "public-cloud",
+                "displayName": "Public Cloud",
+                "description": "Hosted on public cloud (AWS, Azure, GCP)"
+            },
+            {
+                "key": "private-cloud",
+                "displayName": "Private Cloud",
+                "description": "Hosted on private cloud infrastructure"
+            },
+            {
+                "key": "hybrid",
+                "displayName": "Hybrid",
+                "description": "Mix of on-premise and cloud"
+            },
+            {
+                "key": "co-location",
+                "displayName": "Co-location",
+                "description": "Third-party data center"
+            }
+        ]
+    },
+    {
+        "typeKey": "asset_environment",
+        "displayName": "Environment",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "production",
+                "displayName": "Production",
+                "description": "Live production environment"
+            },
+            {
+                "key": "staging",
+                "displayName": "Staging",
+                "description": "Pre-production testing"
+            },
+            {
+                "key": "development",
+                "displayName": "Development",
+                "description": "Development environment"
+            },
+            {
+                "key": "disaster-recovery",
+                "displayName": "Disaster Recovery",
+                "description": "DR failover environment"
+            },
+            {
+                "key": "test",
+                "displayName": "Test",
+                "description": "Testing environment"
+            }
+        ]
+    },
+    {
+        "typeKey": "technology_type",
+        "displayName": "Technology Type",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "language",
+                "displayName": "Language"
+            },
+            {
+                "key": "framework",
+                "displayName": "Framework"
+            },
+            {
+                "key": "library",
+                "displayName": "Library"
+            },
+            {
+                "key": "tool",
+                "displayName": "Tool"
+            },
+            {
+                "key": "platform",
+                "displayName": "Platform"
+            },
+            {
+                "key": "database",
+                "displayName": "Database"
+            },
+            {
+                "key": "runtime",
+                "displayName": "Runtime"
+            }
+        ]
+    },
+    {
+        "typeKey": "technology_recommendation",
+        "displayName": "Recommendation",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "adopt",
+                "displayName": "Adopt",
+                "description": "Ready for production use, standard choice"
+            },
+            {
+                "key": "trial",
+                "displayName": "Trial",
+                "description": "Worth pursuing in limited pilot"
+            },
+            {
+                "key": "assess",
+                "displayName": "Assess",
+                "description": "Worth exploring with research goals"
+            },
+            {
+                "key": "hold",
+                "displayName": "Hold",
+                "description": "Do not use for new projects"
+            }
+        ]
+    },
+    {
+        "typeKey": "interface_type",
+        "displayName": "Interface Type",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "api",
+                "displayName": "API",
+                "description": "REST, GraphQL, or other API"
+            },
+            {
+                "key": "file-transfer",
+                "displayName": "File Transfer",
+                "description": "SFTP, FTP, or file-based"
+            },
+            {
+                "key": "database",
+                "displayName": "Database",
+                "description": "Direct database connection"
+            },
+            {
+                "key": "message-queue",
+                "displayName": "Message Queue",
+                "description": "Kafka, RabbitMQ, etc."
+            },
+            {
+                "key": "webhook",
+                "displayName": "Webhook",
+                "description": "Event-driven HTTP callbacks"
+            }
+        ]
+    },
+    {
+        "typeKey": "interface_direction",
+        "displayName": "Direction",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "sends",
+                "displayName": "Sends",
+                "description": "Data flows outward"
+            },
+            {
+                "key": "receives",
+                "displayName": "Receives",
+                "description": "Data flows inward"
+            },
+            {
+                "key": "bidirectional",
+                "displayName": "Bidirectional",
+                "description": "Data flows both ways"
+            }
+        ]
+    },
+    {
+        "typeKey": "sla_level",
+        "displayName": "SLA Level",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "gold",
+                "displayName": "Gold",
+                "description": "Highest priority, fastest response"
+            },
+            {
+                "key": "silver",
+                "displayName": "Silver",
+                "description": "Standard priority"
+            },
+            {
+                "key": "bronze",
+                "displayName": "Bronze",
+                "description": "Best effort"
+            }
+        ]
+    },
+    {
+        "typeKey": "data_object_category",
+        "displayName": "Category",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "master-data",
+                "displayName": "Master Data",
+                "description": "Core business entities"
+            },
+            {
+                "key": "transactional",
+                "displayName": "Transactional",
+                "description": "Business events and transactions"
+            },
+            {
+                "key": "reference",
+                "displayName": "Reference",
+                "description": "Lookup data and codes"
+            },
+            {
+                "key": "analytical",
+                "displayName": "Analytical",
+                "description": "Derived data for analytics"
+            },
+            {
+                "key": "operational",
+                "displayName": "Operational",
+                "description": "System/process data"
+            }
+        ]
+    },
+    {
+        "typeKey": "data_object_classification",
+        "displayName": "Classification",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "public",
+                "displayName": "Public",
+                "description": "No restrictions on access"
+            },
+            {
+                "key": "internal",
+                "displayName": "Internal",
+                "description": "Internal use only"
+            },
+            {
+                "key": "confidential",
+                "displayName": "Confidential",
+                "description": "Restricted access, need-to-know"
+            },
+            {
+                "key": "restricted",
+                "displayName": "Restricted",
+                "description": "Highly sensitive, strict controls"
+            }
+        ]
+    },
+    {
+        "typeKey": "process_type",
+        "displayName": "Process Type",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "value-chain",
+                "displayName": "Value Chain",
+                "description": "Core business value delivery"
+            },
+            {
+                "key": "business-process",
+                "displayName": "Business Process",
+                "description": "Standard business operation"
+            },
+            {
+                "key": "management",
+                "displayName": "Management",
+                "description": "Governance and oversight"
+            },
+            {
+                "key": "support",
+                "displayName": "Support",
+                "description": "Supporting function"
+            },
+            {
+                "key": "automated-workflow",
+                "displayName": "Automated Workflow",
+                "description": "System-driven automation"
+            },
+            {
+                "key": "case-management",
+                "displayName": "Case Management",
+                "description": "Case-based processing"
+            }
+        ]
+    },
+    {
+        "typeKey": "entity_status",
+        "displayName": "Status",
+        "baseType": "enum",
+        "options": [
+            {
+                "key": "active",
+                "displayName": "Active",
+                "description": "Currently in use"
+            },
+            {
+                "key": "planned",
+                "displayName": "Planned",
+                "description": "Scheduled for future implementation"
+            },
+            {
+                "key": "deprecated",
+                "displayName": "Deprecated",
+                "description": "Being phased out"
+            }
+        ]
+    }
+]

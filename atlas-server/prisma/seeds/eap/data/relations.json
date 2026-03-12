@@ -1,0 +1,284 @@
+[
+    {
+        "relationType": "app_owned_by",
+        "fromEntityName": "Enterprise CRM",
+        "toEntityName": "John Smith",
+        "attributes": {
+            "ownershipRole": "functional-owner"
+        }
+    },
+    {
+        "relationType": "app_owned_by",
+        "fromEntityName": "HR Management Suite",
+        "toEntityName": "Sarah Johnson",
+        "attributes": {
+            "ownershipRole": "functional-owner"
+        }
+    },
+    {
+        "relationType": "app_owned_by",
+        "fromEntityName": "Financial Reporting",
+        "toEntityName": "Michael Chen",
+        "attributes": {
+            "ownershipRole": "functional-owner"
+        }
+    },
+    {
+        "relationType": "app_owned_by",
+        "fromEntityName": "Legacy Inventory System",
+        "toEntityName": "David Brown",
+        "attributes": {
+            "ownershipRole": "technical-owner"
+        }
+    },
+    {
+        "relationType": "app_owned_by",
+        "fromEntityName": "Customer Portal",
+        "toEntityName": "Emily Davis",
+        "attributes": {
+            "ownershipRole": "functional-owner"
+        }
+    },
+    {
+        "relationType": "app_owned_by",
+        "fromEntityName": "Next-Gen Analytics",
+        "toEntityName": "Alex Turner",
+        "attributes": {
+            "ownershipRole": "technical-owner"
+        }
+    },
+    {
+        "relationType": "app_owned_by",
+        "fromEntityName": "Email Marketing Platform",
+        "toEntityName": "Lisa Anderson",
+        "attributes": {
+            "ownershipRole": "functional-owner"
+        }
+    },
+    {
+        "relationType": "app_owned_by",
+        "fromEntityName": "Document Management",
+        "toEntityName": "Robert Wilson",
+        "attributes": {
+            "ownershipRole": "technical-owner"
+        }
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "Enterprise CRM",
+        "toEntityName": "React"
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "Enterprise CRM",
+        "toEntityName": "Node.js"
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "Enterprise CRM",
+        "toEntityName": "PostgreSQL"
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "HR Management Suite",
+        "toEntityName": "Java"
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "HR Management Suite",
+        "toEntityName": "Oracle Database"
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "Financial Reporting",
+        "toEntityName": "Java"
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "Financial Reporting",
+        "toEntityName": "Spring Boot"
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "Legacy Inventory System",
+        "toEntityName": "COBOL"
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "Customer Portal",
+        "toEntityName": "React"
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "Customer Portal",
+        "toEntityName": "Node.js"
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "Customer Portal",
+        "toEntityName": "Docker"
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "Next-Gen Analytics",
+        "toEntityName": "TypeScript"
+    },
+    {
+        "relationType": "app_uses_technology",
+        "fromEntityName": "Next-Gen Analytics",
+        "toEntityName": "Kubernetes"
+    },
+    {
+        "relationType": "app_uses_asset",
+        "fromEntityName": "Enterprise CRM",
+        "toEntityName": "PROD-DB-01",
+        "attributes": {
+            "environment": "production"
+        }
+    },
+    {
+        "relationType": "app_uses_asset",
+        "fromEntityName": "Enterprise CRM",
+        "toEntityName": "APP-SERVER-01",
+        "attributes": {
+            "environment": "production"
+        }
+    },
+    {
+        "relationType": "app_uses_asset",
+        "fromEntityName": "HR Management Suite",
+        "toEntityName": "PROD-DB-02",
+        "attributes": {
+            "environment": "production"
+        }
+    },
+    {
+        "relationType": "app_uses_asset",
+        "fromEntityName": "Legacy Inventory System",
+        "toEntityName": "LEGACY-MAINFRAME",
+        "attributes": {
+            "environment": "production"
+        }
+    },
+    {
+        "relationType": "app_uses_asset",
+        "fromEntityName": "Document Management",
+        "toEntityName": "AZURE-STORAGE",
+        "attributes": {
+            "environment": "production"
+        }
+    },
+    {
+        "relationType": "app_uses_asset",
+        "fromEntityName": "Next-Gen Analytics",
+        "toEntityName": "K8S-CLUSTER",
+        "attributes": {
+            "environment": "production"
+        }
+    },
+    {
+        "relationType": "app_manages_data",
+        "fromEntityName": "Enterprise CRM",
+        "toEntityName": "Customer Data"
+    },
+    {
+        "relationType": "app_manages_data",
+        "fromEntityName": "Enterprise CRM",
+        "toEntityName": "Sales Transactions"
+    },
+    {
+        "relationType": "app_manages_data",
+        "fromEntityName": "HR Management Suite",
+        "toEntityName": "Employee Records"
+    },
+    {
+        "relationType": "app_manages_data",
+        "fromEntityName": "HR Management Suite",
+        "toEntityName": "Payroll Data"
+    },
+    {
+        "relationType": "app_manages_data",
+        "fromEntityName": "Financial Reporting",
+        "toEntityName": "Financial Statements"
+    },
+    {
+        "relationType": "app_manages_data",
+        "fromEntityName": "Legacy Inventory System",
+        "toEntityName": "Inventory Records"
+    },
+    {
+        "relationType": "app_supports_capability",
+        "fromEntityName": "Enterprise CRM",
+        "toEntityName": "Customer Relationship Management"
+    },
+    {
+        "relationType": "app_supports_capability",
+        "fromEntityName": "Enterprise CRM",
+        "toEntityName": "Lead Management"
+    },
+    {
+        "relationType": "app_supports_capability",
+        "fromEntityName": "HR Management Suite",
+        "toEntityName": "Human Resource Management"
+    },
+    {
+        "relationType": "app_supports_capability",
+        "fromEntityName": "Financial Reporting",
+        "toEntityName": "Financial Reporting"
+    },
+    {
+        "relationType": "app_supports_capability",
+        "fromEntityName": "Legacy Inventory System",
+        "toEntityName": "Inventory Management"
+    },
+    {
+        "relationType": "app_supports_capability",
+        "fromEntityName": "Email Marketing Platform",
+        "toEntityName": "Marketing Automation"
+    },
+    {
+        "relationType": "app_supports_capability",
+        "fromEntityName": "Customer Portal",
+        "toEntityName": "Customer Support"
+    },
+    {
+        "relationType": "process_uses_app",
+        "fromEntityName": "Order to Cash",
+        "toEntityName": "Enterprise CRM"
+    },
+    {
+        "relationType": "process_uses_app",
+        "fromEntityName": "Hire to Retire",
+        "toEntityName": "HR Management Suite"
+    },
+    {
+        "relationType": "process_uses_app",
+        "fromEntityName": "Procure to Pay",
+        "toEntityName": "Financial Reporting"
+    },
+    {
+        "relationType": "process_uses_app",
+        "fromEntityName": "Incident Management",
+        "toEntityName": "Document Management"
+    },
+    {
+        "relationType": "interface_owned_by",
+        "fromEntityName": "CRM-ERP Integration",
+        "toEntityName": "Enterprise CRM"
+    },
+    {
+        "relationType": "interface_owned_by",
+        "fromEntityName": "HR-Payroll Feed",
+        "toEntityName": "HR Management Suite"
+    },
+    {
+        "relationType": "interface_owned_by",
+        "fromEntityName": "Customer Portal API",
+        "toEntityName": "Customer Portal"
+    },
+    {
+        "relationType": "interface_owned_by",
+        "fromEntityName": "Legacy Mainframe Bridge",
+        "toEntityName": "Legacy Inventory System"
+    }
+]

@@ -1,0 +1,6 @@
+{
+    "items": [
+        { "entityType": "book", "displayName": "Books", "icon": "book", "visible": true },
+        { "entityType": "author", "displayName": "Authors", "icon": "user", "visible": true }
+    ]
+}

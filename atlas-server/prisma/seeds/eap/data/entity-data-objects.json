@@ -1,0 +1,159 @@
+[
+    {
+        "name": "Customer Data",
+        "description": "Customer personal and contact information",
+        "entityType": "data_object",
+        "attributes": {
+            "category": "master-data",
+            "classification": "confidential",
+            "owner": "Sales",
+            "retentionPeriodDays": 2555,
+            "attributes": [
+                "customer_id",
+                "first_name",
+                "last_name",
+                "email",
+                "phone",
+                "address"
+            ],
+            "isPersonalData": true,
+            "regulatoryScope": [
+                "GDPR",
+                "CCPA"
+            ],
+            "dataResidency": "EU",
+            "confidentiality": "high",
+            "integrity": "high",
+            "availability": "medium",
+            "authenticity": "high"
+        }
+    },
+    {
+        "name": "Sales Transactions",
+        "description": "Sales order and transaction records",
+        "entityType": "data_object",
+        "attributes": {
+            "category": "transactional",
+            "classification": "internal",
+            "owner": "Sales",
+            "retentionPeriodDays": 3650,
+            "attributes": [
+                "order_id",
+                "customer_id",
+                "amount",
+                "date",
+                "status"
+            ],
+            "isPersonalData": false,
+            "confidentiality": "medium",
+            "integrity": "high",
+            "availability": "medium",
+            "authenticity": "high"
+        }
+    },
+    {
+        "name": "Employee Records",
+        "description": "Employee personal and employment data",
+        "entityType": "data_object",
+        "attributes": {
+            "category": "master-data",
+            "classification": "restricted",
+            "owner": "HR",
+            "retentionPeriodDays": 18250,
+            "attributes": [
+                "employee_id",
+                "ssn",
+                "salary",
+                "bank_details",
+                "performance_reviews"
+            ],
+            "isPersonalData": true,
+            "regulatoryScope": [
+                "GDPR",
+                "Labor Law"
+            ],
+            "dataResidency": "EU",
+            "confidentiality": "critical",
+            "integrity": "critical",
+            "availability": "medium",
+            "authenticity": "critical"
+        }
+    },
+    {
+        "name": "Payroll Data",
+        "description": "Employee salary and compensation information",
+        "entityType": "data_object",
+        "attributes": {
+            "category": "transactional",
+            "classification": "restricted",
+            "owner": "HR",
+            "retentionPeriodDays": 2555,
+            "attributes": [
+                "payroll_id",
+                "employee_id",
+                "amount",
+                "tax_deductions",
+                "pay_date"
+            ],
+            "isPersonalData": true,
+            "regulatoryScope": [
+                "GDPR",
+                "Tax Law"
+            ],
+            "dataResidency": "EU",
+            "confidentiality": "critical",
+            "integrity": "critical",
+            "availability": "critical",
+            "authenticity": "critical"
+        }
+    },
+    {
+        "name": "Financial Statements",
+        "description": "Company financial reports and statements",
+        "entityType": "data_object",
+        "attributes": {
+            "category": "reference",
+            "classification": "confidential",
+            "owner": "Finance",
+            "retentionPeriodDays": 36500,
+            "attributes": [
+                "report_id",
+                "period",
+                "revenue",
+                "expenses",
+                "profit"
+            ],
+            "isPersonalData": false,
+            "regulatoryScope": [
+                "SOX",
+                "IFRS"
+            ],
+            "confidentiality": "high",
+            "integrity": "critical",
+            "availability": "high",
+            "authenticity": "critical"
+        }
+    },
+    {
+        "name": "Inventory Records",
+        "description": "Product inventory levels and movements",
+        "entityType": "data_object",
+        "attributes": {
+            "category": "transactional",
+            "classification": "internal",
+            "owner": "Operations",
+            "retentionPeriodDays": 1825,
+            "attributes": [
+                "sku",
+                "quantity",
+                "location",
+                "movement_date"
+            ],
+            "isPersonalData": false,
+            "confidentiality": "internal",
+            "integrity": "high",
+            "availability": "medium",
+            "authenticity": "medium"
+        }
+    }
+]

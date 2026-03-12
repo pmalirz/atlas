@@ -1,0 +1,103 @@
+[
+    {
+        "relationType": "app_uses_technology",
+        "displayName": "Uses Technology",
+        "fromEntityType": "application",
+        "toEntityType": "technology",
+        "isDirectional": true
+    },
+    {
+        "relationType": "app_uses_asset",
+        "displayName": "Uses Asset",
+        "fromEntityType": "application",
+        "toEntityType": "it_asset",
+        "isDirectional": true
+    },
+    {
+        "relationType": "app_manages_data",
+        "displayName": "Manages Data",
+        "fromEntityType": "application",
+        "toEntityType": "data_object",
+        "isDirectional": true
+    },
+    {
+        "relationType": "app_supports_capability",
+        "displayName": "Supports Capability",
+        "fromEntityType": "application",
+        "toEntityType": "business_capability",
+        "isDirectional": true
+    },
+    {
+        "relationType": "app_owned_by",
+        "displayName": "Owned By",
+        "fromEntityType": "application",
+        "toEntityType": "user",
+        "isDirectional": true,
+        "attributeSchema": [
+            {
+                "key": "ownershipRole",
+                "displayName": "Ownership Role",
+                "typeRef": "ownership_role",
+                "required": true
+            }
+        ]
+    },
+    {
+        "relationType": "asset_depends_on_asset",
+        "displayName": "Depends On",
+        "fromEntityType": "it_asset",
+        "toEntityType": "it_asset",
+        "isDirectional": true,
+        "attributeSchema": [
+            {
+                "key": "dependencyType",
+                "displayName": "Dependency Type",
+                "typeRef": "dependency_type",
+                "required": true
+            }
+        ]
+    },
+    {
+        "relationType": "interface_owned_by",
+        "displayName": "Owned By",
+        "fromEntityType": "interface",
+        "toEntityType": "application",
+        "isDirectional": true
+    },
+    {
+        "relationType": "interface_connects",
+        "displayName": "Connects To",
+        "fromEntityType": "interface",
+        "toEntityType": "application",
+        "isDirectional": true,
+        "attributeSchema": [
+            {
+                "key": "direction",
+                "displayName": "Direction",
+                "typeRef": "interface_direction",
+                "required": true
+            }
+        ]
+    },
+    {
+        "relationType": "interface_transfers_data",
+        "displayName": "Transfers Data",
+        "fromEntityType": "interface",
+        "toEntityType": "data_object",
+        "isDirectional": true
+    },
+    {
+        "relationType": "process_uses_app",
+        "displayName": "Uses Application",
+        "fromEntityType": "process",
+        "toEntityType": "application",
+        "isDirectional": true
+    },
+    {
+        "relationType": "capability_parent_of",
+        "displayName": "Parent Of",
+        "fromEntityType": "business_capability",
+        "toEntityType": "business_capability",
+        "isDirectional": true
+    }
+]

@@ -1,0 +1,58 @@
+[
+    {
+        "typeKey": "book_genre",
+        "displayName": "Book Genre",
+        "baseType": "enum",
+        "options": [
+            { "key": "fiction", "displayName": "Fiction", "description": "Fictional works" },
+            { "key": "non-fiction", "displayName": "Non-Fiction", "description": "Factual works" },
+            { "key": "science", "displayName": "Science", "description": "Scientific literature" },
+            { "key": "history", "displayName": "History", "description": "Historical works" },
+            { "key": "biography", "displayName": "Biography", "description": "Life stories" }
+        ]
+    },
+    {
+        "typeKey": "book_language",
+        "displayName": "Language",
+        "baseType": "enum",
+        "options": [
+            { "key": "en", "displayName": "English" },
+            { "key": "pl", "displayName": "Polish" },
+            { "key": "de", "displayName": "German" },
+            { "key": "fr", "displayName": "French" },
+            { "key": "es", "displayName": "Spanish" }
+        ]
+    },
+    {
+        "typeKey": "book_status",
+        "displayName": "Book Status",
+        "baseType": "enum",
+        "options": [
+            { "key": "available", "displayName": "Available", "description": "Available for borrowing" },
+            { "key": "borrowed", "displayName": "Borrowed", "description": "Currently borrowed" },
+            { "key": "reserved", "displayName": "Reserved", "description": "Reserved by someone" },
+            { "key": "archived", "displayName": "Archived", "description": "No longer in circulation" }
+        ]
+    },
+    {
+        "typeKey": "author_role",
+        "displayName": "Author Role",
+        "baseType": "enum",
+        "options": [
+            { "key": "main-author", "displayName": "Main Author", "description": "Primary author" },
+            { "key": "co-author", "displayName": "Co-Author", "description": "Contributing author" },
+            { "key": "editor", "displayName": "Editor", "description": "Editor of the work" },
+            { "key": "translator", "displayName": "Translator", "description": "Translator of the work" }
+        ]
+    },
+    {
+        "typeKey": "author_status",
+        "displayName": "Author Status",
+        "baseType": "enum",
+        "options": [
+            { "key": "active", "displayName": "Active", "description": "Currently writing" },
+            { "key": "inactive", "displayName": "Inactive", "description": "No longer writing" },
+            { "key": "deceased", "displayName": "Deceased", "description": "No longer alive" }
+        ]
+    }
+]

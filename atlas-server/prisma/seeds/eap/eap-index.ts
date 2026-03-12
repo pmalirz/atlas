@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import { seedModel } from './eap-model';
-import { seedUI } from './eap-ui';
+import * as path from 'path';
 import { seedDefaultTenant, DEFAULT_TENANT_ID } from '../default-tenant';
+import { seedModel, seedUI } from '../shared/seed-loader';
 
 /**
  * Enterprise Application Portfolio (EAP) Seed
@@ -17,11 +17,14 @@ export async function seed(prisma: PrismaClient) {
     // Seed the default tenant first
     await seedDefaultTenant(prisma);
 
+    // Get the path to the EAP seed data directory
+    const dataDir = path.join(__dirname, 'data');
+
     // Seed the entity model (types, schemas, entities, relations)
-    await seedModel(prisma, DEFAULT_TENANT_ID);
+    await seedModel(prisma, DEFAULT_TENANT_ID, dataDir);
 
     // Then seed the UI schemas
-    await seedUI(prisma, DEFAULT_TENANT_ID);
+    await seedUI(prisma, DEFAULT_TENANT_ID, dataDir);
 
     console.log('\n✅ Enterprise Application Portfolio seed completed!');
 }

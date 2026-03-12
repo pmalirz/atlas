@@ -1,0 +1,46 @@
+{
+    "items": [
+        {
+            "entityType": "application",
+            "displayName": "Applications",
+            "icon": "app-window",
+            "visible": true
+        },
+        {
+            "entityType": "it_asset",
+            "displayName": "IT Assets",
+            "icon": "server",
+            "visible": true
+        },
+        {
+            "entityType": "interface",
+            "displayName": "Interfaces",
+            "icon": "plug",
+            "visible": true
+        },
+        {
+            "entityType": "data_object",
+            "displayName": "Data Objects",
+            "icon": "database",
+            "visible": true
+        },
+        {
+            "entityType": "technology",
+            "displayName": "Technologies",
+            "icon": "cpu",
+            "visible": true
+        },
+        {
+            "entityType": "process",
+            "displayName": "Processes",
+            "icon": "workflow",
+            "visible": true
+        },
+        {
+            "entityType": "user",
+            "displayName": "Users",
+            "icon": "users",
+            "visible": true
+        }
+    ]
+}

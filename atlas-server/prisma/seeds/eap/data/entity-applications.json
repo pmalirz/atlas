@@ -1,0 +1,190 @@
+[
+    {
+        "name": "Enterprise CRM",
+        "description": "Customer relationship management system for sales and support teams",
+        "entityType": "application",
+        "attributes": {
+            "status": "active",
+            "criticality": "critical",
+            "owner": "John Smith",
+            "department": "Sales",
+            "version": "3.2.1",
+            "confidentiality": "high",
+            "integrity": "high",
+            "availability": "medium",
+            "authenticity": "high",
+            "rtoRequired": 4,
+            "rpoRequired": 1,
+            "mtpdRequired": 24,
+            "rtoCapability": 2,
+            "rpoCapability": 1,
+            "mtpdCapability": 48,
+            "businessImpact": "catastrophic",
+            "financialImpactPerHour": 75000,
+            "testingFrequency": "quarterly",
+            "lastTestedDate": "2024-10-15",
+            "recoveryProcedureDoc": "https://wiki.internal/dr/crm",
+            "isOutsourced": false,
+            "securityContact": "security-team@company.com",
+            "sbomAvailable": true,
+            "patchingFrequency": "monthly",
+            "regulatoryScope": [
+                "DORA",
+                "GDPR"
+            ],
+            "dataResidency": "EU"
+        }
+    },
+    {
+        "name": "HR Management Suite",
+        "description": "Human resources management including payroll, benefits, and employee records",
+        "entityType": "application",
+        "attributes": {
+            "status": "active",
+            "criticality": "high",
+            "owner": "Sarah Johnson",
+            "department": "Human Resources",
+            "version": "2.8.0",
+            "confidentiality": "critical",
+            "integrity": "high",
+            "availability": "medium",
+            "authenticity": "critical",
+            "rtoRequired": 8,
+            "rpoRequired": 4,
+            "mtpdRequired": 48,
+            "businessImpact": "major",
+            "financialImpactPerHour": 25000,
+            "testingFrequency": "semi-annually",
+            "thirdPartyProvider": "SAP SuccessFactors",
+            "isOutsourced": true,
+            "exitStrategy": "Migration to Workday within 12 months if needed",
+            "regulatoryScope": [
+                "DORA",
+                "GDPR",
+                "Labor Law"
+            ],
+            "dataResidency": "EU"
+        }
+    },
+    {
+        "name": "Financial Reporting",
+        "description": "Financial reporting and analytics platform for executive dashboards",
+        "entityType": "application",
+        "attributes": {
+            "status": "active",
+            "criticality": "critical",
+            "owner": "Michael Chen",
+            "department": "Finance",
+            "version": "4.1.0",
+            "confidentiality": "critical",
+            "integrity": "critical",
+            "availability": "high",
+            "authenticity": "critical",
+            "rtoRequired": 2,
+            "rpoRequired": 0.5,
+            "mtpdRequired": 8,
+            "businessImpact": "catastrophic",
+            "financialImpactPerHour": 150000,
+            "testingFrequency": "monthly",
+            "isOutsourced": false,
+            "regulatoryScope": [
+                "DORA",
+                "SOX",
+                "IFRS"
+            ],
+            "dataResidency": "EU",
+            "complianceNotes": "Subject to annual SOX audit"
+        }
+    },
+    {
+        "name": "Legacy Inventory System",
+        "description": "Warehouse inventory tracking system - scheduled for replacement",
+        "entityType": "application",
+        "attributes": {
+            "status": "deprecated",
+            "criticality": "medium",
+            "owner": "David Brown",
+            "department": "Operations",
+            "version": "1.5.3",
+            "confidentiality": "medium",
+            "integrity": "high",
+            "availability": "medium",
+            "authenticity": "medium",
+            "businessImpact": "moderate",
+            "testingFrequency": "not-tested",
+            "isOutsourced": false,
+            "sbomAvailable": false,
+            "patchingFrequency": "never",
+            "complianceNotes": "Legacy system - no longer maintained, replacement planned Q2 2025"
+        }
+    },
+    {
+        "name": "Customer Portal",
+        "description": "Self-service portal for customers to manage accounts and support tickets",
+        "entityType": "application",
+        "attributes": {
+            "status": "active",
+            "criticality": "high",
+            "owner": "Emily Davis",
+            "department": "Customer Service",
+            "version": "2.0.5",
+            "confidentiality": "high",
+            "integrity": "medium",
+            "availability": "high",
+            "authenticity": "high",
+            "rtoRequired": 4,
+            "rpoRequired": 2,
+            "mtpdRequired": 24,
+            "businessImpact": "major",
+            "financialImpactPerHour": 35000,
+            "testingFrequency": "quarterly",
+            "isOutsourced": false,
+            "securityContact": "portal-security@company.com",
+            "vulnerabilityDisclosure": "https://company.com/security/disclosure",
+            "sbomAvailable": true,
+            "patchingFrequency": "weekly",
+            "regulatoryScope": [
+                "DORA",
+                "GDPR",
+                "CRA"
+            ],
+            "dataResidency": "EU"
+        }
+    },
+    {
+        "name": "Next-Gen Analytics",
+        "description": "AI-powered analytics platform currently in development",
+        "entityType": "application",
+        "attributes": {
+            "status": "in-development",
+            "criticality": "high",
+            "owner": "Alex Turner",
+            "department": "IT",
+            "version": "0.9.0"
+        }
+    },
+    {
+        "name": "Email Marketing Platform",
+        "description": "Automated email marketing and campaign management",
+        "entityType": "application",
+        "attributes": {
+            "status": "active",
+            "criticality": "medium",
+            "owner": "Lisa Anderson",
+            "department": "Marketing",
+            "version": "3.0.2"
+        }
+    },
+    {
+        "name": "Document Management",
+        "description": "Enterprise document storage and collaboration platform",
+        "entityType": "application",
+        "attributes": {
+            "status": "active",
+            "criticality": "high",
+            "owner": "Robert Wilson",
+            "department": "IT",
+            "version": "5.1.0"
+        }
+    }
+]

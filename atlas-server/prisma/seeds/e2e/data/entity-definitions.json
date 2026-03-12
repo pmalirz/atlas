@@ -1,0 +1,41 @@
+[
+    {
+        "entityType": "book",
+        "displayName": "Book",
+        "attributeSchema": [
+            { "key": "name", "displayName": "Title", "type": "string", "required": true, "group": "basic" },
+            { "key": "description", "displayName": "Description", "type": "text", "group": "basic" },
+            { "key": "isbn", "displayName": "ISBN", "type": "string", "group": "basic" },
+            { "key": "publisher", "displayName": "Publisher", "type": "string", "group": "basic" },
+            { "key": "genre", "displayName": "Genre", "typeRef": "book_genre", "group": "classification" },
+            { "key": "language", "displayName": "Language", "typeRef": "book_language", "group": "classification" },
+            { "key": "status", "displayName": "Status", "typeRef": "book_status", "group": "classification" },
+            { "key": "tags", "displayName": "Tags", "type": "string", "isArray": true, "group": "classification" },
+            { "key": "publicationDate", "displayName": "Publication Date", "type": "date", "group": "details" },
+            { "key": "pageCount", "displayName": "Page Count", "type": "number", "validation": { "min": 1, "max": 10000 }, "group": "details" },
+            { "key": "price", "displayName": "Price", "type": "decimal", "group": "details" },
+            { "key": "rating", "displayName": "Rating", "type": "number", "validation": { "min": 1, "max": 5 }, "group": "details" },
+            { "key": "isAvailable", "displayName": "Available", "type": "boolean", "group": "status" },
+            { "key": "isEbook", "displayName": "E-Book", "type": "boolean", "group": "status" },
+            { "key": "authors", "displayName": "Authors", "type": "relation", "relType": "book_written_by", "group": "relations" }
+        ]
+    },
+    {
+        "entityType": "author",
+        "displayName": "Author",
+        "attributeSchema": [
+            { "key": "name", "displayName": "Name", "type": "string", "required": true, "group": "basic" },
+            { "key": "description", "displayName": "Biography", "type": "text", "group": "basic" },
+            { "key": "nationality", "displayName": "Nationality", "type": "string", "group": "basic" },
+            { "key": "email", "displayName": "Email", "type": "string", "group": "contact" },
+            { "key": "website", "displayName": "Website", "type": "string", "group": "contact" },
+            { "key": "status", "displayName": "Status", "typeRef": "author_status", "group": "basic" },
+            { "key": "specializations", "displayName": "Specializations", "type": "string", "isArray": true, "group": "expertise" },
+            { "key": "birthDate", "displayName": "Birth Date", "type": "date", "group": "personal" },
+            { "key": "booksCount", "displayName": "Books Published", "type": "number", "group": "stats" },
+            { "key": "rating", "displayName": "Rating", "type": "number", "validation": { "min": 1, "max": 5 }, "group": "stats" },
+            { "key": "isVerified", "displayName": "Verified Author", "type": "boolean", "group": "status" },
+            { "key": "books", "displayName": "Books", "type": "relation", "relType": "book_written_by", "group": "relations" }
+        ]
+    }
+]

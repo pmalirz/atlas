@@ -1,0 +1,54 @@
+[
+    {
+        "name": "CRM-ERP Integration",
+        "description": "Real-time sync between CRM and ERP systems",
+        "entityType": "interface",
+        "attributes": {
+            "type": "api",
+            "direction": "bidirectional",
+            "protocol": "REST",
+            "frequency": "real-time",
+            "slaLevel": "gold",
+            "status": "active"
+        }
+    },
+    {
+        "name": "HR-Payroll Feed",
+        "description": "Daily employee data feed to payroll system",
+        "entityType": "interface",
+        "attributes": {
+            "type": "file",
+            "direction": "outbound",
+            "protocol": "SFTP",
+            "frequency": "daily",
+            "slaLevel": "silver",
+            "status": "active"
+        }
+    },
+    {
+        "name": "Customer Portal API",
+        "description": "Public API for customer self-service portal",
+        "entityType": "interface",
+        "attributes": {
+            "type": "api",
+            "direction": "inbound",
+            "protocol": "REST",
+            "frequency": "real-time",
+            "slaLevel": "gold",
+            "status": "active"
+        }
+    },
+    {
+        "name": "Legacy Mainframe Bridge",
+        "description": "Integration with legacy mainframe systems",
+        "entityType": "interface",
+        "attributes": {
+            "type": "message-queue",
+            "direction": "bidirectional",
+            "protocol": "MQ",
+            "frequency": "batch",
+            "slaLevel": "bronze",
+            "status": "active"
+        }
+    }
+]

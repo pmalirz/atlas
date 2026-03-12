@@ -1,0 +1,98 @@
+[
+    {
+        "name": "PROD-DB-01",
+        "description": "Primary PostgreSQL database cluster",
+        "entityType": "it_asset",
+        "attributes": {
+            "type": "database",
+            "hostingType": "public-cloud",
+            "location": "AWS us-east-1",
+            "status": "online",
+            "environment": "production"
+        }
+    },
+    {
+        "name": "PROD-DB-02",
+        "description": "Oracle database server",
+        "entityType": "it_asset",
+        "attributes": {
+            "type": "database",
+            "hostingType": "on-premise",
+            "location": "On-premise DC1",
+            "status": "online",
+            "environment": "production"
+        }
+    },
+    {
+        "name": "APP-SERVER-01",
+        "description": "Application server cluster",
+        "entityType": "it_asset",
+        "attributes": {
+            "type": "server",
+            "hostingType": "public-cloud",
+            "location": "AWS us-east-1",
+            "status": "online",
+            "environment": "production"
+        }
+    },
+    {
+        "name": "LEGACY-MAINFRAME",
+        "description": "IBM mainframe for legacy systems",
+        "entityType": "it_asset",
+        "attributes": {
+            "type": "server",
+            "hostingType": "on-premise",
+            "location": "On-premise DC2",
+            "status": "online",
+            "environment": "production"
+        }
+    },
+    {
+        "name": "AZURE-STORAGE",
+        "description": "Azure Blob Storage for documents",
+        "entityType": "it_asset",
+        "attributes": {
+            "type": "storage",
+            "hostingType": "public-cloud",
+            "location": "Azure West US",
+            "status": "online",
+            "environment": "production"
+        }
+    },
+    {
+        "name": "K8S-CLUSTER",
+        "description": "Kubernetes cluster for microservices",
+        "entityType": "it_asset",
+        "attributes": {
+            "type": "cloud-service",
+            "hostingType": "public-cloud",
+            "location": "GCP us-central1",
+            "status": "online",
+            "environment": "production"
+        }
+    },
+    {
+        "name": "VPN-GATEWAY",
+        "description": "Site-to-site VPN gateway",
+        "entityType": "it_asset",
+        "attributes": {
+            "type": "network",
+            "hostingType": "on-premise",
+            "location": "On-premise DC1",
+            "status": "online",
+            "environment": "production"
+        }
+    },
+    {
+        "name": "DEV-SERVER-01",
+        "description": "Development server for testing",
+        "entityType": "it_asset",
+        "attributes": {
+            "type": "server",
+            "hostingType": "public-cloud",
+            "location": "AWS us-east-1",
+            "status": "online",
+            "environment": "development"
+        }
+    }
+]
