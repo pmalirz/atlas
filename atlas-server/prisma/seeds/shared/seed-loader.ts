@@ -103,12 +103,17 @@ export async function seedModel(
     console.log('🗑️  Clearing existing data...');
     await prisma.$executeRawUnsafe(`
         TRUNCATE TABLE
+            email_verification_tokens,
+            password_reset_tokens,
+            users,
             audit_events,
             relations,
             entities,
             entity_definitions,
             relation_definitions,
-            type_definitions
+            type_definitions,
+            ui_entity_config,
+            ui_global_config
         CASCADE;
     `);
     console.log('✓ Data cleared\n');
