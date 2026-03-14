@@ -10,9 +10,8 @@ import { withTenantApiPath } from '../../utils/tenant-paths';
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
 
 // Test user credentials - use the pre-seeded admin user
-const testEmail = 'e2e-test@atlas.local';
-const testPassword = 'e2e-test-password-123';
-const testName = 'E2E Test User';
+const testEmail = 'e2e-admin@atlas.local';
+const testPassword = 'admin';
 
 let authToken: string | null = null;
 

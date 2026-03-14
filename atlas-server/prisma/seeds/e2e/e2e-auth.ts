@@ -11,9 +11,9 @@ import { DEFAULT_TENANT_ID, seedDefaultRoles } from '../default-tenant';
 
 // Well-known test user credentials - used in tests
 export const E2E_TEST_USER = {
-    email: 'e2e-test@atlas.local',
-    password: 'e2e-test-password-123',
-    name: 'E2E Test User',
+    email: 'e2e-admin@atlas.local',
+    password: 'admin',
+    name: 'E2E Admin',
 };
 
 export async function seedAuth(prisma: PrismaClient) {
