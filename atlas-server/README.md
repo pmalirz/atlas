@@ -155,6 +155,8 @@ npm run test:watch
 
 ## API Endpoints
 
+All tenant-aware endpoints are scoped by slug: `/api/:slug/...` (for example, `/api/myatlas/entities/book`).
+
 ### Auth API
 
 Handles authentication and user session management.
@@ -228,6 +230,16 @@ Provides JSON configuration for the Server-Driven UI.
 | GET | `/api/ui-config/entities/:entityType` | Get UI config for specific entity |
 | GET | `/api/ui-config/global` | Get global UI settings |
 | GET | `/api/ui-config/menu` | Get main menu structure |
+
+### RBAC API
+
+Returns effective roles and permissions for the authenticated user in the active tenant.
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/:slug/rbac/me` | Get current user roles and permissions |
+| GET | `/api/:slug/rbac/roles` | List tenant roles with permissions |
+| GET | `/api/:slug/rbac/users/:id/roles` | Get roles for a specific user |
 
 ### Swagger Documentation
 

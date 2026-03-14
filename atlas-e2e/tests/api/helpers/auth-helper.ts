@@ -9,16 +9,16 @@ import { withTenantApiPath } from '../../utils/tenant-paths';
 
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
 
-// Test user credentials - unique per test run to avoid conflicts
-const testEmail = `e2e-test-${Date.now()}@test.com`;
+// Test user credentials - use the pre-seeded admin user
+const testEmail = 'e2e-test@atlas.local';
 const testPassword = 'e2e-test-password-123';
 const testName = 'E2E Test User';
 
 let authToken: string | null = null;
 
 /**
- * Get or create auth token for E2E tests.
- * Registers a new test user if needed.
+ * Get auth token for E2E tests.
+ * Uses the pre-seeded admin user for authentication.
  */
 export async function getAuthToken(): Promise<string> {
     if (authToken) {
@@ -26,32 +26,9 @@ export async function getAuthToken(): Promise<string> {
     }
 
     console.log(`[Auth Helper] API_BASE_URL: ${API_BASE_URL}`);
-    console.log(`[Auth Helper] Registering user: ${testEmail}`);
+    console.log(`[Auth Helper] Logging in user: ${testEmail}`);
 
-    // Try to register a new test user
-    try {
-        const registerResponse = await request(API_BASE_URL)
-            .post(withTenantApiPath('/api/auth/register'))
-            .send({
-                email: testEmail,
-                password: testPassword,
-                name: testName,
-            });
-
-        console.log(`[Auth Helper] Register response status: ${registerResponse.status}`);
-
-        if (registerResponse.status === 201) {
-            authToken = registerResponse.body.accessToken;
-            console.log(`[Auth Helper] Registered successfully, got token`);
-            return authToken!;
-        }
-
-        console.log(`[Auth Helper] Register failed with body:`, registerResponse.body);
-    } catch (error) {
-        console.error(`[Auth Helper] Register request error:`, error);
-    }
-
-    // If user already exists, try to login
+    // Try to login with the pre-seeded admin user
     try {
         console.log(`[Auth Helper] Trying login...`);
         const loginResponse = await request(API_BASE_URL)

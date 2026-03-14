@@ -2,7 +2,7 @@ import { Controller, Get, Param, UseGuards, Request } from '@nestjs/common';
 import { RbacService } from './rbac.service';
 import { AuthGuard } from '../auth/guards/auth.guard';
 
-@Controller('rbac')
+@Controller(':slug/rbac')
 @UseGuards(AuthGuard)
 export class RbacController {
   constructor(private readonly rbacService: RbacService) {}
