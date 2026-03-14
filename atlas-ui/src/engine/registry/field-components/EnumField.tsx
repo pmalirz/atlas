@@ -7,6 +7,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import type { FieldComponentProps } from '../component-registry';
+import { ReadOnlyField } from './shared/ReadOnlyField';
 
 export function EnumField({
     value,
@@ -20,7 +21,7 @@ export function EnumField({
     const options = fieldSchema.options ?? [];
 
     // Get style for current value
-    const currentStyle = value && valueStyles?.[value];
+    const currentStyle = value ? valueStyles?.[value] : undefined;
 
     /**
      * Get display label with fallback priority:
@@ -35,20 +36,27 @@ export function EnumField({
     };
 
     if (readonly) {
-        if (!value) return <span className="text-muted-foreground">—</span>;
-
-        if (currentStyle) {
+        if (!value) {
             return (
-                <Badge
-                    className={currentStyle.color}
-                    title={currentStyle.description}
-                >
-                    {currentStyle.label || getLabel(value)}
-                </Badge>
+                <ReadOnlyField>
+                    <span className="text-muted-foreground">—</span>
+                </ReadOnlyField>
             );
         }
 
-        return <Badge variant="secondary">{getLabel(value)}</Badge>;
+        const label = currentStyle?.label || getLabel(value);
+
+        return (
+            <ReadOnlyField>
+                {currentStyle ? (
+                    <Badge className={currentStyle.color} title={currentStyle.description}>
+                        {currentStyle.label || label}
+                    </Badge>
+                ) : (
+                    <span>{label}</span>
+                )}
+            </ReadOnlyField>
+        );
     }
 
     // Edit mode - use shadcn Select directly (EnumSelect is for simpler cases)

@@ -34,6 +34,7 @@ Server runs at `http://localhost:3001` with API prefix `/api`.
 - **Schema-Driven Validation**: Entity definitions (`entity_definitions` + `type_definitions`) drive validation, options, and personal-data flags
 - **Type-safe Relations**: Relations stored in `relations` with typed `relation_type`, constrained by `relation_definitions`
 - **Audit Compliance**: Append-only `audit_events` table for DORA/CRA regulatory requirements
+- **RBAC Enforcement**: Entity-level and attribute-level permissions are enforced server-side (403 on unauthorized writes)
 - **Soft Delete**: All entities support soft delete via `deleted_at`
 - **Pluggable Auth**: Supports Native (JWT), Clerk, Logto, and SSO providers
 

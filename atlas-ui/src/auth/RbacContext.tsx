@@ -48,7 +48,7 @@ export function RbacProvider({ children }: { children: React.ReactNode }) {
         resourceName: string,
         action: 'create' | 'read' | 'update' | 'delete'
     ): boolean => {
-        if (!userWithRoles) return !isLoading; // While loading, default to allow (backend still enforces)
+        if (!userWithRoles) return false; // No permissions = deny all (backend still enforces)
 
 
         for (const role of userWithRoles.roles) {

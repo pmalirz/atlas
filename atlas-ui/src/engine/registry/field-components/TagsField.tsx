@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import type { FieldComponentProps } from '../component-registry';
+import { ReadOnlyField } from './shared/ReadOnlyField';
 
 export function TagsField({
     value,
@@ -29,17 +30,21 @@ export function TagsField({
 
     if (readonly) {
         if (tags.length === 0) {
-            return <span className="text-muted-foreground">—</span>;
+            return (
+                <ReadOnlyField>
+                    <span className="text-muted-foreground">—</span>
+                </ReadOnlyField>
+            );
         }
 
         return (
-            <div className="flex flex-wrap gap-1">
+            <ReadOnlyField multiline className="flex flex-wrap gap-1">
                 {tags.map((tag) => (
                     <Badge key={tag} variant="secondary">
                         {tag}
                     </Badge>
                 ))}
-            </div>
+            </ReadOnlyField>
         );
     }
 

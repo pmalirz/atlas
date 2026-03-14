@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NumberInput } from './inputs';
 import type { FieldComponentProps } from '../component-registry';
+import { ReadOnlyField } from './shared/ReadOnlyField';
 
 export function NumberField({
     value,
@@ -13,7 +14,11 @@ export function NumberField({
     const [draft, setDraft] = useState<number | undefined>(value);
 
     if (readonly) {
-        return <span className="text-foreground">{value ?? '—'}</span>;
+        return (
+            <ReadOnlyField>
+                {value ?? '—'}
+            </ReadOnlyField>
+        );
     }
 
     if (!editing) {
