@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useParams, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AuthProvider, ProtectedRoute, TenantProvider } from '@/auth';
+import { AuthProvider, ProtectedRoute, TenantProvider, RbacProvider } from '@/auth';
 
 // Lazy load components for code splitting
 const DashboardPage = React.lazy(() => import('@/pages/DashboardPage').then(module => ({ default: module.DashboardPage })));
@@ -89,7 +89,7 @@ function TenantRoutes() {
             />
 
             {/* Protected routes - require authentication */}
-            <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+            <Route element={<ProtectedRoute><RbacProvider><AppLayout /></RbacProvider></ProtectedRoute>}>
                 <Route
                     index
                     element={

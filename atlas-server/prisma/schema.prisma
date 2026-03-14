@@ -38,6 +38,8 @@ model Tenant {
   relationDefinitions RelationDefinition[]
   uiEntityConfigs     UIEntityConfig[]
   uiGlobalConfigs     UIGlobalConfig[]
+  roles               Role[]
+  userRoles           UserRole[]
 
   @@index([slug], name: "tenants_slug_idx")
   @@map("tenants")
@@ -142,6 +144,7 @@ model User {
   // Token relations
   passwordResetTokens     PasswordResetToken[]
   emailVerificationTokens EmailVerificationToken[]
+  userRoles               UserRole[]
 
   @@unique([email, tenantId], name: "users_email_tenant_unique")
   @@unique([provider, externalId])
@@ -180,6 +183,87 @@ model EmailVerificationToken {
   @@index([token], name: "email_verification_tokens_token_idx")
   @@index([userId], name: "email_verification_tokens_user_idx")
   @@map("email_verification_tokens")
+}
+
+// =============================================================================
+// Role-Based Access Control (RBAC)
+// =============================================================================
+
+/// Role defines a set of permissions that can be assigned to users
+model Role {
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String @default("")
+
+  // Multi-tenancy
+  tenantId String @map("tenant_id") @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Audit fields
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  updatedBy String?  @map("updated_by")
+
+  // Relations
+  permissions RolePermission[]
+  userRoles   UserRole[]
+
+  @@unique([name, tenantId], name: "roles_name_tenant_unique")
+  @@index([tenantId], name: "roles_tenant_idx")
+  @@map("roles")
+}
+
+/// RolePermission defines what a role can do to a specific resource type
+model RolePermission {
+  id               String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roleId           String @map("role_id") @db.Uuid
+  resourceType     String @map("resource_type") // 'entity' | 'relation'
+  resourceName     String @map("resource_name") // e.g., 'application', 'it_asset', or '*' for all
+  
+  // Entity-level permissions
+  canCreate        Boolean @default(false) @map("can_create")
+  canRead          Boolean @default(false) @map("can_read")
+  canUpdate        Boolean @default(false) @map("can_update")
+  canDelete        Boolean @default(false) @map("can_delete")
+  
+  // Attribute-level permissions (JSON arrays of string keys)
+  allowedAttributes Json? @map("allowed_attributes") // null means all attributes allowed
+  deniedAttributes  Json? @map("denied_attributes")  // attributes explicitly denied (overrides allowed)
+
+  // Audit fields
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  updatedBy String?  @map("updated_by")
+
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, resourceType, resourceName], name: "role_permissions_role_resource_unique")
+  @@index([roleId], name: "role_permissions_role_idx")
+  @@map("role_permissions")
+}
+
+/// UserRole links a user to a role
+model UserRole {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  roleId String @map("role_id") @db.Uuid
+
+  // Multi-tenancy
+  tenantId String @map("tenant_id") @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Audit fields
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  createdBy String?  @map("created_by")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId], name: "user_roles_user_role_unique")
+  @@index([userId], name: "user_roles_user_idx")
+  @@index([roleId], name: "user_roles_role_idx")
+  @@index([tenantId], name: "user_roles_tenant_idx")
+  @@map("user_roles")
 }
 
 // =============================================================================

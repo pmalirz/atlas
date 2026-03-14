@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { DEFAULT_TENANT_ID } from '../default-tenant';
+import { DEFAULT_TENANT_ID, seedDefaultRoles } from '../default-tenant';
 
 /**
  * E2E Auth Seeder
@@ -27,6 +27,9 @@ export async function seedAuth(prisma: PrismaClient) {
     // Hash the password
     const passwordHash = await bcrypt.hash(E2E_TEST_USER.password, 10);
 
+    // Seed roles to ensure we have Admin
+    const roles = await seedDefaultRoles(prisma);
+
     // Create the test user
     const user = await prisma.user.create({
         data: {
@@ -39,6 +42,15 @@ export async function seedAuth(prisma: PrismaClient) {
         },
     });
 
-    console.log(`   ✔ Created test user: ${user.email}`);
+    // Assign the Admin role
+    await prisma.userRole.create({
+        data: {
+            userId: user.id,
+            roleId: roles.adminRole.id,
+            tenantId: DEFAULT_TENANT_ID,
+        }
+    });
+
+    console.log(`   ✔ Created test user: ${user.email} (Admin)`);
     console.log('');
 }

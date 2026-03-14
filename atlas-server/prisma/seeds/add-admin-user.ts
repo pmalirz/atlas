@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { DEFAULT_TENANT_ID, seedDefaultTenant } from './default-tenant';
+import { DEFAULT_TENANT_ID, seedDefaultTenant, seedDefaultRoles } from './default-tenant';
 
 /**
  * Utility script to create a starting admin user with a specified email and password.
@@ -60,7 +60,26 @@ async function main() {
             },
         });
 
-        console.log(`✅ Successfully seeded admin user: ${user.email}`);
+        // Seed default roles
+        const roles = await seedDefaultRoles(prisma);
+
+        // Assign Admin role to the user
+        await prisma.userRole.upsert({
+            where: {
+                user_roles_user_role_unique: {
+                    userId: user.id,
+                    roleId: roles.adminRole.id,
+                }
+            },
+            update: {},
+            create: {
+                userId: user.id,
+                roleId: roles.adminRole.id,
+                tenantId: DEFAULT_TENANT_ID,
+            }
+        });
+
+        console.log(`✅ Successfully seeded admin user: ${user.email} with Admin role`);
     } catch (error) {
         console.error('❌ Failed to seed admin user:', error);
         process.exit(1);

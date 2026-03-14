@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { LayoutGrid, Table as TableIcon, Plus, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTenant } from '@/auth';
+import { useRbac } from '@/auth/RbacContext';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -27,6 +28,10 @@ export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
 
     // Fetch entities from backend
     const { entities, loading: entitiesLoading, error: entitiesError } = useEntities(entityType);
+
+    // RBAC logic
+    const { hasPermission } = useRbac();
+    const canCreate = hasPermission('entity', entityType, 'create');
 
     const loading = configLoading || entitiesLoading || entitySchemaLoading;
 
@@ -130,7 +135,7 @@ export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
                     </ToggleGroup>
 
                     {/* Create button */}
-                    {browseConfig.allowCreate && (
+                    {browseConfig.allowCreate && canCreate && (
                         <Button asChild data-testid="create-entity-btn">
                             <Link to={`/${slug}/${entityType}/create`}>
                                 <Plus className="h-4 w-4 mr-2" />
@@ -169,7 +174,7 @@ export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
             {sortedEntities.length === 0 && (
                 <div className="text-center py-12 text-muted-foreground">
                     <p>No {entityType}s found</p>
-                    {browseConfig.allowCreate && (
+                    {browseConfig.allowCreate && canCreate && (
                         <Button variant="outline" className="mt-4" asChild data-testid="create-first-entity-btn">
                             <Link to={`/${slug}/${entityType}/create`}>
                                 <Plus className="h-4 w-4 mr-2" />

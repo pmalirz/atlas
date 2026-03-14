@@ -10,6 +10,7 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
+  UseInterceptors,
   ParseUUIDPipe,
 } from '@nestjs/common';
 import {
@@ -25,10 +26,12 @@ import { QueryEntitiesDto } from './dto/query-entities.dto';
 import { GetEntityQueryDto } from './dto/get-entity.dto';
 import { EntityResponse, PaginatedResponse } from './dto/entity-response.dto';
 import { EntityAccessGuard } from './guards/entity-access.guard';
+import { AttributeAccessInterceptor } from './interceptors/attribute-access.interceptor';
 
 @ApiTags('entities')
 @Controller(':slug/entities/:entityType')
 @UseGuards(EntityAccessGuard)
+@UseInterceptors(AttributeAccessInterceptor)
 @ApiParam({ name: 'entityType', description: 'Entity type (e.g., application, it_asset)' })
 export class EntitiesController {
   constructor(private readonly entitiesService: EntitiesService) { }

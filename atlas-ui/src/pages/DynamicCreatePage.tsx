@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowLeft, Save, Plus, AlertCircle, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTenant } from '@/auth';
+import { useRbac } from '@/auth/RbacContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -25,6 +26,10 @@ export function DynamicCreatePage({ entityType }: DynamicCreatePageProps) {
 
     // Create mutation
     const createMutation = useCreateEntity(entityType);
+
+    // RBAC check
+    const { hasPermission } = useRbac();
+    const canCreate = hasPermission('entity', entityType, 'create');
 
     // Form state
     const [name, setName] = useState('');
@@ -80,6 +85,22 @@ export function DynamicCreatePage({ entityType }: DynamicCreatePageProps) {
             }
         );
     };
+
+    // RBAC Error state
+    if (!canCreate) {
+        return (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+                <AlertCircle className="h-12 w-12 text-destructive mb-4" />
+                <h2 className="text-lg font-semibold">Access Denied</h2>
+                <p className="text-muted-foreground mt-2">You do not have permission to create this entity type.</p>
+                <div className="flex gap-2 mt-4">
+                    <Button variant="outline" asChild>
+                        <Link to={`/${slug}/${entityType}`}>Go Back</Link>
+                    </Button>
+                </div>
+            </div>
+        );
+    }
 
     // Error state
     if (configError) {

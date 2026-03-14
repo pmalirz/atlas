@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import * as path from 'path';
-import { seedDefaultTenant, DEFAULT_TENANT_ID } from '../default-tenant';
+import { seedDefaultTenant, seedDefaultRoles, DEFAULT_TENANT_ID } from '../default-tenant';
 import { seedModel, seedUI } from '../shared/seed-loader';
 
 /**
@@ -22,6 +22,9 @@ export async function seed(prisma: PrismaClient) {
 
     // Seed the entity model (types, schemas, entities, relations)
     await seedModel(prisma, DEFAULT_TENANT_ID, dataDir);
+
+    // Seed default roles for the tenant (AFTER seedModel)
+    await seedDefaultRoles(prisma);
 
     // Then seed the UI schemas
     await seedUI(prisma, DEFAULT_TENANT_ID, dataDir);

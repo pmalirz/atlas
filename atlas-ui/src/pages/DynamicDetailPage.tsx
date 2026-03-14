@@ -1,6 +1,7 @@
 import { ArrowLeft, Trash2, AlertCircle, Loader2, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTenant } from '@/auth';
+import { useRbac } from '@/auth/RbacContext';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -39,6 +40,13 @@ export function DynamicDetailPage({ entityType, entityId }: DynamicDetailPagePro
 
     // Fetch entity from backend
     const { entity, loading: entityLoading, error: entityError } = useEntity(entityType, entityId);
+
+    // RBAC check
+    const { hasPermission } = useRbac();
+    const canCreate = hasPermission('entity', entityType, 'create');
+    const canDelete = hasPermission('entity', entityType, 'delete');
+    // canUpdate is handled by FieldRenderer automatically, but maybe we need it for top-level interactions
+    // const canUpdate = hasPermission('entity', entityType, 'update');
 
     // Mutations
     const updateMutation = useUpdateEntity(entityType);
@@ -148,17 +156,20 @@ export function DynamicDetailPage({ entityType, entityId }: DynamicDetailPagePro
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <Button
-                        variant="secondary"
-                        size="sm"
-                        asChild
-                    >
-                        <Link to={`/${slug}/${entityType}/create`}>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Create
-                        </Link>
-                    </Button>
-                    <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                    {canCreate && (
+                        <Button
+                            variant="secondary"
+                            size="sm"
+                            asChild
+                        >
+                            <Link to={`/${slug}/${entityType}/create`}>
+                                <Plus className="h-4 w-4 mr-2" />
+                                Create
+                            </Link>
+                        </Button>
+                    )}
+                    {canDelete && (
+                        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                         <AlertDialogTrigger asChild>
                             <Button
                                 variant="destructive"
@@ -197,6 +208,7 @@ export function DynamicDetailPage({ entityType, entityId }: DynamicDetailPagePro
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
+                    )}
                 </div>
             </div>
 

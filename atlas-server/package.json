@@ -26,7 +26,7 @@
     "db:seed:force": "ts-node prisma/seed.ts --force",
     "db:seed:eap": "npx ts-node prisma/seed.ts --seed eap --force",
     "db:seed:e2e": "npx ts-node prisma/seed.ts --seed e2e --force",
-    "db:seed:addAdminUser": "npx ts-node prisma/seeds/add-admin-user.ts",
+    "db:seed:addAdminUser": "npx ts-node prisma/seeds/add-admin-user.ts admin@admin.xyz admin",
     "db:reset": "prisma migrate reset --force"
   },
   "dependencies": {

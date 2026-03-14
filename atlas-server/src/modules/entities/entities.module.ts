@@ -6,7 +6,11 @@ import { EntityRepository } from '../../database/entity.repository';
 import { SchemaValidatorService } from './validation/schema-validator.service';
 import { EntityAccessGuard } from './guards/entity-access.guard';
 
+// Import RbacModule to provide RbacService for the guard
+import { RbacModule } from '../rbac/rbac.module';
+
 @Module({
+  imports: [RbacModule],
   controllers: [EntitiesController],
   providers: [
     EntitiesService,
@@ -18,4 +22,3 @@ import { EntityAccessGuard } from './guards/entity-access.guard';
   exports: [EntitiesService, SchemaValidatorService],
 })
 export class EntitiesModule { }
-
