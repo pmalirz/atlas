@@ -33,17 +33,16 @@ export function FieldRenderer({
     // Find field definition in entity schema
     const fieldSchema = entitySchema.attributes.find(f => f.key === fieldKey);
 
-    const { getAllowedAttributes, getDeniedAttributes, hasPermission } = useRbac();
-    const allowedAttrs = getAllowedAttributes('entity', entitySchema.entityType);
-    const deniedAttrs = getDeniedAttributes('entity', entitySchema.entityType);
+    const { getReadableAttributes, getUpdatableAttributes, hasPermission } = useRbac();
+    const readableAttrs = getReadableAttributes('entity', entitySchema.entityType);
+    const updatableAttrs = getUpdatableAttributes('entity', entitySchema.entityType);
     const canUpdate = hasPermission('entity', entitySchema.entityType, 'update');
 
     // Top-level fields are not filtered by attribute-level RBAC on the backend
     const isTopLevelField = ['id', 'name', 'description', 'createdAt', 'updatedAt'].includes(fieldKey);
 
     if (!isTopLevelField) {
-        if (deniedAttrs.has(fieldKey)) return null;
-        if (allowedAttrs !== null && !allowedAttrs.has(fieldKey)) return null;
+        if (readableAttrs !== null && !readableAttrs.has(fieldKey)) return null;
     }
 
 
@@ -60,7 +59,8 @@ export function FieldRenderer({
     // Calculate grid placement classes
     const gridClasses = getGridClasses(placement);
     
-    const isReadonly = placement.readonly || !canUpdate;
+    const canUpdateField = updatableAttrs === null || updatableAttrs.has(fieldKey);
+    const isReadonly = placement.readonly || !canUpdate || !canUpdateField;
 
     // Handle relation fields with special rendering
     if (isRelationField) {

@@ -7,8 +7,8 @@ interface RbacContextType {
     userWithRoles: UserWithRoles | null;
     isLoading: boolean;
     hasPermission: (resourceType: string, resourceName: string, action: 'create' | 'read' | 'update' | 'delete') => boolean;
-    getAllowedAttributes: (resourceType: string, resourceName: string) => Set<string> | null;
-    getDeniedAttributes: (resourceType: string, resourceName: string) => Set<string>;
+    getReadableAttributes: (resourceType: string, resourceName: string) => Set<string> | null;
+    getUpdatableAttributes: (resourceType: string, resourceName: string) => Set<string> | null;
 }
 
 const RbacContext = createContext<RbacContextType | undefined>(undefined);
@@ -70,49 +70,52 @@ export function RbacProvider({ children }: { children: React.ReactNode }) {
         return false;
     };
 
-    const getAllowedAttributes = (resourceType: string, resourceName: string): Set<string> | null => {
-        if (!userWithRoles) return null; // No allow-list means all attributes are visible
+    const getReadableAttributes = (resourceType: string, resourceName: string): Set<string> | null => {
+        if (!userWithRoles) return null; // No readable list means all attributes are visible
 
-        let hasExplicitAllowList = false;
-        const allowed = new Set<string>();
+        let hasExplicitReadableList = false;
+        const readable = new Set<string>();
 
         for (const role of userWithRoles.roles) {
             const perm = role.permissions.find(
                 (p) => p.resourceType === resourceType && (p.resourceName === resourceName || p.resourceName === '*')
             );
             
-            if (perm && perm.allowedAttributes && Array.isArray(perm.allowedAttributes)) {
-                hasExplicitAllowList = true;
-                perm.allowedAttributes.forEach((attr: string) => allowed.add(attr));
+            if (perm && perm.readableAttributes && Array.isArray(perm.readableAttributes)) {
+                hasExplicitReadableList = true;
+                perm.readableAttributes.forEach((attr: string) => readable.add(attr));
             }
         }
 
-        return hasExplicitAllowList ? allowed : null; // returns null if no role defines an allow list (meaning all allowed logically if no denies exist)
+        return hasExplicitReadableList ? readable : null;
     };
 
-    const getDeniedAttributes = (resourceType: string, resourceName: string): Set<string> => {
-        const denied = new Set<string>();
-        if (!userWithRoles) return denied;
+    const getUpdatableAttributes = (resourceType: string, resourceName: string): Set<string> | null => {
+        if (!userWithRoles) return null; // No updatable list means all attributes are updatable
+
+        let hasExplicitUpdatableList = false;
+        const updatable = new Set<string>();
 
         for (const role of userWithRoles.roles) {
             const perm = role.permissions.find(
                 (p) => p.resourceType === resourceType && (p.resourceName === resourceName || p.resourceName === '*')
             );
             
-            if (perm && perm.deniedAttributes && Array.isArray(perm.deniedAttributes)) {
-                perm.deniedAttributes.forEach((attr: string) => denied.add(attr));
+            if (perm && perm.updatableAttributes && Array.isArray(perm.updatableAttributes)) {
+                hasExplicitUpdatableList = true;
+                perm.updatableAttributes.forEach((attr: string) => updatable.add(attr));
             }
         }
 
-        return denied;
+        return hasExplicitUpdatableList ? updatable : null;
     };
 
     const value: RbacContextType = {
         userWithRoles,
         isLoading,
         hasPermission,
-        getAllowedAttributes,
-        getDeniedAttributes
+        getReadableAttributes,
+        getUpdatableAttributes
     };
 
     return (

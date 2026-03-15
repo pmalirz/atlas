@@ -3,7 +3,7 @@
  *
  * Verifies server-side RBAC enforcement for:
  * - entity-level update denial (readonly user)
- * - attribute-level update permissions (regular user)
+ * - attribute-level readable/updatable permissions (regular user)
  */
 import { createAuthenticatedApi } from './helpers/auth-helper';
 
@@ -84,7 +84,7 @@ describe('RBAC API permissions (e2e)', () => {
         expect(response.body.attributes.tags).toEqual(['rbac', 'allowed-update']);
     });
 
-    it('should reject regular user when updating explicitly denied attributes', async () => {
+    it('should reject regular user when updating non-updatable attributes', async () => {
         const response = await regularApi
             .patch(`/api/entities/book/${testBookId}`)
             .send({
@@ -98,7 +98,7 @@ describe('RBAC API permissions (e2e)', () => {
         expect(response.body.message).toContain('price');
     });
 
-    it('should reject regular user when updating attributes outside allowlist', async () => {
+    it('should reject regular user when updating attributes outside updatable list', async () => {
         const response = await regularApi
             .patch(`/api/entities/book/${testBookId}`)
             .send({
@@ -112,7 +112,18 @@ describe('RBAC API permissions (e2e)', () => {
         expect(response.body.message).toContain('language');
     });
 
-    it('should not apply partial update when payload mixes allowed and denied attributes', async () => {
+    it('should allow regular user to read attributes that are not updatable', async () => {
+        const response = await regularApi.get(`/api/entities/book/${testBookId}`).expect(200);
+
+        expect(response.body.attributes).toMatchObject({
+            price: 10.99,
+            isbn: '111-1111111111',
+            publisher: 'RBAC Test Publisher',
+            status: 'borrowed',
+        });
+    });
+
+    it('should not apply partial update when payload mixes updatable and non-updatable attributes', async () => {
         await regularApi
             .patch(`/api/entities/book/${testBookId}`)
             .send({

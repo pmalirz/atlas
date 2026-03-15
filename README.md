@@ -101,6 +101,7 @@ Detailed documentation is available in the [`docs/`](./docs) directory:
 - [**UI Engine Guide**](./docs/UI_ENGINE_GUIDE.md) — Configuring the schema-driven UI system, widgets, and menus
 - [**Theme System Guide**](./docs/THEME_SYSTEM.md) — How to switch, customize, and extend themes
 - [**Authentication Guide**](./docs/AUTHENTICATION.md) — User registration, login, password reset, and email verification
+- [**RBAC Guide**](./docs/RBAC.md) — Role-Based Access Control with entity and attribute-level permissions
 - [**Audit System Guide**](./docs/AUDIT.md) — Compliance, non-repudiation, and database-level audit logging
 - [**Email Setup Guide**](./docs/EMAIL_SETUP.md) — Configure Mailpit, Resend, or other SMTP providers
 - [**Frontend Guide**](./atlas-ui/README.md) — Setup and development of the React application
@@ -141,8 +142,8 @@ The `atlas-e2e` module contains all end-to-end tests:
 RBAC API coverage includes attribute-level enforcement tests in `atlas-e2e/tests/api/rbac.e2e-spec.ts`, validating:
 
 - read-only users are denied entity updates (`403`)
-- regular users can update only explicitly allowed attributes
-- denied or non-allowlisted attributes are rejected with `403` (no partial updates)
+- regular users can read all permitted attributes while updating only explicitly updatable attributes
+- non-updatable attributes are rejected with `403` (no partial updates)
 
 ---
 

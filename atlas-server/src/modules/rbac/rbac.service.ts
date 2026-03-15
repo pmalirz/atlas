@@ -67,14 +67,14 @@ export class RbacService {
     
     // Iterate through user's roles
     for (const role of userWithRoles.roles) {
-      // Find a permission matching the resource type and name (or wildcard '*')
-      const perm = role.permissions.find(
-        (p) =>
-          p.resourceType === resourceType &&
-          (p.resourceName === resourceName || p.resourceName === '*'),
-      );
+      for (const perm of role.permissions) {
+        if (perm.resourceType !== resourceType) {
+          continue;
+        }
+        if (perm.resourceName !== resourceName && perm.resourceName !== '*') {
+          continue;
+        }
 
-      if (perm) {
         // Map the action to the corresponding permission flag
         let hasAccess = false;
         switch (action) {

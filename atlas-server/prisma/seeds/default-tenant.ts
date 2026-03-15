@@ -61,14 +61,16 @@ export async function seedDefaultRoles(prisma: PrismaClient, tenantId: string = 
             canRead: true,
             canUpdate: true,
             canDelete: true,
+            readableAttributes: Prisma.DbNull,
+            updatableAttributes: Prisma.DbNull,
         },
         update: {
             canCreate: true,
             canRead: true,
             canUpdate: true,
             canDelete: true,
-            allowedAttributes: Prisma.DbNull,
-            deniedAttributes: Prisma.DbNull,
+            readableAttributes: Prisma.DbNull,
+            updatableAttributes: Prisma.DbNull,
         },
     });
 
@@ -95,14 +97,16 @@ export async function seedDefaultRoles(prisma: PrismaClient, tenantId: string = 
             canRead: true,
             canUpdate: false,
             canDelete: false,
+            readableAttributes: Prisma.DbNull,
+            updatableAttributes: [],
         },
         update: {
             canCreate: false,
             canRead: true,
             canUpdate: false,
             canDelete: false,
-            allowedAttributes: Prisma.DbNull,
-            deniedAttributes: Prisma.DbNull,
+            readableAttributes: Prisma.DbNull,
+            updatableAttributes: [],
         },
     });
 

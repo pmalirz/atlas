@@ -34,8 +34,8 @@ export const RolePermissionSchema = z.object({
     canRead: z.boolean(),
     canUpdate: z.boolean(),
     canDelete: z.boolean(),
-    allowedAttributes: z.array(z.string()).nullable().optional(),
-    deniedAttributes: z.array(z.string()).nullable().optional(),
+    readableAttributes: z.array(z.string()).nullable().optional(),
+    updatableAttributes: z.array(z.string()).nullable().optional(),
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),
     updatedBy: z.string().nullable().optional(),
@@ -89,8 +89,8 @@ export const CreateRolePermissionRequestSchema = RolePermissionSchema.pick({
     canRead: true,
     canUpdate: true,
     canDelete: true,
-    allowedAttributes: true,
-    deniedAttributes: true,
+    readableAttributes: true,
+    updatableAttributes: true,
 }).extend({
     // allowing optional booleans for creating with defaults
     canCreate: z.boolean().optional().default(false),

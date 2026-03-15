@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { DEFAULT_TENANT_ID, seedDefaultRoles } from '../default-tenant';
 
@@ -113,16 +113,16 @@ export async function seedAuth(prisma: PrismaClient) {
             canRead: true,
             canUpdate: true,
             canDelete: false,
-            allowedAttributes: ['status', 'tags', 'rating'],
-            deniedAttributes: ['price', 'isbn', 'publisher'],
+            readableAttributes: Prisma.DbNull,
+            updatableAttributes: ['status', 'tags', 'rating'],
         },
         update: {
             canCreate: false,
             canRead: true,
             canUpdate: true,
             canDelete: false,
-            allowedAttributes: ['status', 'tags', 'rating'],
-            deniedAttributes: ['price', 'isbn', 'publisher'],
+            readableAttributes: Prisma.DbNull,
+            updatableAttributes: ['status', 'tags', 'rating'],
         },
     });
 

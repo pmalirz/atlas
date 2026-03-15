@@ -227,8 +227,8 @@ model RolePermission {
   canDelete        Boolean @default(false) @map("can_delete")
   
   // Attribute-level permissions (JSON arrays of string keys)
-  allowedAttributes Json? @map("allowed_attributes") // null means all attributes allowed
-  deniedAttributes  Json? @map("denied_attributes")  // attributes explicitly denied (overrides allowed)
+  readableAttributes  Json? @map("readable_attributes")  // null means all attributes readable
+  updatableAttributes Json? @map("updatable_attributes") // null means all attributes updatable
 
   // Audit fields
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz

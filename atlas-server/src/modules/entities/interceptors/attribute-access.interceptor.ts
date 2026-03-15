@@ -35,10 +35,11 @@ export class AttributeAccessInterceptor implements NestInterceptor {
     // Fetch user's roles
     const userWithRoles = await this.rbacService.getUserRoles(userId, tenantId);
 
-    // Aggregate Allowed & Denied sets for this entityType based on roles
-    let hasExplicitAllowList = false;
-    let allowedAttributes = new Set<string>();
-    let deniedAttributes = new Set<string>();
+    // Aggregate readable/updatable sets for this entityType based on roles
+    let hasExplicitReadableList = false;
+    let readableAttributes = new Set<string>();
+    let hasExplicitUpdatableList = false;
+    let updatableAttributes = new Set<string>();
 
     for (const role of userWithRoles.roles) {
       const perm = role.permissions.find(
@@ -48,15 +49,16 @@ export class AttributeAccessInterceptor implements NestInterceptor {
       );
 
       if (perm) {
-        // Evaluate allowed
-        if (perm.allowedAttributes && Array.isArray(perm.allowedAttributes)) {
-          hasExplicitAllowList = true;
-          perm.allowedAttributes.forEach((attr: string) => allowedAttributes.add(attr));
+        // Evaluate readable attributes
+        if (perm.readableAttributes && Array.isArray(perm.readableAttributes)) {
+          hasExplicitReadableList = true;
+          perm.readableAttributes.forEach((attr: string) => readableAttributes.add(attr));
         }
 
-        // Evaluate denied
-        if (perm.deniedAttributes && Array.isArray(perm.deniedAttributes)) {
-          perm.deniedAttributes.forEach((attr: string) => deniedAttributes.add(attr));
+        // Evaluate updatable attributes
+        if (perm.updatableAttributes && Array.isArray(perm.updatableAttributes)) {
+          hasExplicitUpdatableList = true;
+          perm.updatableAttributes.forEach((attr: string) => updatableAttributes.add(attr));
         }
       }
     }
@@ -67,9 +69,7 @@ export class AttributeAccessInterceptor implements NestInterceptor {
 
       const filtered = { ...attributes };
       for (const key of Object.keys(filtered)) {
-        if (deniedAttributes.has(key)) {
-          delete filtered[key];
-        } else if (hasExplicitAllowList && !allowedAttributes.has(key)) {
+        if (hasExplicitReadableList && !readableAttributes.has(key)) {
           delete filtered[key];
         }
       }
@@ -81,7 +81,7 @@ export class AttributeAccessInterceptor implements NestInterceptor {
         const bodyAttributes = request.body.attributes;
         const keysAttemptedToModify = Object.keys(bodyAttributes);
         const keysUnauthorized = keysAttemptedToModify.filter(
-            (key) => deniedAttributes.has(key) || (hasExplicitAllowList && !allowedAttributes.has(key))
+            (key) => hasExplicitUpdatableList && !updatableAttributes.has(key)
         );
 
         if (keysUnauthorized.length > 0) {

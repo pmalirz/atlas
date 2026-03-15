@@ -137,8 +137,8 @@ End-to-End tests are located in the `atlas-e2e` workspace. They cover API and UI
 RBAC API e2e coverage includes `atlas-e2e/tests/api/rbac.e2e-spec.ts` with tenant-scoped checks for:
 
 - viewer/read-only user update denial on entities (`403`)
-- regular user attribute-level allow/deny enforcement on `book`
-- no partial writes when a request includes forbidden attributes
+- regular user attribute-level read vs update enforcement on `book`
+- no partial writes when a request includes non-updatable attributes
 
 E2E seed users (from `prisma/seeds/e2e/e2e-auth.ts`):
 
