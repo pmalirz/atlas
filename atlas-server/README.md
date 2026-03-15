@@ -407,6 +407,10 @@ interface FieldDefinition {
 
 Relation fields (`type: 'relation'`) link to `RelationDefinition` via `relType`:
 
+- Direction is inferred from `RelationDefinition.fromEntityType` and `RelationDefinition.toEntityType`.
+- Optional field `side` (`from` or `to`) can override direction for symmetric or ambiguous cases.
+- Relation fields no longer rely on a dedicated `incoming` metadata flag.
+
 **EntityDefinition field:**
 
 ```json
@@ -672,3 +676,5 @@ npm run db:push
 # Manually drop test database
 docker exec app-atlas-db psql -U atlas -d postgres -c "DROP DATABASE IF EXISTS app_atlas_test"
 ```
+
+
