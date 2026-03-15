@@ -351,7 +351,6 @@ model RelationDefinition {
   displayName     String  @map("display_name")
   fromEntityType  String? @map("from_entity_type")
   toEntityType    String? @map("to_entity_type")
-  isDirectional   Boolean @default(true) @map("is_directional")
   attributeSchema Json?   @map("attribute_schema") // field definitions for relation attributes
 
   // Multi-tenancy

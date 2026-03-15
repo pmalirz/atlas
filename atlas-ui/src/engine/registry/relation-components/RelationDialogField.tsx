@@ -52,13 +52,12 @@ export function RelationDialogField({
     const { getByType } = useRelationDefinitions();
     const relationDefinition = propRelationDef || (fieldSchema.relType ? getByType(fieldSchema.relType) : undefined);
 
-    // Determine target entity type and direction
-    const targetEntityType = getTargetEntityType(fieldSchema, relationDefinition);
     const relationType = fieldSchema.relType;
 
     // Auto-detect direction from RelationDefinition
     const direction = inferRelationDirection(entityType, relationDefinition, fieldSchema);
     const isIncoming = direction === 'incoming';
+    const targetEntityType = getTargetEntityType(fieldSchema, relationDefinition, entityType);
 
     // Fetch relations from server
     const { relations: outgoingRels, loading: outgoingLoading } = useOutgoingRelations(

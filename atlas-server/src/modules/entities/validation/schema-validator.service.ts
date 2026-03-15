@@ -356,7 +356,6 @@ export class SchemaValidatorService implements OnModuleInit {
           displayName: relDef.displayName,
           fromEntityType: relDef.fromEntityType,
           toEntityType: relDef.toEntityType,
-          isDirectional: relDef.isDirectional,
           attributeSchema: relDef.attributeSchema as AttributeDefinition[] | null,
         };
 

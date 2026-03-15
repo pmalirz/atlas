@@ -39,8 +39,9 @@
 
 | Feature | Description |
 |---------|-------------|
-| **Dynamic Data Model** | [Generic Entity-Relation model](./docs/DATA_MODEL.md) allows runtime schema extension without migrations |
+| **Dynamic Data Model** | [Generic Entity-Relation model](./docs/DATA_MODEL.md) allows runtime schema extension without migrations, with relation direction inferred from source/target entity types |
 | **Schema-Driven UI** | UI layouts, forms, and views adapt automatically based on backend JSON configuration |
+| **Direction-Aware Relation Editing** | Relation direction is inferred from relation definitions (fromEntityType/toEntityType) with optional side override, and attributed relations are editable from both sides |
 | **Relation Visualization** | Interactive, force-directed graph views for exploring complex entity relationships |
 | **Audit & Compliance** | Built-in audit logging for all data changes, supporting DORA and compliance requirements |
 | **RBAC-Aware Editing UX** | Field-level permissions are enforced in UI and API with tenant-scoped RBAC endpoints; non-writable fields stay visible in read-only mode |
@@ -134,6 +135,8 @@ npm run test:ui -w atlas-e2e
 npm run test:e2e
 ```
 
+Server unit tests in `atlas-server` use a dedicated `tsconfig.spec.json` and Jest alias mapping to resolve `@app-atlas/shared` from workspace sources during tests.
+
 The `atlas-e2e` module contains all end-to-end tests:
 
 - **API Tests** — Jest + Supertest tests for entities, relations, and definitions (schemas)
@@ -162,3 +165,4 @@ This project is licensed under the [MIT License](./LICENSE).
 <p align="center">
   <sub>Built with ❤️ for developers who want to move fast without sacrificing quality.</sub>
 </p>
+

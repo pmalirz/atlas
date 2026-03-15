@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { waitForPageLoad, navigateToEntity, selectEntity, waitForToast, loginTestUser } from './utils/test-helpers';
+import { waitForPageLoad, navigateToEntity, selectEntity, loginTestUser } from './utils/test-helpers';
+
 import { withTenantUiPath } from '../utils/tenant-paths';
 
 /**
@@ -133,3 +134,71 @@ test.describe('Relation Dialog (Attributes)', () => {
     });
 
 });
+
+test.describe('Relation Dialog (Attributes) - Incoming Side', () => {
+    test.describe.configure({ mode: 'serial', timeout: 60000 });
+
+    test.beforeEach(async ({ page }) => {
+        await loginTestUser(page);
+
+        await page.goto(withTenantUiPath('/'));
+        await waitForPageLoad(page);
+
+        await navigateToEntity(page, 'Authors');
+        await selectEntity(page, 'Robert C. Martin');
+
+        const booksSection = page.locator('text=Books').first();
+        await expect(booksSection).toBeVisible();
+        await booksSection.scrollIntoViewIfNeeded();
+    });
+
+    test('should add edit and remove relation attributes from author side', async ({ page }) => {
+        const addButton = page.getByTestId('add-relation-button');
+        await expect(addButton).toBeVisible();
+        await addButton.click();
+
+        const popover = page.locator('[data-radix-popper-content-wrapper]');
+        await expect(popover).toBeVisible();
+        await expect(popover.getByText('Loading...')).toBeHidden();
+
+        const entitySelect = page.getByTestId('relation-entity-select-trigger');
+        await entitySelect.click({ force: true });
+
+        const bookOption = page.getByRole('option', { name: /Test Book Without Author/i });
+        await expect(bookOption).toBeVisible({ timeout: 10000 });
+        await bookOption.click();
+
+        const roleSelectTrigger = page.getByTestId('relation-attribute-role');
+        await roleSelectTrigger.click();
+        const roleOption = page.getByRole('option', { name: /Editor/i });
+        await expect(roleOption).toBeVisible();
+        await roleOption.click();
+
+        const contributionInput = page.getByTestId('relation-attribute-contribution');
+        await contributionInput.fill('7');
+
+        const submitButton = page.getByTestId('add-relation-submit');
+        await submitButton.click();
+
+        const relationRow = page.getByTestId('relation-row-Test Book Without Author');
+        await expect(relationRow).toBeVisible();
+        await expect(relationRow).toContainText('Editor');
+        await expect(relationRow).toContainText('7');
+
+        await relationRow.hover();
+        await relationRow.getByTestId('edit-relation-button').click();
+
+        const editContributionInput = relationRow.getByTestId('relation-attribute-contribution');
+        await expect(editContributionInput).toBeVisible();
+        await editContributionInput.fill('11');
+
+        await relationRow.getByTestId('save-relation-button').click();
+        await expect(relationRow).toContainText('11');
+
+        await relationRow.hover();
+        await relationRow.getByTestId('delete-relation-button').click({ force: true });
+        await expect(relationRow).not.toBeVisible();
+    });
+});
+
+

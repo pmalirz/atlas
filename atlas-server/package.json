@@ -88,7 +88,17 @@
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.(t|j)s$": [
+        "ts-jest",
+        {
+          "tsconfig": "tsconfig.spec.json"
+        }
+      ]
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1",
+      "^@app-atlas/shared$": "<rootDir>/../../atlas-shared/src/index.ts",
+      "^@app-atlas/shared/zod$": "<rootDir>/../../atlas-shared/src/schemas/zod.ts"
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"

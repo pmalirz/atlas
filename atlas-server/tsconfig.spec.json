@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "@app-atlas/shared": ["../atlas-shared/src/index.ts"],
+      "@app-atlas/shared/zod": ["../atlas-shared/src/schemas/zod.ts"]
+    }
+  }
+}

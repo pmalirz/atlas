@@ -35,6 +35,7 @@ async function main() {
 
   console.log(`🚀 Running seed: ${seedName}...`);
   console.log('ℹ️  Seeding expects the latest Prisma schema and migrations.');
+  console.log('ℹ️  Seed JSON is strictly validated against atlas-shared schemas before insert.');
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires

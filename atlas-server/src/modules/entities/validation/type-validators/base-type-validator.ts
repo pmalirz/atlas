@@ -31,7 +31,6 @@ export interface RelationDefinitionData {
     displayName: string;
     fromEntityType: string | null;
     toEntityType: string | null;
-    isDirectional: boolean;
     attributeSchema: AttributeDefinition[] | null;
 }
 

@@ -4,7 +4,6 @@
         "displayName": "Written By",
         "fromEntityType": "book",
         "toEntityType": "author",
-        "isDirectional": true,
         "attributeSchema": [
             {
                 "key": "role",

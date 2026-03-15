@@ -48,7 +48,6 @@ export interface RelationDefinition {
     displayName: string;
     fromEntityType?: string;
     toEntityType?: string;
-    isDirectional: boolean;
     attributeSchema?: RelationAttributeSchema[];
 }
 
@@ -91,9 +90,9 @@ export interface RelationComponentProps {
  * Infer relation direction based on RelationDefinition and current entity type.
  *
  * Auto-detection logic:
- * 1. Check fieldSchema.side for explicit override (used for symmetric relations)
- * 2. Check if current entity type is in fromEntityTypes → 'outgoing'
- * 3. Check if current entity type is in toEntityTypes → 'incoming'
+ * 1. Check fieldSchema.side for explicit override (used for ambiguous/symmetric relations)
+ * 2. Check if current entity type matches fromEntityType → 'outgoing'
+ * 3. Check if current entity type matches toEntityType → 'incoming'
  * 4. Default to 'outgoing' with warning for symmetric relations
  */
 export function inferRelationDirection(
@@ -131,8 +130,8 @@ export function inferRelationDirection(
 /**
  * Infer the component type for a relation based on its characteristics.
  * Uses auto-detection logic:
- * - incoming relation (entity is in toEntityTypes) → 'panel'
  * - has attributeSchema → 'dialog'
+ * - incoming relation (entity is in toEntityType) → 'panel'
  * - default → 'tags'
  */
 export function inferRelationComponentType(
@@ -145,7 +144,12 @@ export function inferRelationComponentType(
         return fieldSchema.relation.componentType;
     }
 
-    // Auto-detect direction and use panel for incoming
+    // Relations with attributes should be editable from both sides
+    if (relationDef?.attributeSchema && relationDef.attributeSchema.length > 0) {
+        return 'dialog';
+    }
+
+    // Incoming relation without attributes → panel
     if (
         currentEntityType &&
         relationDef &&
@@ -154,31 +158,37 @@ export function inferRelationComponentType(
         return 'panel';
     }
 
-    // Has attributes → dialog
-    if (relationDef?.attributeSchema && relationDef.attributeSchema.length > 0) {
-        return 'dialog';
-    }
-
     // Simple relation → tags (default)
     return 'tags';
 }
 
 /**
  * Get the target entity type from field schema or relation definition.
+ * If currentEntityType is provided, target is resolved based on inferred direction.
  */
 export function getTargetEntityType(
     fieldSchema: FieldSchema,
-    relationDef?: RelationDefinition
+    relationDef?: RelationDefinition,
+    currentEntityType?: string
 ): string | undefined {
     // Explicit config takes precedence
     if (fieldSchema.relation?.targetEntityType) {
         return fieldSchema.relation.targetEntityType;
     }
 
-    // Infer from relation definition
-    if (relationDef?.toEntityType) {
-        return relationDef.toEntityType;
+    if (!relationDef) {
+        return undefined;
     }
 
-    return undefined;
+    // Backward-compatible fallback when caller does not provide entity context
+    if (!currentEntityType) {
+        return relationDef.toEntityType ?? undefined;
+    }
+
+    const direction = inferRelationDirection(currentEntityType, relationDef, fieldSchema);
+    if (direction === 'incoming') {
+        return relationDef.fromEntityType ?? relationDef.toEntityType ?? undefined;
+    }
+
+    return relationDef.toEntityType ?? relationDef.fromEntityType ?? undefined;
 }

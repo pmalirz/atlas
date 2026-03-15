@@ -22,6 +22,12 @@ interface RelationRecord {
   attributes: unknown;
 }
 
+interface RelationDefinitionRecord {
+  relationType: string;
+  fromEntityType: string | null;
+  toEntityType: string | null;
+}
+
 @Injectable()
 export class EntityRelationsService {
   private readonly logger = new Logger(EntityRelationsService.name);
@@ -160,14 +166,13 @@ export class EntityRelationsService {
     }
 
     const entityIds = entities.map(e => e.id);
-
-    // Separate outgoing and incoming relation fields
-    const { outgoingFields, incomingFields } = this.separateRelationFields(relationFields);
+    const relationTypes = this.getRelationTypes(relationFields);
+    const relationDefinitions = await this.getRelationDefinitions(relationTypes);
 
     // Fetch relations
     const [outgoingRelations, incomingRelations] = await Promise.all([
-      this.fetchRelations(entityIds, outgoingFields, 'outgoing'),
-      this.fetchRelations(entityIds, incomingFields, 'incoming'),
+      this.fetchRelations(entityIds, relationTypes, 'outgoing'),
+      this.fetchRelations(entityIds, relationTypes, 'incoming'),
     ]);
 
     // Group relations by entity ID and then by type
@@ -177,8 +182,8 @@ export class EntityRelationsService {
     return entities.map(entity => {
       const attributes = this.mapRelationsToAttributes(
         entity,
-        outgoingFields,
-        incomingFields,
+        relationFields,
+        relationDefinitions,
         outgoingByEntity,
         incomingByEntity
       );
@@ -191,34 +196,14 @@ export class EntityRelationsService {
   }
 
   /**
-   * Helper to separate relation fields into outgoing and incoming
-   */
-  private separateRelationFields(relationFields: Map<string, AttributeDefinition>) {
-    const outgoingFields: Array<[string, AttributeDefinition]> = [];
-    const incomingFields: Array<[string, AttributeDefinition]> = [];
-
-    for (const [key, field] of relationFields.entries()) {
-      if (field.incoming) {
-        incomingFields.push([key, field]);
-      } else {
-        outgoingFields.push([key, field]);
-      }
-    }
-
-    return { outgoingFields, incomingFields };
-  }
-
-  /**
    * Fetch relations for a given direction
    */
   private async fetchRelations(
     entityIds: string[],
-    fields: Array<[string, AttributeDefinition]>,
+    relationTypes: string[],
     direction: 'incoming' | 'outgoing'
   ): Promise<RelationRecord[]> {
-    if (fields.length === 0) return [];
-
-    const relationTypes = fields.map(([_, f]) => f.relType!);
+    if (relationTypes.length === 0) return [];
 
     if (direction === 'outgoing') {
       return this.prisma.relation.findMany({
@@ -256,8 +241,8 @@ export class EntityRelationsService {
    */
   private mapRelationsToAttributes(
     entity: EntityRecord,
-    outgoingFields: Array<[string, AttributeDefinition]>,
-    incomingFields: Array<[string, AttributeDefinition]>,
+    relationFields: Map<string, AttributeDefinition>,
+    relationDefinitions: Map<string, RelationDefinitionRecord>,
     outgoingByEntity: Map<string, Map<string, RelationRecord[]>>,
     incomingByEntity: Map<string, Map<string, RelationRecord[]>>
   ): Record<string, unknown> {
@@ -265,27 +250,72 @@ export class EntityRelationsService {
     const entityOutgoing = outgoingByEntity.get(entity.id);
     const entityIncoming = incomingByEntity.get(entity.id);
 
-    // Add outgoing relations
-    for (const [fieldKey, fieldDef] of outgoingFields) {
+    for (const [fieldKey, fieldDef] of relationFields.entries()) {
       const relType = fieldDef.relType!;
-      const rels = entityOutgoing?.get(relType) ?? [];
-      embeddedAttributes[fieldKey] = rels.map(r => ({
-        targetId: r.toEntityId, // Using toEntityId as target for outgoing
-        ...(r.attributes as Record<string, unknown>),
-      }));
-    }
+      const relationDef = relationDefinitions.get(relType);
+      const direction = this.inferRelationDirection(entity.entityType, fieldDef, relationDef);
+      const rels = direction === 'incoming'
+        ? (entityIncoming?.get(relType) ?? [])
+        : (entityOutgoing?.get(relType) ?? []);
 
-    // Add incoming relations
-    for (const [fieldKey, fieldDef] of incomingFields) {
-      const relType = fieldDef.relType!;
-      const rels = entityIncoming?.get(relType) ?? [];
       embeddedAttributes[fieldKey] = rels.map(r => ({
-        targetId: r.fromEntityId, // Using fromEntityId as target for incoming
+        targetId: direction === 'incoming' ? r.fromEntityId : r.toEntityId,
         ...(r.attributes as Record<string, unknown>),
       }));
     }
 
     return embeddedAttributes;
+  }
+
+  private getRelationTypes(relationFields: Map<string, AttributeDefinition>): string[] {
+    return Array.from(
+      new Set(
+        Array.from(relationFields.values())
+          .map(field => field.relType)
+          .filter((value): value is string => typeof value === 'string' && value.length > 0)
+      )
+    );
+  }
+
+  private async getRelationDefinitions(
+    relationTypes: string[],
+  ): Promise<Map<string, RelationDefinitionRecord>> {
+    const result = new Map<string, RelationDefinitionRecord>();
+    if (relationTypes.length === 0) return result;
+
+    const relationDefinitions = await this.prisma.relationDefinition.findMany({
+      where: {
+        relationType: { in: relationTypes },
+        tenantId: this.tenantContext.getTenantId(),
+      },
+      select: {
+        relationType: true,
+        fromEntityType: true,
+        toEntityType: true,
+      },
+    });
+
+    for (const definition of relationDefinitions) {
+      result.set(definition.relationType, definition);
+    }
+
+    return result;
+  }
+
+  private inferRelationDirection(
+    entityType: string,
+    fieldDef: AttributeDefinition,
+    relationDef?: RelationDefinitionRecord,
+  ): 'incoming' | 'outgoing' {
+    if (fieldDef.side === 'to') return 'incoming';
+    if (fieldDef.side === 'from') return 'outgoing';
+    if (!relationDef) return 'outgoing';
+
+    const isFrom = relationDef.fromEntityType === entityType;
+    const isTo = relationDef.toEntityType === entityType;
+
+    if (isTo && !isFrom) return 'incoming';
+    return 'outgoing';
   }
 
   /**

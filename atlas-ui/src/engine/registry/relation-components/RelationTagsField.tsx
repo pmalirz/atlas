@@ -36,13 +36,12 @@ export function RelationTagsField({
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState('');
 
-    // Determine target entity type for fetching available entities
-    const targetEntityType = getTargetEntityType(fieldSchema, relationDefinition);
     const relationType = fieldSchema.relType;
 
     // Auto-detect direction from RelationDefinition
     const direction = inferRelationDirection(entityType, relationDefinition, fieldSchema);
     const isIncoming = direction === 'incoming';
+    const targetEntityType = getTargetEntityType(fieldSchema, relationDefinition, entityType);
 
     // Fetch relations from server
     const { relations: outgoingRels, loading: outgoingLoading } = useOutgoingRelations(

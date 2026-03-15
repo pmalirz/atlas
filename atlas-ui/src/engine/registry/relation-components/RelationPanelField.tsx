@@ -27,12 +27,12 @@ export function RelationPanelField({
     readonly = false,
     disabled = false,
 }: RelationComponentProps) {
-    const targetEntityType = getTargetEntityType(fieldSchema, relationDefinition);
     const relationType = fieldSchema.relType;
 
     // Auto-detect direction from RelationDefinition
     const direction = inferRelationDirection(entityType, relationDefinition, fieldSchema);
     const isIncoming = direction === 'incoming';
+    const targetEntityType = getTargetEntityType(fieldSchema, relationDefinition, entityType);
 
     // Fetch relations from server
     const { relations: outgoingRels, loading: outgoingLoading } = useOutgoingRelations(
@@ -62,10 +62,7 @@ export function RelationPanelField({
         }));
     }, [serverRelations, isIncoming]);
 
-    // For incoming relations, the linked entity type is the source
-    const linkedEntityType = isIncoming
-        ? (relationDefinition?.fromEntityType || targetEntityType)
-        : targetEntityType;
+    const linkedEntityType = targetEntityType;
 
     if (isLoading) {
         return (
