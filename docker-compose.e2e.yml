@@ -85,3 +85,4 @@ services:
         condition: service_healthy
     volumes:
       - ./atlas-e2e/playwright-report:/app/atlas-e2e/playwright-report
+      - ./atlas-e2e/coverage:/app/atlas-e2e/coverage
