@@ -27,7 +27,6 @@ export interface RelationDefinitionData {
     displayName: string;
     fromEntityType: string;
     toEntityType: string;
-    isDirectional: boolean;
     attributeSchema?: Record<string, unknown>[];
 }
 

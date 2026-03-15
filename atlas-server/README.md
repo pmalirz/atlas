@@ -86,7 +86,7 @@ The database uses a **generic entity-relation model**:
 To support the dynamic model, the system relies on three key metadata tables:
 
 - **EntityDefinition**: Defines the structure of an entity (e.g., "Application"), including its display name and allowed fields (`attributeSchema`).
-- **RelationDefinition**: Defines an allowed link between entities (e.g., "Application owned by User"), including directional rules and any attributes stored on the link itself (e.g., "Role").
+- **RelationDefinition**: Defines an allowed link between entities (e.g., "Application owned by User"), including source/target entity type constraints and any attributes stored on the link itself (e.g., "Role").
 - **TypeDefinition**: Defines reusable data types, primarily Enums (e.g., "Lifecycle Status"), that can be referenced by multiple entities or relations to ensure consistency.
 
 ### Entity Storage Pattern
@@ -390,7 +390,7 @@ interface FieldDefinition {
   type?: string;                  // 'string' | 'number' | 'boolean' | 'date' | 'datetime' | 'text' | 'relation'
   typeRef?: string;               // Reference to TypeDefinition (for enums)
   relType?: string;               // Reference to RelationDefinition (for relations)
-  incoming?: boolean;             // If true, fetch relations where entity is the target (bidirectional)
+  side?: 'from' | 'to';           // Optional explicit direction override
   required?: boolean;             // Is field required?
   isArray?: boolean;              // Array of primitive values?
   deprecated?: boolean;           // Skip in validation?
@@ -419,15 +419,15 @@ Relation fields (`type: 'relation'`) link to `RelationDefinition` via `relType`:
 }
 ```
 
-**Incoming Relation field (on Target entity):**
+**Direction override for a relation field:**
 
 ```json
 {
-  "key": "incomingInterfaces",
-  "displayName": "Interfaces Provided to Us",
+  "key": "connectedInterfaces",
+  "displayName": "Connected Interfaces",
   "type": "relation",
   "relType": "interface_connects",
-  "incoming": true
+  "side": "to"
 }
 ```
 
@@ -439,7 +439,6 @@ Relation fields (`type: 'relation'`) link to `RelationDefinition` via `relType`:
   "displayName": "Owned By",
   "fromEntityType": "application",
   "toEntityType": "user",
-  "isDirectional": true,
   "attributeSchema": [
     {
       "key": "ownershipRole",

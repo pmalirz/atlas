@@ -90,7 +90,6 @@ describe('RelationTypeValidator', () => {
                     displayName: 'Uses Technology',
                     fromEntityType: 'application',
                     toEntityType: 'technology',
-                    isDirectional: true,
                     attributeSchema: null,
                 };
 
@@ -124,7 +123,6 @@ describe('RelationTypeValidator', () => {
                     displayName: 'Uses Technology',
                     fromEntityType: 'application',
                     toEntityType: 'technology',
-                    isDirectional: true,
                     attributeSchema: null,
                 };
 
@@ -161,7 +159,6 @@ describe('RelationTypeValidator', () => {
                 displayName: 'Owned By',
                 fromEntityType: 'application',
                 toEntityType: 'user',
-                isDirectional: true,
                 attributeSchema: [
                     {
                         key: 'ownershipRole',
@@ -255,7 +252,6 @@ describe('RelationTypeValidator', () => {
                 displayName: 'Owned By',
                 fromEntityType: 'application',
                 toEntityType: 'user',
-                isDirectional: true,
                 attributeSchema: [
                     {
                         key: 'ownershipRole',
@@ -328,7 +324,6 @@ describe('RelationTypeValidator', () => {
                 displayName: 'Complex Relation',
                 fromEntityType: 'application',
                 toEntityType: 'user',
-                isDirectional: true,
                 attributeSchema: [
                     { key: 'role', displayName: 'Role', typeRef: 'ownership_role', required: true },
                     { key: 'priority', displayName: 'Priority', type: 'number', required: false },
@@ -422,7 +417,6 @@ describe('RelationTypeValidator', () => {
                     displayName: 'Simple Relation',
                     fromEntityType: 'application',
                     toEntityType: 'user',
-                    isDirectional: true,
                     attributeSchema: [],
                 };
 
@@ -452,7 +446,6 @@ describe('RelationTypeValidator', () => {
                     displayName: 'Owned By',
                     fromEntityType: 'application',
                     toEntityType: 'user',
-                    isDirectional: true,
                     attributeSchema: [
                         {
                             key: 'unknownType',

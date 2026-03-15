@@ -181,7 +181,6 @@ export class DefinitionsService {
             displayName: d.displayName,
             fromEntityType: d.fromEntityType,
             toEntityType: d.toEntityType,
-            isDirectional: d.isDirectional,
             attributeSchema: d.attributeSchema as AttributeDefinition[] | null,
         }));
     }
@@ -202,7 +201,6 @@ export class DefinitionsService {
             displayName: definition.displayName,
             fromEntityType: definition.fromEntityType,
             toEntityType: definition.toEntityType,
-            isDirectional: definition.isDirectional,
             attributeSchema: definition.attributeSchema as AttributeDefinition[] | null,
         };
     }

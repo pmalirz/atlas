@@ -39,7 +39,7 @@
 
 | Feature | Description |
 |---------|-------------|
-| **Dynamic Data Model** | [Generic Entity-Relation model](./docs/DATA_MODEL.md) allows runtime schema extension without migrations |
+| **Dynamic Data Model** | [Generic Entity-Relation model](./docs/DATA_MODEL.md) allows runtime schema extension without migrations, with relation direction inferred from source/target entity types |
 | **Schema-Driven UI** | UI layouts, forms, and views adapt automatically based on backend JSON configuration |
 | **Relation Visualization** | Interactive, force-directed graph views for exploring complex entity relationships |
 | **Audit & Compliance** | Built-in audit logging for all data changes, supporting DORA and compliance requirements |

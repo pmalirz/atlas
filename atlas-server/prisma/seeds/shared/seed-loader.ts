@@ -222,7 +222,6 @@ export async function seedRelationDefinitions(
                     displayName: d.displayName,
                     fromEntityType: d.fromEntityType,
                     toEntityType: d.toEntityType,
-                    isDirectional: d.isDirectional,
                     attributeSchema: (d.attributeSchema ?? []) as Prisma.InputJsonValue,
                 },
                 create: {
@@ -230,7 +229,6 @@ export async function seedRelationDefinitions(
                     displayName: d.displayName,
                     fromEntityType: d.fromEntityType,
                     toEntityType: d.toEntityType,
-                    isDirectional: d.isDirectional,
                     attributeSchema: (d.attributeSchema ?? []) as Prisma.InputJsonValue,
                     tenantId,
                 },

@@ -245,9 +245,8 @@ describe('RelationDefinitionDataSchema', () => {
     const validRelation = {
         relationType: 'app_owned_by',
         displayName: 'Owned By',
-        fromEntityTypes: ['application'],
-        toEntityTypes: ['user'],
-        isDirectional: true,
+        fromEntityType: 'application',
+        toEntityType: 'user',
     };
 
     it('should accept valid relation definition', () => {
@@ -273,9 +272,8 @@ describe('RelationDefinitionDataSchema', () => {
         const relation = {
             relationType: 'generic_relates_to',
             displayName: 'Relates To',
-            fromEntityTypes: null,
-            toEntityTypes: null,
-            isDirectional: false,
+            fromEntityType: null,
+            toEntityType: null,
         };
         expect(() => RelationDefinitionDataSchema.parse(relation)).not.toThrow();
     });

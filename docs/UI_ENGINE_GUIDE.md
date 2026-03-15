@@ -252,12 +252,11 @@ In the EntityDefinition's `attributeSchema`, relation fields are defined with:
 Each `relType` references a `RelationDefinition` in the database:
 
 ```typescript
-{
+const relationDef = {
     relationType: 'app_uses_technology',
     displayName: 'Uses Technology',
     fromEntityType: 'application',  // Source entity type
     toEntityType: 'technology',     // Target entity type
-    isDirectional: true,
     attributeSchema: null           // Optional relation attributes
 }
 ```

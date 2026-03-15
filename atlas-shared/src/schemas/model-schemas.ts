@@ -108,7 +108,7 @@ export type Validation = z.infer<typeof ValidationSchema>;
  * Key design decisions:
  * - `type` and `typeRef` are mutually exclusive: use `type` for primitives, `typeRef` for reusable types
  * - `relType` is required when type === 'relation'
- * - `side` disambiguates symmetric relations (same entity on both ends)
+ * - `side` disambiguates relation direction from current entity perspective
  * - `isArray` allows multiple values for primitives/enums (not relations)
  */
 export const AttributeDefinitionSchema = z.object({
@@ -135,9 +135,6 @@ export const AttributeDefinitionSchema = z.object({
     isPersonalData: z.boolean().optional(),  // GDPR/privacy flag
     deprecated: z.boolean().optional(),
     group: z.string().optional(),  // UI grouping hint
-
-    // Legacy field (prefer auto-detection from RelationDefinition)
-    incoming: z.boolean().optional(),
 
     // Validation rules
     validation: ValidationSchema,
@@ -207,8 +204,7 @@ export type TypeDefinitionData = z.infer<typeof TypeDefinitionDataSchema>;
  * Stored in the RelationDefinition table.
  * 
  * Key design decisions:
- * - fromEntityTypes/toEntityTypes are arrays to support polymorphic relations
- * - isDirectional: false means the relation is symmetric (A relates to B = B relates to A)
+ * - fromEntityType/toEntityType constrain allowed source/target entity types
  * - attributeSchema defines additional properties on the relation instance
  */
 export const RelationDefinitionDataSchema = z.object({
@@ -218,9 +214,6 @@ export const RelationDefinitionDataSchema = z.object({
     // Entity type constraints (null = any entity type allowed)
     fromEntityType: z.string().nullable().optional(),
     toEntityType: z.string().nullable().optional(),
-
-    // Relation properties
-    isDirectional: z.boolean().default(true),
 
     // Attributes on the relation itself (e.g., ownership role, direction)
     attributeSchema: z.array(AttributeDefinitionSchema).nullable().optional(),
