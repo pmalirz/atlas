@@ -151,6 +151,7 @@ See root `README.md` for instructions on running E2E tests.
 ### Unit Tests
 
 Unit tests are co-located with the source code (e.g., `*.spec.ts` files).
+Jest uses `tsconfig.spec.json` for unit tests, including workspace alias resolution for `@app-atlas/shared` and `@app-atlas/shared/zod`.
 
 ```bash
 # Run unit tests

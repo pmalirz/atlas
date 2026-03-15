@@ -135,6 +135,8 @@ npm run test:ui -w atlas-e2e
 npm run test:e2e
 ```
 
+Server unit tests in `atlas-server` use a dedicated `tsconfig.spec.json` and Jest alias mapping to resolve `@app-atlas/shared` from workspace sources during tests.
+
 The `atlas-e2e` module contains all end-to-end tests:
 
 - **API Tests** — Jest + Supertest tests for entities, relations, and definitions (schemas)
