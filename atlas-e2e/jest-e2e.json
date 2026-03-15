@@ -12,6 +12,20 @@
     },
     "testTimeout": 30000,
     "maxWorkers": 1,
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+        "json",
+        "lcov",
+        "text"
+    ],
+    "collectCoverageFrom": [
+        "../atlas-server/src/**/*.ts",
+        "!../atlas-server/src/**/*.spec.ts",
+        "!../atlas-server/src/**/*.test.ts",
+        "!../atlas-server/src/main.ts",
+        "!**/node_modules/**"
+    ],
     "reporters": [
         "default",
         [
