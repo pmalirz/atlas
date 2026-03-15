@@ -134,6 +134,18 @@ npm run db:reset
 
 End-to-End tests are located in the `atlas-e2e` workspace. They cover API and UI flows using an **isolated test database** (`app_atlas_test`) and Dockerized environment.
 
+RBAC API e2e coverage includes `atlas-e2e/tests/api/rbac.e2e-spec.ts` with tenant-scoped checks for:
+
+- viewer/read-only user update denial on entities (`403`)
+- regular user attribute-level allow/deny enforcement on `book`
+- no partial writes when a request includes forbidden attributes
+
+E2E seed users (from `prisma/seeds/e2e/e2e-auth.ts`):
+
+- `e2e-admin@atlas.local` / `admin` (Admin role)
+- `e2e-readonly-user@atlas.local` / `readonly` (Viewer role)
+- `e2e-regular-user@atlas.local` / `regular` (book-scoped attribute-editor role)
+
 See root `README.md` for instructions on running E2E tests.
 
 ### Unit Tests

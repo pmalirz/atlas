@@ -138,6 +138,12 @@ The `atlas-e2e` module contains all end-to-end tests:
 - **API Tests** — Jest + Supertest tests for entities, relations, and definitions (schemas)
 - **UI Tests** — Playwright smoke tests for navigation, forms, and data persistence
 
+RBAC API coverage includes attribute-level enforcement tests in `atlas-e2e/tests/api/rbac.e2e-spec.ts`, validating:
+
+- read-only users are denied entity updates (`403`)
+- regular users can update only explicitly allowed attributes
+- denied or non-allowlisted attributes are rejected with `403` (no partial updates)
+
 ---
 
 ## 🤝 Contributing
