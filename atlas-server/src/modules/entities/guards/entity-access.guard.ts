@@ -5,19 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-
-/**
- * Entity access permissions by operation type.
- * This is a placeholder structure that will be populated from
- * user roles/claims when authentication is implemented.
- */
-export interface EntityPermissions {
-  entityType: string;
-  canCreate: boolean;
-  canRead: boolean;
-  canUpdate: boolean;
-  canDelete: boolean;
-}
+import { RbacService } from '../../rbac/rbac.service';
 
 /**
  * Decorator to specify required permission for an endpoint.
@@ -28,33 +16,43 @@ export const RequirePermission = (permission: 'create' | 'read' | 'update' | 'de
 /**
  * Guard that checks if the user has permission to perform the requested
  * operation on the specified entity type.
- * 
- * Currently, this guard is permissive (allows all operations).
- * When authentication is implemented:
- * 1. Extract user from JWT token
- * 2. Load user's role-based permissions
- * 3. Check if user has permission for entityType + operation
  */
 @Injectable()
 export class EntityAccessGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(
+    private readonly reflector: Reflector,
+    private readonly rbacService: RbacService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const entityType = request.params?.entityType;
     const method = request.method;
+    const user = request.user;
+
+    // Skip generic protection if no entityType in route (guard might be applied globally, though it's typically controller-scoped)
+    if (!entityType || !user) {
+      return true;
+    }
 
     // Map HTTP method to permission
     const operation = this.getOperationFromMethod(method);
 
-    // TODO: When auth is implemented, check user permissions here
-    // const user = request.user;
-    // const permissions = await this.getPermissions(user, entityType);
-    // if (!this.hasPermission(permissions, operation)) {
-    //   throw new ForbiddenException(`No ${operation} permission for ${entityType}`);
-    // }
+    const userId = user.id || user.sub;
+    const tenantId = user.tenantId;
 
-    // For now, allow all operations
+    const hasAccess = await this.rbacService.hasPermission(
+      userId,
+      tenantId,
+      'entity',
+      entityType,
+      operation,
+    );
+
+    if (!hasAccess) {
+      throw new ForbiddenException(`No ${operation} permission for entity type ${entityType}`);
+    }
+
     return true;
   }
 
@@ -73,27 +71,5 @@ export class EntityAccessGuard implements CanActivate {
         return 'read';
     }
   }
-
-  // Placeholder for future implementation
-  // private async getPermissions(user: any, entityType: string): Promise<EntityPermissions> {
-  //   // Load from database or JWT claims
-  //   return {
-  //     entityType,
-  //     canCreate: true,
-  //     canRead: true,
-  //     canUpdate: true,
-  //     canDelete: true,
-  //   };
-  // }
-
-  // private hasPermission(permissions: EntityPermissions, operation: string): boolean {
-  //   switch (operation) {
-  //     case 'create': return permissions.canCreate;
-  //     case 'read': return permissions.canRead;
-  //     case 'update': return permissions.canUpdate;
-  //     case 'delete': return permissions.canDelete;
-  //     default: return false;
-  //   }
-  // }
 }
 

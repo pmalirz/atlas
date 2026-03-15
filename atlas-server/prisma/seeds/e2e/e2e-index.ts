@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import * as path from 'path';
 import { seedAuth } from './e2e-auth';
 import { seedModel, seedUI } from '../shared/seed-loader';
-import { seedDefaultTenant, DEFAULT_TENANT_ID } from '../default-tenant';
+import { seedDefaultTenant, seedDefaultRoles, DEFAULT_TENANT_ID } from '../default-tenant';
 
 /**
  * E2E Test Seed
@@ -30,8 +30,11 @@ export async function seed(prisma: PrismaClient) {
     await seedDefaultTenant(prisma);
 
     // Seed the entity model (types, schemas, entities, relations)
-    // This will truncate all tables including users
+    // This will truncate all tables including users and roles
     await seedModel(prisma, DEFAULT_TENANT_ID, DATA_DIR);
+
+    // Seed default roles for the tenant (AFTER seedModel)
+    await seedDefaultRoles(prisma);
 
     // Seed auth user AFTER seedModel because it truncates the users table
     await seedAuth(prisma);

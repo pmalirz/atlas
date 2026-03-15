@@ -1,5 +1,6 @@
 import { Switch } from '@/components/ui/switch';
 import type { FieldComponentProps } from '../component-registry';
+import { ReadOnlyField } from './shared/ReadOnlyField';
 
 export function BooleanField({
     value,
@@ -9,9 +10,9 @@ export function BooleanField({
 }: FieldComponentProps<boolean>) {
     if (readonly) {
         return (
-            <span className="text-foreground">
+            <ReadOnlyField>
                 {value ? 'Yes' : 'No'}
-            </span>
+            </ReadOnlyField>
         );
     }
 

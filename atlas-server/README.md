@@ -34,6 +34,7 @@ Server runs at `http://localhost:3001` with API prefix `/api`.
 - **Schema-Driven Validation**: Entity definitions (`entity_definitions` + `type_definitions`) drive validation, options, and personal-data flags
 - **Type-safe Relations**: Relations stored in `relations` with typed `relation_type`, constrained by `relation_definitions`
 - **Audit Compliance**: Append-only `audit_events` table for DORA/CRA regulatory requirements
+- **RBAC Enforcement**: Entity-level and attribute-level permissions are enforced server-side (403 on unauthorized writes)
 - **Soft Delete**: All entities support soft delete via `deleted_at`
 - **Pluggable Auth**: Supports Native (JWT), Clerk, Logto, and SSO providers
 
@@ -133,6 +134,18 @@ npm run db:reset
 
 End-to-End tests are located in the `atlas-e2e` workspace. They cover API and UI flows using an **isolated test database** (`app_atlas_test`) and Dockerized environment.
 
+RBAC API e2e coverage includes `atlas-e2e/tests/api/rbac.e2e-spec.ts` with tenant-scoped checks for:
+
+- viewer/read-only user update denial on entities (`403`)
+- regular user attribute-level read vs update enforcement on `book`
+- no partial writes when a request includes non-updatable attributes
+
+E2E seed users (from `prisma/seeds/e2e/e2e-auth.ts`):
+
+- `e2e-admin@atlas.local` / `admin` (Admin role)
+- `e2e-readonly-user@atlas.local` / `readonly` (Viewer role)
+- `e2e-regular-user@atlas.local` / `regular` (book-scoped attribute-editor role)
+
 See root `README.md` for instructions on running E2E tests.
 
 ### Unit Tests
@@ -153,6 +166,8 @@ npm run test:watch
 ---
 
 ## API Endpoints
+
+All tenant-aware endpoints are scoped by slug: `/api/:slug/...` (for example, `/api/myatlas/entities/book`).
 
 ### Auth API
 
@@ -227,6 +242,16 @@ Provides JSON configuration for the Server-Driven UI.
 | GET | `/api/ui-config/entities/:entityType` | Get UI config for specific entity |
 | GET | `/api/ui-config/global` | Get global UI settings |
 | GET | `/api/ui-config/menu` | Get main menu structure |
+
+### RBAC API
+
+Returns effective roles and permissions for the authenticated user in the active tenant.
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/:slug/rbac/me` | Get current user roles and permissions |
+| GET | `/api/:slug/rbac/roles` | List tenant roles with permissions |
+| GET | `/api/:slug/rbac/users/:id/roles` | Get roles for a specific user |
 
 ### Swagger Documentation
 

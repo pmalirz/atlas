@@ -9,64 +9,55 @@ import { withTenantApiPath } from '../../utils/tenant-paths';
 
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
 
-// Test user credentials - unique per test run to avoid conflicts
-const testEmail = `e2e-test-${Date.now()}@test.com`;
-const testPassword = 'e2e-test-password-123';
-const testName = 'E2E Test User';
+export type E2ETestUserKey = 'admin' | 'readonly' | 'regular';
 
-let authToken: string | null = null;
+const TEST_USERS: Record<E2ETestUserKey, { email: string; password: string }> = {
+    admin: {
+        email: 'e2e-admin@atlas.local',
+        password: 'admin',
+    },
+    readonly: {
+        email: 'e2e-readonly-user@atlas.local',
+        password: 'readonly',
+    },
+    regular: {
+        email: 'e2e-regular-user@atlas.local',
+        password: 'regular',
+    },
+};
+
+const authTokens: Partial<Record<E2ETestUserKey, string>> = {};
 
 /**
- * Get or create auth token for E2E tests.
- * Registers a new test user if needed.
+ * Get auth token for E2E tests.
+ * Uses pre-seeded users for authentication.
  */
-export async function getAuthToken(): Promise<string> {
-    if (authToken) {
-        return authToken;
+export async function getAuthToken(user: E2ETestUserKey = 'admin'): Promise<string> {
+    const cached = authTokens[user];
+    if (cached) {
+        return cached;
     }
 
+    const credentials = TEST_USERS[user];
     console.log(`[Auth Helper] API_BASE_URL: ${API_BASE_URL}`);
-    console.log(`[Auth Helper] Registering user: ${testEmail}`);
+    console.log(`[Auth Helper] Logging in user: ${credentials.email}`);
 
-    // Try to register a new test user
-    try {
-        const registerResponse = await request(API_BASE_URL)
-            .post(withTenantApiPath('/api/auth/register'))
-            .send({
-                email: testEmail,
-                password: testPassword,
-                name: testName,
-            });
-
-        console.log(`[Auth Helper] Register response status: ${registerResponse.status}`);
-
-        if (registerResponse.status === 201) {
-            authToken = registerResponse.body.accessToken;
-            console.log(`[Auth Helper] Registered successfully, got token`);
-            return authToken!;
-        }
-
-        console.log(`[Auth Helper] Register failed with body:`, registerResponse.body);
-    } catch (error) {
-        console.error(`[Auth Helper] Register request error:`, error);
-    }
-
-    // If user already exists, try to login
+    // Try to login with the pre-seeded user
     try {
         console.log(`[Auth Helper] Trying login...`);
         const loginResponse = await request(API_BASE_URL)
             .post(withTenantApiPath('/api/auth/login'))
             .send({
-                email: testEmail,
-                password: testPassword,
+                email: credentials.email,
+                password: credentials.password,
             });
 
         console.log(`[Auth Helper] Login response status: ${loginResponse.status}`);
 
         if (loginResponse.status === 200) {
-            authToken = loginResponse.body.accessToken;
+            authTokens[user] = loginResponse.body.accessToken;
             console.log(`[Auth Helper] Login successful, got token`);
-            return authToken!;
+            return authTokens[user]!;
         }
 
         console.log(`[Auth Helper] Login failed with body:`, loginResponse.body);
@@ -80,20 +71,20 @@ export async function getAuthToken(): Promise<string> {
 /**
  * Get the auth header object for use with supertest .set()
  */
-export async function getAuthHeader(): Promise<{ Authorization: string }> {
-    const token = await getAuthToken();
+export async function getAuthHeader(user: E2ETestUserKey = 'admin'): Promise<{ Authorization: string }> {
+    const token = await getAuthToken(user);
     return { Authorization: `Bearer ${token}` };
 }
 
 /**
  * Create authenticated request helpers bound to the API
  */
-export function createAuthenticatedApi() {
+export function createAuthenticatedApi(user: E2ETestUserKey = 'admin') {
     let token: string;
 
     return {
         async setup() {
-            token = await getAuthToken();
+            token = await getAuthToken(user);
         },
 
         get authHeader() {
@@ -122,5 +113,7 @@ export function createAuthenticatedApi() {
  * Reset auth token (for test isolation if needed)
  */
 export function resetAuthToken(): void {
-    authToken = null;
+    for (const user of Object.keys(authTokens) as E2ETestUserKey[]) {
+        delete authTokens[user];
+    }
 }

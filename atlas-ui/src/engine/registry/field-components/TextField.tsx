@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TextInput } from './inputs';
 import type { FieldComponentProps } from '../component-registry';
+import { ReadOnlyField } from './shared/ReadOnlyField';
 
 export function TextField({
     value,
@@ -12,7 +13,11 @@ export function TextField({
     const [draft, setDraft] = useState(value ?? '');
 
     if (readonly) {
-        return <span className="text-foreground">{value || '—'}</span>;
+        return (
+            <ReadOnlyField multiline>
+                {value || '—'}
+            </ReadOnlyField>
+        );
     }
 
     if (!editing) {

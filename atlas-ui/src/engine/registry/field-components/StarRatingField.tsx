@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { FieldComponentProps } from '../component-registry';
+import { ReadOnlyField } from './shared/ReadOnlyField';
 
 // Default labels for 1-5 scale if not provided
 const DEFAULT_LABELS: Record<number, string> = {
@@ -46,6 +47,32 @@ export function StarRatingField({
             onChange(index);
         }
     };
+
+    if (readonly) {
+        return (
+            <ReadOnlyField className="gap-1">
+                {Array.from({ length: max }).map((_, i) => {
+                    const index = i + 1;
+                    const isFilled = index <= value;
+
+                    return (
+                        <Star
+                            key={index}
+                            className={cn(
+                                "h-5 w-5",
+                                isFilled
+                                    ? "fill-[hsl(var(--star))] text-[hsl(var(--star-foreground))]"
+                                    : "text-muted-foreground/30"
+                            )}
+                        />
+                    );
+                })}
+                {(labels && value > 0) && (
+                    <span className="ml-2 text-muted-foreground">{labels[value]}</span>
+                )}
+            </ReadOnlyField>
+        );
+    }
 
     return (
         <div className="flex flex-col items-start gap-2">

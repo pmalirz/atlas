@@ -4,6 +4,7 @@ import { getGridClasses } from '../utils/field-utils';
 import { EntityData } from '../schema/common';
 import { RelationFieldRenderer } from './RelationFieldRenderer';
 import { FieldWrapper } from './FieldWrapper';
+import { useRbac } from '@/auth/RbacContext';
 
 interface FieldRendererProps {
     fieldKey: string;
@@ -32,6 +33,18 @@ export function FieldRenderer({
     // Find field definition in entity schema
     const fieldSchema = entitySchema.attributes.find(f => f.key === fieldKey);
 
+    const { getReadableAttributes, getUpdatableAttributes, hasPermission } = useRbac();
+    const readableAttrs = getReadableAttributes('entity', entitySchema.entityType);
+    const updatableAttrs = getUpdatableAttributes('entity', entitySchema.entityType);
+    const canUpdate = hasPermission('entity', entitySchema.entityType, 'update');
+
+    // Top-level fields are not filtered by attribute-level RBAC on the backend
+    const isTopLevelField = ['id', 'name', 'description', 'createdAt', 'updatedAt'].includes(fieldKey);
+
+    if (!isTopLevelField) {
+        if (readableAttrs !== null && !readableAttrs.has(fieldKey)) return null;
+    }
+
 
     if (!fieldSchema) {
         if (import.meta.env.DEV) {
@@ -45,6 +58,9 @@ export function FieldRenderer({
 
     // Calculate grid placement classes
     const gridClasses = getGridClasses(placement);
+    
+    const canUpdateField = updatableAttrs === null || updatableAttrs.has(fieldKey);
+    const isReadonly = placement.readonly || !canUpdate || !canUpdateField;
 
     // Handle relation fields with special rendering
     if (isRelationField) {
@@ -55,7 +71,7 @@ export function FieldRenderer({
                 entity={entity}
                 entitySchema={entitySchema}
                 fieldSchema={fieldSchema as FieldSchema}
-                placement={placement}
+                placement={{...placement, readonly: isReadonly}}
                 gridClasses={gridClasses}
                 onUpdate={onUpdate}
             />
@@ -77,11 +93,14 @@ export function FieldRenderer({
             {Component ? (
                 <Component
                     value={entity[fieldKey] as never}
-                    onChange={(value) => onUpdate(fieldKey, value)}
+                    onChange={(value) => {
+                        if (isReadonly) return;
+                        onUpdate(fieldKey, value);
+                    }}
                     fieldSchema={fieldSchema}
                     placement={placement}
                     valueStyles={placement.valueStyles}
-                    readonly={placement.readonly}
+                    readonly={isReadonly}
                 />
             ) : (
                 <div className="atlas-field-error border border-destructive p-2 rounded">

@@ -17,5 +17,8 @@ export * from './auth-schemas';
 // Tenant schemas (Tenant, TenantSlug, etc.)
 export * from './tenant-schemas';
 
+// RBAC schemas (Role, RolePermission, UserRole)
+export * from './rbac-schemas';
+
 // Re-export zod.ts (includes z export and all schemas)
 export * from './zod';

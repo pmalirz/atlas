@@ -14,6 +14,7 @@ async function main() {
   if (!seedName) {
     console.log('ℹ️  No specific seed provided.');
     console.log('   Usage: npx prisma db seed -- --seed <name>');
+    console.log('   Ensure latest migrations are applied before seeding.');
 
     const seedsDir = path.join(__dirname, 'seeds');
     if (fs.existsSync(seedsDir)) {
@@ -33,6 +34,7 @@ async function main() {
   }
 
   console.log(`🚀 Running seed: ${seedName}...`);
+  console.log('ℹ️  Seeding expects the latest Prisma schema and migrations.');
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 
 /**
  * Default tenant ID — shared constant for all seeds.
@@ -32,4 +32,84 @@ export async function seedDefaultTenant(prisma: PrismaClient) {
 
     console.log(`  ✓ Default tenant seeded: ${tenant.name} (slug: ${tenant.slug})`);
     return tenant;
+}
+
+/**
+ * Seed default roles for a tenant.
+ */
+export async function seedDefaultRoles(prisma: PrismaClient, tenantId: string = DEFAULT_TENANT_ID) {
+    // Admin Role
+    const adminRole = await prisma.role.upsert({
+        where: { roles_name_tenant_unique: { name: 'Admin', tenantId } },
+        create: {
+            name: 'Admin',
+            description: 'Full administrative access',
+            tenantId,
+        },
+        update: {
+            description: 'Full administrative access',
+        },
+    });
+
+    await prisma.rolePermission.upsert({
+        where: { role_permissions_role_resource_unique: { roleId: adminRole.id, resourceType: 'entity', resourceName: '*' } },
+        create: {
+            roleId: adminRole.id,
+            resourceType: 'entity',
+            resourceName: '*',
+            canCreate: true,
+            canRead: true,
+            canUpdate: true,
+            canDelete: true,
+            readableAttributes: Prisma.DbNull,
+            updatableAttributes: Prisma.DbNull,
+        },
+        update: {
+            canCreate: true,
+            canRead: true,
+            canUpdate: true,
+            canDelete: true,
+            readableAttributes: Prisma.DbNull,
+            updatableAttributes: Prisma.DbNull,
+        },
+    });
+
+    // Viewer Role
+    const viewerRole = await prisma.role.upsert({
+        where: { roles_name_tenant_unique: { name: 'Viewer', tenantId } },
+        create: {
+            name: 'Viewer',
+            description: 'Read-only access',
+            tenantId,
+        },
+        update: {
+            description: 'Read-only access',
+        },
+    });
+
+    await prisma.rolePermission.upsert({
+        where: { role_permissions_role_resource_unique: { roleId: viewerRole.id, resourceType: 'entity', resourceName: '*' } },
+        create: {
+            roleId: viewerRole.id,
+            resourceType: 'entity',
+            resourceName: '*',
+            canCreate: false,
+            canRead: true,
+            canUpdate: false,
+            canDelete: false,
+            readableAttributes: Prisma.DbNull,
+            updatableAttributes: [],
+        },
+        update: {
+            canCreate: false,
+            canRead: true,
+            canUpdate: false,
+            canDelete: false,
+            readableAttributes: Prisma.DbNull,
+            updatableAttributes: [],
+        },
+    });
+
+    console.log(`  ✓ Default roles seeded: Admin, Viewer`);
+    return { adminRole, viewerRole };
 }

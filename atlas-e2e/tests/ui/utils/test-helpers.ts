@@ -6,8 +6,8 @@ import { withTenantUiPath } from '../../utils/tenant-paths';
 // ─────────────────────────────────────────────────────────────
 
 // Well-known test user credentials (matches E2E seed in e2e-auth.ts)
-const TEST_EMAIL = 'e2e-test@atlas.local';
-const TEST_PASSWORD = 'e2e-test-password-123';
+const TEST_EMAIL = 'e2e-admin@atlas.local';
+const TEST_PASSWORD = 'admin';
 
 /**
  * Login with the seeded test user via the UI login page.

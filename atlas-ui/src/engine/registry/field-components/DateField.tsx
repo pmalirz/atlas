@@ -6,6 +6,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import type { FieldComponentProps } from '../component-registry';
 import { cn, formatDate } from '@/lib/utils';
+import { ReadOnlyField } from './shared/ReadOnlyField';
 
 export function DateField({
     value,
@@ -22,9 +23,9 @@ export function DateField({
 
     if (readonly) {
         return (
-            <span className="text-foreground">
+            <ReadOnlyField>
                 {isValidDate ? formatDate(dateValue) : '—'}
-            </span>
+            </ReadOnlyField>
         );
     }
 
