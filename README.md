@@ -25,6 +25,12 @@
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License" />
 </p>
 
+## Code Quality & Security
+
+- **Strict Types:** End-to-end typing with eliminated any types.
+- **Security:** Helmet headers and secured parameters.
+- **Optimized UI:** Heavily memoized React components across dynamic UI trees.
+
 ---
 
 ## ✨ What is Atlas?
@@ -33,11 +39,23 @@
 
 > 🚀 *Customize it to your needs. Deploy ready-to-use seeds. Extend and evolve.*
 
+## Code Quality & Security
+
+- **Strict Types:** End-to-end typing with eliminated any types.
+- **Security:** Helmet headers and secured parameters.
+- **Optimized UI:** Heavily memoized React components across dynamic UI trees.
+
 ---
 
 ## 🎯 Key Features
 
 | Feature | Description |
+## Code Quality & Security
+
+- **Strict Types:** End-to-end typing with eliminated any types.
+- **Security:** Helmet headers and secured parameters.
+- **Optimized UI:** Heavily memoized React components across dynamic UI trees.
+
 |---------|-------------|
 | **Dynamic Data Model** | [Generic Entity-Relation model](./docs/DATA_MODEL.md) allows runtime schema extension without migrations, with relation direction inferred from source/target entity types |
 | **Schema-Driven UI** | UI layouts, forms, and views adapt automatically based on backend JSON configuration |
@@ -49,6 +67,12 @@
 | **Full-Stack TypeScript** | End-to-end type safety with shared contracts between frontend and backend |
 | **Pluggable Auth** | [Native and extensible authentication](./docs/AUTHENTICATION.md) supporting multiple providers |
 | **Email Integration** | [Pluggable email system](./docs/EMAIL_SETUP.md) for verification and password resets (Nodemailer, SMTP) |
+
+## Code Quality & Security
+
+- **Strict Types:** End-to-end typing with eliminated any types.
+- **Security:** Helmet headers and secured parameters.
+- **Optimized UI:** Heavily memoized React components across dynamic UI trees.
 
 ---
 
@@ -62,6 +86,12 @@ app-atlas/
 ├── atlas-e2e/       # End-to-end tests (API + UI)
 └── docs/            # Detailed documentation
 ```
+
+## Code Quality & Security
+
+- **Strict Types:** End-to-end typing with eliminated any types.
+- **Security:** Helmet headers and secured parameters.
+- **Optimized UI:** Heavily memoized React components across dynamic UI trees.
 
 ---
 
@@ -92,6 +122,12 @@ npm run dev:server &
 npm run dev:ui
 ```
 
+## Code Quality & Security
+
+- **Strict Types:** End-to-end typing with eliminated any types.
+- **Security:** Helmet headers and secured parameters.
+- **Optimized UI:** Heavily memoized React components across dynamic UI trees.
+
 ---
 
 ## 🗎 Documentation
@@ -108,6 +144,12 @@ Detailed documentation is available in the [`docs/`](./docs) directory:
 - [**Frontend Guide**](./atlas-ui/README.md) — Setup and development of the React application
 - [**Backend Guide**](./atlas-server/README.md) — Setup and development of the NestJS API
 
+## Code Quality & Security
+
+- **Strict Types:** End-to-end typing with eliminated any types.
+- **Security:** Helmet headers and secured parameters.
+- **Optimized UI:** Heavily memoized React components across dynamic UI trees.
+
 ---
 
 ## 🌱 Seeds
@@ -115,10 +157,22 @@ Detailed documentation is available in the [`docs/`](./docs) directory:
 Atlas ships with **ready-to-deploy seeds** — pre-configured data models that you can use as starting points:
 
 | Seed | Description |
+## Code Quality & Security
+
+- **Strict Types:** End-to-end typing with eliminated any types.
+- **Security:** Helmet headers and secured parameters.
+- **Optimized UI:** Heavily memoized React components across dynamic UI trees.
+
 |------|-------------|
 | **eap** | Enterprise Application Portfolio — manage applications, technologies, and integrations |
 
 > 💡 Seeds are fully customizable. Use them as-is or modify to fit your domain.
+
+## Code Quality & Security
+
+- **Strict Types:** End-to-end typing with eliminated any types.
+- **Security:** Helmet headers and secured parameters.
+- **Optimized UI:** Heavily memoized React components across dynamic UI trees.
 
 ---
 
@@ -148,17 +202,35 @@ RBAC API coverage includes attribute-level enforcement tests in `atlas-e2e/tests
 - regular users can read all permitted attributes while updating only explicitly updatable attributes
 - non-updatable attributes are rejected with `403` (no partial updates)
 
+## Code Quality & Security
+
+- **Strict Types:** End-to-end typing with eliminated any types.
+- **Security:** Helmet headers and secured parameters.
+- **Optimized UI:** Heavily memoized React components across dynamic UI trees.
+
 ---
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please see our contributing guidelines for more details.
 
+## Code Quality & Security
+
+- **Strict Types:** End-to-end typing with eliminated any types.
+- **Security:** Helmet headers and secured parameters.
+- **Optimized UI:** Heavily memoized React components across dynamic UI trees.
+
 ---
 
 ## 📄 License
 
 This project is licensed under the [MIT License](./LICENSE).
+
+## Code Quality & Security
+
+- **Strict Types:** End-to-end typing with eliminated any types.
+- **Security:** Helmet headers and secured parameters.
+- **Optimized UI:** Heavily memoized React components across dynamic UI trees.
 
 ---
 

@@ -24,6 +24,12 @@ npm run start:dev
 
 Server runs at `http://localhost:3001` with API prefix `/api`.
 
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 ---
 
 ## Architecture Overview
@@ -64,6 +70,12 @@ server/
 │   └── main.ts            # Application entry point
 ```
 
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 ---
 
 ## Database
@@ -73,6 +85,12 @@ server/
 The database uses a **generic entity-relation model**:
 
 | Table | Purpose |
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 |-------|---------|
 | `entities` | All domain objects with JSONB `attributes` |
 | `relations` | Typed links between entities with JSONB `attributes` |
@@ -126,6 +144,12 @@ npm run db:seed
 npm run db:reset
 ```
 
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 ---
 
 ## Testing
@@ -164,6 +188,12 @@ npm run test:cov
 npm run test:watch
 ```
 
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 ---
 
 ## API Endpoints
@@ -175,6 +205,12 @@ All tenant-aware endpoints are scoped by slug: `/api/:slug/...` (for example, `/
 Handles authentication and user session management.
 
 | Method | Endpoint | Description |
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 |--------|----------|-------------|
 | GET | `/api/auth/config` | Get auth configuration (provider type, etc) |
 | POST | `/api/auth/login` | Login (Native provider) |
@@ -187,6 +223,12 @@ Handles authentication and user session management.
 Unified interface for all entity types (entity types come from `entity_definitions`):
 
 | Method | Endpoint | Description |
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 |--------|----------|-------------|
 | GET | `/api/entities/:entityType` | List entities with pagination, search, filtering |
 | POST | `/api/entities/:entityType` | Create entity (validated against schema) |
@@ -198,6 +240,12 @@ Unified interface for all entity types (entity types come from `entity_definitio
 **Query Parameters:**
 
 | Parameter | Type | Description |
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 |-----------|------|-------------|
 | `search` | string | Case-insensitive partial match on name |
 | `filter` | JSON | Attribute filter, e.g., `{"status":"active"}` |
@@ -210,6 +258,12 @@ Unified interface for all entity types (entity types come from `entity_definitio
 ### Relations API
 
 | Method | Endpoint | Description |
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 |--------|----------|-------------|
 | GET | `/api/relations` | List relations |
 | POST | `/api/relations` | Create relation (validated against `relation_definitions`) |
@@ -223,6 +277,12 @@ Unified interface for all entity types (entity types come from `entity_definitio
 Provides access to the dynamic data model definitions.
 
 | Method | Endpoint | Description |
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 |--------|----------|-------------|
 | GET | `/api/definitions/entities` | List all entity definitions |
 | GET | `/api/definitions/entities/:entityType` | Get definition for entity type |
@@ -238,6 +298,12 @@ Provides access to the dynamic data model definitions.
 Provides JSON configuration for the Server-Driven UI.
 
 | Method | Endpoint | Description |
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 |--------|----------|-------------|
 | GET | `/api/ui-config/entities` | Get all UI configurations |
 | GET | `/api/ui-config/entities/:entityType` | Get UI config for specific entity |
@@ -249,6 +315,12 @@ Provides JSON configuration for the Server-Driven UI.
 Returns effective roles and permissions for the authenticated user in the active tenant.
 
 | Method | Endpoint | Description |
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 |--------|----------|-------------|
 | GET | `/api/:slug/rbac/me` | Get current user roles and permissions |
 | GET | `/api/:slug/rbac/roles` | List tenant roles with permissions |
@@ -261,6 +333,12 @@ When running in development, Swagger UI is available at:
 ```bash
 http://localhost:3001/api/docs
 ```
+
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
 
 ---
 
@@ -332,6 +410,12 @@ Handles email transmission using a pluggable provider architecture:
 
 See the [Email Setup Guide](../docs/EMAIL_SETUP.md) for configuration.
 
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 ---
 
 ## Dynamic Schema Validation
@@ -372,6 +456,12 @@ The server uses a **data-driven validation system** where validation rules come 
 Each validator implements the Strategy Pattern and handles specific field types:
 
 | Validator | Types | Features |
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 |-----------|-------|----------|
 | `StringTypeValidator` | `string`, `text` | min/max length, regex pattern |
 | `NumberTypeValidator` | `number`, `decimal` | min/max bounds |
@@ -553,6 +643,12 @@ KEEP_TEST_DB=false
 AUTH_PROVIDER="native"
 ```
 
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 ---
 
 ## Development Workflow
@@ -578,6 +674,12 @@ No NestJS module or controller is required—generic `/api/entities/:entityType`
 - **Explicit Return Types**: Controllers should utilize explicit return types (e.g., `Promise<EntityResponse>`) to enforce contract adherence and automatically generate accurate Swagger documentation.
 - **DTOs**: Use shared DTOs from `atlas-shared` where possible to ensure type consistency between frontend and backend.
 - **Performance Optimization**: When performing operations like `remove` that do not require entity relations, avoid using `findOne` (which fetches relations). Instead, use `schemaValidator.validateEntityType` combined with `getEntityOrThrow` for existence checks.
+
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
 
 ---
 
@@ -626,11 +728,23 @@ Developers are encouraged to contribute custom models that serve as good scaffol
 
 We welcome contributions of new seeded models (e.g., for specific industries, regulatory frameworks, or organizational structures) to help others get started quickly!
 
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 ---
 
 ## Scripts Reference
 
 | Script | Description |
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
+
 |--------|-------------|
 | `npm run start` | Start server |
 | `npm run start:dev` | Start with hot reload |
@@ -643,6 +757,12 @@ We welcome contributions of new seeded models (e.g., for specific industries, re
 | `npm run db:reset` | Reset database (clean up all data) |
 | `npm run db:redeploy` | Full reset and re-apply EAP seed |
 | `npm run db:studio` | Open Prisma Studio |
+
+## Code Quality & Security Improvements
+
+- **Strict Types:** Strict TypeScript rules are enforced to improve compile-time safety and eliminate explicit `any` usage.
+- **Security Hardening:** Global security enhancements applied using Helmet.js, input validation, and secure header propagation.
+- **Optimizations:** Removed redundant components to limit unnecessary abstraction.
 
 ---
 
