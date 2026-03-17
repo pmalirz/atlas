@@ -1,19 +1,20 @@
 import type { SectionComponentProps } from '../component-registry';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { testIds } from '../../utils/testIdUtils';
 
 export function CardSection({ schema, children }: SectionComponentProps) {
     return (
-        <div className="atlas-section" data-testid={testIds.section(schema.id)}>
+        <Card data-testid={testIds.section(schema.id)}>
             {schema.title && (
-                <div className="atlas-section-header">
-                    <h3 className="atlas-section-title">{schema.title}</h3>
+                <CardHeader>
+                    <CardTitle className="text-base">{schema.title}</CardTitle>
                     {schema.description && (
-                        <p className="atlas-section-description">{schema.description}</p>
+                        <CardDescription>{schema.description}</CardDescription>
                     )}
-                </div>
+                </CardHeader>
             )}
-            <div className="atlas-section-content">{children}</div>
-        </div>
+            <CardContent className="space-y-4">{children}</CardContent>
+        </Card>
     );
 }
 

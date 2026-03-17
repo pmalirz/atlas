@@ -26,9 +26,10 @@ export function FieldWrapper({
     children
 }: FieldWrapperProps) {
     return (
-        <div className={cn(className, 'atlas-field')} data-testid={testIds.field(sectionId, fieldKey)}>
-            <Label className={cn('atlas-field-label', required && 'atlas-field-label--required')}>
+        <div className={cn(className, 'space-y-1.5')} data-testid={testIds.field(sectionId, fieldKey)}>
+            <Label className="text-sm font-medium text-foreground">
                 {label}
+                {required && <span className="text-destructive"> *</span>}
             </Label>
             {children}
         </div>

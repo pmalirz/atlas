@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { getTenantSlug } from '@/api/client';
 import { ArrowRight } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import type { TileViewSchema, TileFieldSchema, EntitySchema } from '../schema/types';
 import { formatRelativeTime } from '@/lib/utils';
 import { testIds } from '../utils/testIdUtils';
@@ -36,59 +38,63 @@ export function TileRenderer({
     return (
         <Link
             to={`/${slug}/${entityType}/${id}`}
-            className="atlas-card block group"
+            className="group block"
             data-testid={testIds.tile(entityType, id)}
         >
-            {/* Header */}
-            <div className="atlas-card-header border-0 pb-0 mb-4">
-                <div>
-                    {titleField && (
-                        <h3 className="atlas-card-title group-hover:text-primary transition-colors">
-                            {formatFieldValue(entity, titleField, entitySchema)}
-                        </h3>
-                    )}
-                    {subtitleField && (
-                        <p className="atlas-card-description mt-1">
-                            {formatFieldValue(entity, subtitleField, entitySchema)}
-                        </p>
-                    )}
-                </div>
-                <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-            </div>
+            <Card className="h-full border-border transition-shadow duration-200 group-hover:shadow-md">
+                <CardHeader className="mb-2 border-0 pb-0">
+                    <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                            {titleField && (
+                                <CardTitle className="truncate text-lg group-hover:text-primary transition-colors">
+                                    {formatFieldValue(entity, titleField, entitySchema)}
+                                </CardTitle>
+                            )}
+                            {subtitleField && (
+                                <p className="mt-1 truncate text-sm text-muted-foreground">
+                                    {formatFieldValue(entity, subtitleField, entitySchema)}
+                                </p>
+                            )}
+                        </div>
+                        <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                </CardHeader>
 
-            {/* Description */}
-            {descriptionField && (
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                    {formatFieldValue(entity, descriptionField, entitySchema)}
-                </p>
-            )}
+                {(descriptionField || badgeFields.length > 0) && (
+                    <CardContent className="space-y-4">
+                        {descriptionField && (
+                            <p className="line-clamp-2 text-sm text-muted-foreground">
+                                {formatFieldValue(entity, descriptionField, entitySchema)}
+                            </p>
+                        )}
 
-            {/* Badges */}
-            {badgeFields.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-4">
-                    {badgeFields.map(field => {
-                        const value = entity[field.field];
-                        if (!value) return null;
+                        {badgeFields.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                                {badgeFields.map(field => {
+                                    const value = entity[field.field];
+                                    if (!value) return null;
 
-                        return (
-                            <span key={field.field} className="atlas-badge-secondary">
-                                {String(value)}
+                                    return (
+                                        <Badge key={field.field} variant="secondary">
+                                            {String(value)}
+                                        </Badge>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </CardContent>
+                )}
+
+                {footerFields.length > 0 && (
+                    <CardFooter className="mt-auto justify-start gap-4 border-t pt-3 text-xs text-muted-foreground">
+                        {footerFields.map(field => (
+                            <span key={field.field}>
+                                {formatFieldValue(entity, field, entitySchema)}
                             </span>
-                        );
-                    })}
-                </div>
-            )}
-
-            {/* Footer */}
-            {footerFields.length > 0 && (
-                <div className="atlas-card-footer justify-start gap-4 text-xs border-t pt-3 mt-auto">
-                    {footerFields.map(field => (
-                        <span key={field.field}>
-                            {formatFieldValue(entity, field, entitySchema)}
-                        </span>
-                    ))}
-                </div>
-            )}
+                        ))}
+                    </CardFooter>
+                )}
+            </Card>
         </Link>
     );
 }

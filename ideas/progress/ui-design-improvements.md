@@ -75,9 +75,9 @@
 - [x] Add onboarding/empty-state illustration when data is sparse
 
 ### 9. Component Standardization
-- [ ] Document guidance: use shadcn components as first-class building blocks
-- [ ] Keep `atlas-*` classes only for layout composition (page, sidebar, content)
-- [ ] Deprecate component-level `atlas-*` classes that overlap shadcn (btn, card, field)
+- [x] Document guidance: use shadcn components as first-class building blocks
+- [x] Keep `atlas-*` classes only for layout composition (page, sidebar, content)
+- [x] Deprecate component-level `atlas-*` classes that overlap shadcn (btn, card, field)
 
 ---
 
