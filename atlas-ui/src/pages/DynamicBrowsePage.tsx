@@ -1,22 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { LayoutGrid, Table as TableIcon, Plus, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTenant } from '@/auth';
 import { useRbac } from '@/auth/RbacContext';
 import { Button } from '@/components/ui/button';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TileRenderer } from '@/engine/renderers/TileRenderer';
 import { TableRenderer } from '@/engine/renderers/TableRenderer';
 import { useUIEntityConfig } from '@/hooks/useUIEntityConfig';
 import { useEntitySchema } from '@/hooks/useEntitySchema';
 import { useEntities } from '@/hooks/useEntities';
-import { sortEntities } from '@/lib/utils';
+import { cn, formatLabel, sortEntities } from '@/lib/utils';
 import type { SortSchema, BrowsePageSchema, TileViewSchema, TableViewSchema } from '@/engine/schema/types';
 
 interface DynamicBrowsePageProps {
     entityType: string;
 }
+
+const LG_TILE_COLUMN_CLASSES: Record<number, string> = {
+    1: 'lg:grid-cols-1',
+    2: 'lg:grid-cols-2',
+    3: 'lg:grid-cols-3',
+    4: 'lg:grid-cols-4',
+    5: 'lg:grid-cols-5',
+    6: 'lg:grid-cols-6',
+};
 
 export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
     const { slug } = useTenant();
@@ -35,17 +43,7 @@ export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
 
     const loading = configLoading || entitiesLoading || entitySchemaLoading;
 
-    // Default to tile view, update when schema loads
-    const [viewMode, setViewMode] = useState<'tile' | 'table'>('tile');
-
-    // Keep track of which entityType's viewMode we've initialized
-    const [initializedForEntityType, setInitializedForEntityType] = useState<string | null>(null);
-
-    // Update view mode when config loads for a new entity type
-    if (initializedForEntityType !== entityType && uiConfig?.browse?.defaultView) {
-        setViewMode(uiConfig.browse.defaultView);
-        setInitializedForEntityType(entityType);
-    }
+    const [viewModeByEntityType, setViewModeByEntityType] = useState<Partial<Record<string, 'tile' | 'table'>>>({});
 
     const [sort, setSort] = useState<SortSchema | undefined>();
 
@@ -109,6 +107,22 @@ export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
         columns: [],
     };
 
+    const defaultViewMode = browseConfig.defaultView ?? 'tile';
+    const viewMode = viewModeByEntityType[entityType] ?? defaultViewMode;
+
+    const handleViewModeChange = (nextViewMode: 'tile' | 'table') => {
+        setViewModeByEntityType((previous) => ({
+            ...previous,
+            [entityType]: nextViewMode,
+        }));
+    };
+
+    const tileColumns = tileConfig.layout?.columns ?? 3;
+    const normalizedTileColumns = Math.min(Math.max(Math.round(tileColumns), 1), 6);
+    const tileGridColumnsClass = LG_TILE_COLUMN_CLASSES[normalizedTileColumns] ?? LG_TILE_COLUMN_CLASSES[3];
+
+    const entityDisplayName = browseConfig.title?.replace(/s$/, '') || formatLabel(entityType);
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -122,26 +136,35 @@ export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
 
                 <div className="flex items-center gap-4">
                     {/* View toggle */}
-                    <ToggleGroup
-                        type="single"
-                        value={viewMode}
-                        onValueChange={(v) => v && setViewMode(v as 'tile' | 'table')}
-                        className="border rounded-md p-1"
-                    >
-                        <ToggleGroupItem value="tile" aria-label="Tile view" title="Tile view">
+                    <div className="flex items-center rounded-md border p-1" role="group" aria-label="View mode">
+                        <Button
+                            type="button"
+                            variant={viewMode === 'tile' ? 'secondary' : 'ghost'}
+                            size="icon"
+                            aria-label="Tile view"
+                            title="Tile view"
+                            onClick={() => handleViewModeChange('tile')}
+                        >
                             <LayoutGrid className="h-4 w-4" />
-                        </ToggleGroupItem>
-                        <ToggleGroupItem value="table" aria-label="Table view" title="Table view">
+                        </Button>
+                        <Button
+                            type="button"
+                            variant={viewMode === 'table' ? 'secondary' : 'ghost'}
+                            size="icon"
+                            aria-label="Table view"
+                            title="Table view"
+                            onClick={() => handleViewModeChange('table')}
+                        >
                             <TableIcon className="h-4 w-4" />
-                        </ToggleGroupItem>
-                    </ToggleGroup>
+                        </Button>
+                    </div>
 
                     {/* Create button */}
                     {browseConfig.allowCreate && canCreate && (
                         <Button asChild data-testid="create-entity-btn">
                             <Link to={`/${slug}/${entityType}/create`}>
                                 <Plus className="h-4 w-4 mr-2" />
-                                Create {entityType}
+                                Create {entityDisplayName}
                             </Link>
                         </Button>
                     )}
@@ -150,7 +173,7 @@ export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
 
             {/* Content */}
             {viewMode === 'tile' ? (
-                <div className={`grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-${tileConfig.layout?.columns ?? 3}`}>
+                <div className={cn('grid gap-6 grid-cols-1 md:grid-cols-2', tileGridColumnsClass)}>
                     {sortedEntities.map((entity: Record<string, unknown>) => (
                         <TileRenderer
                             key={entity.id as string}
@@ -180,7 +203,7 @@ export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
                         <Button variant="outline" className="mt-4" asChild data-testid="create-first-entity-btn">
                             <Link to={`/${slug}/${entityType}/create`}>
                                 <Plus className="h-4 w-4 mr-2" />
-                                Create your first {entityType}
+                                Create your first {entityDisplayName}
                             </Link>
                         </Button>
                     )}

@@ -5,6 +5,7 @@ import { ArrowRight, Boxes, Sparkles } from 'lucide-react';
 import { entitiesApi, type Entity } from '@/api/entities.api';
 import { menuConfigApi, type MenuItem } from '@/api/ui-schema.api';
 import { useTenant } from '@/auth';
+import { useRbac } from '@/auth/RbacContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -67,6 +68,7 @@ function toRecentEntity(entity: Entity, item: MenuItem): RecentDashboardEntity {
 
 export function DashboardPage() {
     const { slug } = useTenant();
+    const { hasPermission, isLoading: rbacLoading } = useRbac();
 
     const { data: menuConfig, isLoading: menuLoading } = useQuery({
         queryKey: ['menu-config'],
@@ -108,9 +110,14 @@ export function DashboardPage() {
         [countCards],
     );
 
+    const createEnabledItems = useMemo(
+        () => visibleItems.filter((item) => hasPermission('entity', item.entityType, 'create')),
+        [visibleItems, hasPermission],
+    );
+
     const quickActionItems = useMemo(
-        () => visibleItems.slice(0, QUICK_ACTION_LIMIT),
-        [visibleItems],
+        () => createEnabledItems.slice(0, QUICK_ACTION_LIMIT),
+        [createEnabledItems],
     );
 
     const recentSourceItems = useMemo(
@@ -143,7 +150,7 @@ export function DashboardPage() {
     const isRecentLoading = recentQueries.some((query) => query.isLoading);
     const hasSparseData = !isCountsLoading && totalEntities <= SPARSE_DATA_THRESHOLD;
     const hasNoEntityTypes = !menuLoading && visibleItems.length === 0;
-    const firstEntityType = visibleItems[0];
+    const firstCreateEntityType = createEnabledItems[0];
 
     return (
         <div className="space-y-8">
@@ -206,22 +213,32 @@ export function DashboardPage() {
                                 <CardDescription>Create records and manage your core inventory faster.</CardDescription>
                             </CardHeader>
                             <CardContent className="grid gap-3 sm:grid-cols-2">
-                                {quickActionItems.map((item) => {
-                                    const Icon = toLucideIcon(item.icon, Boxes);
-                                    const displayName = item.displayName || formatLabel(item.entityType);
+                                {rbacLoading ? (
+                                    Array.from({ length: 4 }).map((_, index) => (
+                                        <Skeleton key={`quick-actions-skeleton-${index}`} className="h-12 w-full" />
+                                    ))
+                                ) : quickActionItems.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground sm:col-span-2">
+                                        You do not currently have create permissions for visible entity types.
+                                    </p>
+                                ) : (
+                                    quickActionItems.map((item) => {
+                                        const Icon = toLucideIcon(item.icon, Boxes);
+                                        const displayName = item.displayName || formatLabel(item.entityType);
 
-                                    return (
-                                        <Button key={item.entityType} asChild variant="outline" className="h-auto justify-between px-4 py-3">
-                                            <Link to={`/${slug}/${item.entityType}/create`}>
-                                                <span className="flex items-center gap-2 text-sm font-medium">
-                                                    <Icon className="h-4 w-4 text-primary" />
-                                                    <span>Create {displayName}</span>
-                                                </span>
-                                                <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                                            </Link>
-                                        </Button>
-                                    );
-                                })}
+                                        return (
+                                            <Button key={item.entityType} asChild variant="outline" className="h-auto justify-between px-4 py-3">
+                                                <Link to={`/${slug}/${item.entityType}/create`}>
+                                                    <span className="flex items-center gap-2 text-sm font-medium">
+                                                        <Icon className="h-4 w-4 text-primary" />
+                                                        <span>Create {displayName}</span>
+                                                    </span>
+                                                    <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                                                </Link>
+                                            </Button>
+                                        );
+                                    })
+                                )}
                             </CardContent>
                         </Card>
 
@@ -286,10 +303,10 @@ export function DashboardPage() {
                                     </p>
                                 </div>
 
-                                {firstEntityType && (
+                                {firstCreateEntityType && (
                                     <Button asChild className="h-11 px-6">
-                                        <Link to={`/${slug}/${firstEntityType.entityType}/create`}>
-                                            Create your first {firstEntityType.displayName || formatLabel(firstEntityType.entityType)}
+                                        <Link to={`/${slug}/${firstCreateEntityType.entityType}/create`}>
+                                            Create your first {firstCreateEntityType.displayName || formatLabel(firstCreateEntityType.entityType)}
                                         </Link>
                                     </Button>
                                 )}
