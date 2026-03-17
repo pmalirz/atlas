@@ -2,12 +2,26 @@ import { useQuery } from '@tanstack/react-query';
 import { NavLink } from 'react-router-dom';
 import { menuConfigApi } from '@/api/ui-schema.api';
 import { cn, toLucideIcon } from '@/lib/utils';
-import { LayoutDashboard, LogOut, User } from 'lucide-react';
+import { LayoutDashboard, LogOut, User, X } from 'lucide-react';
 import { ThemeSwitcher } from './ThemeSwitcher';
 import { useAuth, useTenant } from '@/auth';
 import { Button } from '@/components/ui/button';
 
-export function Sidebar() {
+interface SidebarProps {
+    className?: string;
+    onNavigate?: () => void;
+    onRequestClose?: () => void;
+    showMobileClose?: boolean;
+    'data-testid'?: string;
+}
+
+export function Sidebar({
+    className,
+    onNavigate,
+    onRequestClose,
+    showMobileClose = false,
+    'data-testid': testId = 'sidebar',
+}: SidebarProps = {}) {
     const { user, logout } = useAuth();
     const { slug } = useTenant();
     const { data: menuConfig, isLoading } = useQuery({
@@ -19,19 +33,38 @@ export function Sidebar() {
     // Filter visible items
     const visibleItems = menuConfig?.items.filter((item) => item.visible) ?? [];
 
+    const handleNavigate = () => {
+        onNavigate?.();
+    };
+
     const handleLogout = async () => {
         await logout();
+        onNavigate?.();
     };
 
     return (
-        <aside className="atlas-sidebar w-64 flex flex-col" data-testid="sidebar">
-            <div className="atlas-sidebar-header">
+        <aside className={cn('atlas-sidebar flex flex-col', className)} data-testid={testId}>
+            <div className="atlas-sidebar-header flex items-center justify-between gap-2">
                 <h1 className="text-2xl font-bold text-sidebar-foreground font-['Tektur']">Atlas</h1>
+                {showMobileClose && (
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-sidebar-foreground/80 hover:text-sidebar-foreground"
+                        onClick={onRequestClose}
+                        aria-label="Close navigation"
+                        data-testid="sidebar-close-btn"
+                    >
+                        <X className="h-4 w-4" />
+                    </Button>
+                )}
             </div>
 
             <nav className="atlas-sidebar-content flex-1 space-y-1">
                 <NavLink
                     to={`/${slug}`}
+                    onClick={handleNavigate}
                     className={({ isActive }) =>
                         cn(
                             "atlas-sidebar-item",
@@ -58,6 +91,7 @@ export function Sidebar() {
                             <NavLink
                                 key={item.entityType}
                                 to={`/${slug}/${item.entityType}`}
+                                onClick={handleNavigate}
                                 className={({ isActive }) =>
                                     cn(
                                         "atlas-sidebar-item",
