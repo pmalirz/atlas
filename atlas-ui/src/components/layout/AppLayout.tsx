@@ -48,6 +48,7 @@ export function AppLayout() {
                     onNavigate={closeMobileNav}
                     onRequestClose={closeMobileNav}
                     showMobileClose
+                    data-testid="mobile-sidebar"
                 />
             </aside>
 

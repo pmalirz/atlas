@@ -12,6 +12,7 @@ interface SidebarProps {
     onNavigate?: () => void;
     onRequestClose?: () => void;
     showMobileClose?: boolean;
+    'data-testid'?: string;
 }
 
 export function Sidebar({
@@ -19,6 +20,7 @@ export function Sidebar({
     onNavigate,
     onRequestClose,
     showMobileClose = false,
+    'data-testid': testId = 'sidebar',
 }: SidebarProps = {}) {
     const { user, logout } = useAuth();
     const { slug } = useTenant();
@@ -41,7 +43,7 @@ export function Sidebar({
     };
 
     return (
-        <aside className={cn('atlas-sidebar flex flex-col', className)} data-testid="sidebar">
+        <aside className={cn('atlas-sidebar flex flex-col', className)} data-testid={testId}>
             <div className="atlas-sidebar-header flex items-center justify-between gap-2">
                 <h1 className="text-2xl font-bold text-sidebar-foreground font-['Tektur']">Atlas</h1>
                 {showMobileClose && (
