@@ -1,7 +1,7 @@
 import { ConditionSchema, CONDITION_OPERATORS, ConditionOperator } from '../schema/types';
 import { EntityData } from '../schema/common';
 
-const OPERATOR_STRATEGIES: Record<ConditionOperator, (value: any, conditionValue: any) => boolean> = {
+const OPERATOR_STRATEGIES: Record<ConditionOperator, (value: unknown, conditionValue: unknown) => boolean> = {
     [CONDITION_OPERATORS.EQ]: (value, conditionValue) => value === conditionValue,
     [CONDITION_OPERATORS.NEQ]: (value, conditionValue) => value !== conditionValue,
     [CONDITION_OPERATORS.GT]: (value, conditionValue) => typeof value === 'number' && typeof conditionValue === 'number' && value > conditionValue,

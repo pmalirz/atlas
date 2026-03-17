@@ -38,12 +38,14 @@ export function DynamicBrowsePage({ entityType }: DynamicBrowsePageProps) {
     // Default to tile view, update when schema loads
     const [viewMode, setViewMode] = useState<'tile' | 'table'>('tile');
 
-    // Update view mode when config loads
-    useEffect(() => {
-        if (uiConfig?.browse?.defaultView) {
-            setViewMode(uiConfig.browse.defaultView);
-        }
-    }, [uiConfig]);
+    // Keep track of which entityType's viewMode we've initialized
+    const [initializedForEntityType, setInitializedForEntityType] = useState<string | null>(null);
+
+    // Update view mode when config loads for a new entity type
+    if (initializedForEntityType !== entityType && uiConfig?.browse?.defaultView) {
+        setViewMode(uiConfig.browse.defaultView);
+        setInitializedForEntityType(entityType);
+    }
 
     const [sort, setSort] = useState<SortSchema | undefined>();
 

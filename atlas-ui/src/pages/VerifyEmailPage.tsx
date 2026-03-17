@@ -18,7 +18,6 @@ export function VerifyEmailPage() {
 
     useEffect(() => {
         if (!token) {
-            setPageState('invalid');
             return;
         }
 

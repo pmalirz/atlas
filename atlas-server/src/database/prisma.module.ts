@@ -55,17 +55,18 @@ import { TenantContextService } from '../common/services/tenant-context.service'
                     // Model name in extension is usually Capitalized (e.g. 'Entity'), but client prop is camelCase (e.g. 'entity')
                     if (model) {
                       const modelName = model.charAt(0).toLowerCase() + model.slice(1);
-                      return await (tx as any)[modelName][operation](args);
+                      return await (tx as Record<string, any>)[modelName][operation](args);
                     } else {
-                      return await (tx as any)[operation](args);
+                      return await (tx as Record<string, any>)[operation](args);
                     }
                   });
-                } catch (error: any) {
+                } catch (error: unknown) {
                   // If we are already in a transaction, Prisma throws an error about nested transactions.
                   // In that case, the outer transaction should have already set the context.
                   // Just execute the query directly without trying to set context again
                   // (using client.$executeRaw here would go to a different connection anyway).
-                  if (error.message?.includes('Nested transactions') || error.code === 'P2034') {
+                  const err = error as Error & { code?: string };
+                  if (err.message?.includes('Nested transactions') || err.code === 'P2034') {
                     return query(args);
                   }
 

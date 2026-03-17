@@ -4,11 +4,13 @@ import { evaluateCondition } from '../utils/conditions';
 import { FieldRenderer } from './FieldRenderer';
 import { EntityData } from '../schema/common';
 
+import React from 'react';
+
 interface SectionRendererProps {
     section: SectionSchema;
     entity: EntityData;
     entitySchema: EntitySchema;
-    onUpdate: (field: string, value: any) => void;
+    onUpdate: (field: string, value: unknown) => void;
 }
 
 /**
@@ -29,41 +31,37 @@ export function SectionRenderer({
     }
 
     // Get section component
-    const SectionComponent = registry.getSection(section.component ?? section.type);
+    const sectionComponent = registry.getSection(section.component ?? section.type);
 
     // Widget sections render their own content (no fields/layout)
     if (section.type === 'widget' && section.component) {
-        const WidgetComponent = registry.getWidget(section.component);
-        return (
-            <SectionComponent schema={section}>
-                <WidgetComponent
-                    entityId={entity.id as string}
-                    entityType={entitySchema.entityType}
-                    entity={entity}
-                    schema={section}
-                />
-            </SectionComponent>
+        const widgetComponent = registry.getWidget(section.component);
+        return React.createElement(sectionComponent, { schema: section },
+            React.createElement(widgetComponent, {
+                entityId: entity.id as string,
+                entityType: entitySchema.entityType,
+                entity: entity,
+                schema: section
+            })
         );
     }
 
     // Get layout component
-    const LayoutComponent = registry.getLayout();
+    const layoutComponent = registry.getLayout();
 
-    return (
-        <SectionComponent schema={section}>
-            <LayoutComponent layout={section.layout}>
-                {section.fields.map(fieldPlacement => (
-                    <FieldRenderer
-                        key={fieldPlacement.field}
-                        fieldKey={fieldPlacement.field}
-                        sectionId={section.id}
-                        entity={entity}
-                        entitySchema={entitySchema}
-                        placement={fieldPlacement}
-                        onUpdate={onUpdate}
-                    />
-                ))}
-            </LayoutComponent>
-        </SectionComponent>
+    return React.createElement(sectionComponent, { schema: section },
+        React.createElement(layoutComponent, { layout: section.layout },
+            section.fields.map(fieldPlacement => (
+                <FieldRenderer
+                    key={fieldPlacement.field}
+                    fieldKey={fieldPlacement.field}
+                    sectionId={section.id}
+                    entity={entity}
+                    entitySchema={entitySchema}
+                    placement={fieldPlacement}
+                    onUpdate={onUpdate}
+                />
+            ))
+        )
     );
 }
