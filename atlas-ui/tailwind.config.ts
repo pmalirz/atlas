@@ -84,6 +84,7 @@ export default {
             },
             fontFamily: {
                 sans: [
+                    'DM Sans',
                     'Montserrat',
                     'ui-sans-serif',
                     'system-ui',
@@ -96,14 +97,12 @@ export default {
                     'Noto Sans',
                     'sans-serif'
                 ],
-                serif: [
-                    'Cormorant Garamond',
-                    'ui-serif',
-                    'Georgia',
-                    'Cambria',
-                    'Times New Roman',
-                    'Times',
-                    'serif'
+                display: [
+                    'Instrument Sans',
+                    'DM Sans',
+                    'ui-sans-serif',
+                    'system-ui',
+                    'sans-serif'
                 ],
                 mono: [
                     'IBM Plex Mono',

@@ -2,6 +2,8 @@
 
 NestJS backend API for the App Atlas generic entity/relationship service (dynamic schema, no hardcoded models).
 
+Latest workspace update: auth-facing UI pages now share a theme-aware branding panel and subtle route-content fade transitions; server API contracts are unchanged.
+
 ## Quick Start
 
 ```bash

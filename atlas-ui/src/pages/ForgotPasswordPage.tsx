@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ParticlesBackground } from '@/components/ui/particles-background';
+import { AuthBrandingPanel } from '@/components/layout/AuthBrandingPanel';
 import * as authApi from '@/api/auth.api';
 import { CheckCircle2, ArrowLeft } from 'lucide-react';
 
@@ -64,7 +64,7 @@ export function ForgotPasswordPage() {
                         // Form State
                         <>
                             <div className="space-y-2 text-center lg:text-left">
-                                <h1 className="text-3xl font-bold tracking-tight">FORGOT PASSWORD</h1>
+                                <h1 className="text-3xl font-bold tracking-tight font-display">Forgot Password</h1>
                                 <p className="text-muted-foreground text-base">
                                     Enter your email and we'll send you a reset link.
                                 </p>
@@ -113,25 +113,10 @@ export function ForgotPasswordPage() {
                 </div>
             </div>
 
-            {/* Right Side: Gradient & Branding */}
-            <div className="hidden lg:flex relative h-full w-full bg-slate-50 items-center justify-center p-12 overflow-hidden">
-                <div className="absolute inset-0 w-full h-full bg-slate-50 z-0" />
-                <ParticlesBackground
-                    className="absolute inset-0 z-0"
-                    particleColor="rgba(147, 51, 234, 0.3)"
-                    lineColor="rgba(147, 51, 234, 0.15)"
-                    particleCount={80}
-                />
-                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03] z-0" />
-                <div className="relative z-10 max-w-lg text-center space-y-6">
-                    <h1 className="text-5xl font-bold tracking-tighter text-slate-900">
-                        Atlas Platform
-                    </h1>
-                    <p className="text-xl text-slate-600 font-light leading-relaxed">
-                        We'll help you get back into your account.
-                    </p>
-                </div>
-            </div>
+            {/* Right Side: Branding */}
+            <AuthBrandingPanel
+                subtitle="We'll help you get back into your account."
+            />
         </div>
     );
 }

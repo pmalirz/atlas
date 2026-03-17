@@ -1,6 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap");
 
 @tailwind base;
@@ -144,7 +143,7 @@
 
   .atlas-sidebar-item {
     @apply flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium;
-    @apply text-sidebar-foreground transition-colors;
+    @apply text-sidebar-foreground transition-colors duration-150;
   }
 
   .atlas-sidebar-item:hover {
@@ -160,13 +159,14 @@
    * --------------------------------------------------------------------------- */
 
   .atlas-card {
-    @apply rounded-lg border border-border p-4;
+    @apply rounded-lg border border-border p-4 transition-shadow duration-200;
     background: var(--gradient-card, hsl(var(--card)));
     box-shadow: var(--shadow-sm);
   }
 
   .atlas-card:hover {
     box-shadow: var(--shadow-md);
+    @apply cursor-pointer;
   }
 
   .atlas-card-header {
@@ -240,6 +240,7 @@
     @apply text-foreground placeholder:text-muted-foreground;
     @apply focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent;
     @apply disabled:cursor-not-allowed disabled:opacity-50;
+    @apply transition-colors duration-150;
     box-shadow: var(--shadow-2xs);
   }
 
@@ -265,7 +266,7 @@
 
   .atlas-btn {
     @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2;
-    @apply text-sm font-medium transition-colors;
+    @apply text-sm font-medium transition-colors duration-150 cursor-pointer;
     @apply focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
     @apply disabled:pointer-events-none disabled:opacity-50;
   }
@@ -333,7 +334,7 @@
   }
 
   .atlas-table-row {
-    @apply border-b border-border transition-colors;
+    @apply border-b border-border transition-colors duration-200;
   }
 
   .atlas-table-row:hover {
@@ -431,7 +432,7 @@
 
   .atlas-tab {
     @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium;
-    @apply text-muted-foreground transition-colors;
+    @apply text-muted-foreground transition-colors duration-150;
     @apply border-b-2 border-transparent -mb-px;
   }
 
@@ -453,5 +454,18 @@
 
   .atlas-skeleton {
     @apply animate-pulse rounded-md bg-muted;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * KEYFRAMES
+ * --------------------------------------------------------------------------- */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
