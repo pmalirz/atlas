@@ -37,9 +37,9 @@ export class AttributeAccessInterceptor implements NestInterceptor {
 
     // Aggregate readable/updatable sets for this entityType based on roles
     let hasExplicitReadableList = false;
-    let readableAttributes = new Set<string>();
+    const readableAttributes = new Set<string>();
     let hasExplicitUpdatableList = false;
-    let updatableAttributes = new Set<string>();
+    const updatableAttributes = new Set<string>();
 
     for (const role of userWithRoles.roles) {
       const perm = role.permissions.find(

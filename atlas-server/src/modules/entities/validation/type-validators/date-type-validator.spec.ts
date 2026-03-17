@@ -27,7 +27,7 @@ describe('DateTypeValidator', () => {
             const testCases: unknown[] = ['string', 'number', 'boolean', 'text', undefined];
             testCases.forEach(type => {
                 const context: ValidatorContext = {
-                    field: { key: 'field', displayName: 'Field', type: type as string },
+                    field: { key: 'field', displayName: 'Field', type: type as any },
                 };
                 expect(validator.supports(context)).toBe(false);
             });
