@@ -70,9 +70,9 @@
 ## P3 — Future Enhancements
 
 ### 8. Dashboard Page
-- [ ] Add entity count cards (dynamic, from API)
-- [ ] Add "Quick Actions" section (create new entity, recent items)
-- [ ] Add onboarding/empty-state illustration when data is sparse
+- [x] Add entity count cards (dynamic, from API)
+- [x] Add "Quick Actions" section (create new entity, recent items)
+- [x] Add onboarding/empty-state illustration when data is sparse
 
 ### 9. Component Standardization
 - [ ] Document guidance: use shadcn components as first-class building blocks
