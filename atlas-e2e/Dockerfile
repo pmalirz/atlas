@@ -9,10 +9,8 @@ COPY atlas-shared/package.json ./atlas-shared/
 COPY atlas-ui/package.json ./atlas-ui/
 COPY atlas-e2e/package.json ./atlas-e2e/
 
-# Install dependencies
-RUN npm install --include=dev && \
-    rm -rf node_modules/@swc/core-* 2>/dev/null || true && \
-    npm install @swc/core --force
+# Install dependencies (npm ci is deterministic and resolves correct linux native binaries from lockfile)
+RUN npm ci --include=dev
 
 # Copy source code
 COPY atlas-shared ./atlas-shared
