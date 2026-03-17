@@ -19,7 +19,7 @@ import { RbacService } from '../../rbac/rbac.service';
 export class AttributeAccessInterceptor implements NestInterceptor {
   constructor(private readonly rbacService: RbacService) {}
 
-  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<unknown>> {
     const request = context.switchToHttp().getRequest();
     const entityType = request.params?.entityType;
     const user = request.user;
@@ -37,9 +37,9 @@ export class AttributeAccessInterceptor implements NestInterceptor {
 
     // Aggregate readable/updatable sets for this entityType based on roles
     let hasExplicitReadableList = false;
-    let readableAttributes = new Set<string>();
+    const readableAttributes = new Set<string>();
     let hasExplicitUpdatableList = false;
-    let updatableAttributes = new Set<string>();
+    const updatableAttributes = new Set<string>();
 
     for (const role of userWithRoles.roles) {
       const perm = role.permissions.find(
@@ -64,7 +64,7 @@ export class AttributeAccessInterceptor implements NestInterceptor {
     }
 
     // Function to filter an attributes object
-    const filterAttributes = (attributes: any) => {
+    const filterAttributes = (attributes: Record<string, unknown>) => {
       if (!attributes || typeof attributes !== 'object') return attributes;
 
       const filtered = { ...attributes };
@@ -91,21 +91,21 @@ export class AttributeAccessInterceptor implements NestInterceptor {
 
     // 2. Intercept Response Payload (Read operations)
     return next.handle().pipe(
-      map((data) => {
+      map((data: Record<string, any>) => {
         // data could be a single EntityResponse or a PaginatedResponse
         if (!data) return data;
 
         if (data.data && Array.isArray(data.data)) {
           // Paginated list
-          data.data = data.data.map((entity: any) => {
+          data.data = data.data.map((entity: Record<string, any>) => {
             if (entity.attributes) {
-              entity.attributes = filterAttributes(entity.attributes);
+              entity.attributes = filterAttributes(entity.attributes as Record<string, unknown>);
             }
             return entity;
           });
         } else if (data.attributes) {
           // Single entity
-          data.attributes = filterAttributes(data.attributes);
+          data.attributes = filterAttributes(data.attributes as Record<string, unknown>);
         }
 
         return data;

@@ -23,7 +23,7 @@ import { AuditContextInterceptor, TenantScopeInterceptor } from './common/interc
       global: true,
       middleware: {
         mount: true,
-        setup: (cls, req: any) => {
+        setup: (cls, req: import('express').Request) => {
           // Setup Request ID immediately
           const requestId = req.headers['x-request-id'] ?? randomUUID();
           cls.set('requestId', requestId);
@@ -91,4 +91,3 @@ import { AuditContextInterceptor, TenantScopeInterceptor } from './common/interc
   ],
 })
 export class AppModule { }
-

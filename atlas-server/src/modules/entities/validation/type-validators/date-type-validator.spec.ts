@@ -24,10 +24,10 @@ describe('DateTypeValidator', () => {
         });
 
         it('should not support other types', () => {
-            const testCases: any[] = ['string', 'number', 'boolean', 'text', undefined];
+            const testCases: unknown[] = ['string', 'number', 'boolean', 'text', undefined];
             testCases.forEach(type => {
                 const context: ValidatorContext = {
-                    field: { key: 'field', displayName: 'Field', type },
+                    field: { key: 'field', displayName: 'Field', type: type as any },
                 };
                 expect(validator.supports(context)).toBe(false);
             });
@@ -149,4 +149,3 @@ describe('DateTypeValidator', () => {
         });
     });
 });
-

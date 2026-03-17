@@ -5,6 +5,7 @@ import { useRelationDefinitions } from '@/hooks/useRelations';
 import { transformToRelationItems } from '../utils/field-utils';
 import { EntityData } from '../schema/common';
 import { FieldWrapper } from './FieldWrapper';
+import React from 'react';
 
 interface RelationFieldRendererProps {
     fieldKey: string;
@@ -14,7 +15,7 @@ interface RelationFieldRendererProps {
     fieldSchema: FieldSchema;
     placement: FieldPlacementSchema;
     gridClasses: string;
-    onUpdate: (field: string, value: any) => void;
+    onUpdate: (field: string, value: unknown) => void;
 }
 
 /**
@@ -44,7 +45,7 @@ export function RelationFieldRenderer({
         ?? inferRelationComponentType(fieldSchema, relationDefinition, entitySchema.entityType);
 
     // Get the relation component
-    const RelationComponent = registry.getRelation(componentType);
+    const relationComponent = registry.getRelation(componentType);
 
     // Transform raw value to RelationItem[] format
     const relationValue = transformToRelationItems(entity[fieldKey]);
@@ -68,15 +69,15 @@ export function RelationFieldRenderer({
             required={fieldSchema.required}
             className={gridClasses}
         >
-            <RelationComponent
-                entityId={entity.id as string}
-                entityType={entitySchema.entityType}
-                fieldSchema={fieldSchema}
-                relationDefinition={relationDefinition}
-                value={relationValue}
-                onChange={handleRelationChange}
-                readonly={placement.readonly}
-            />
+            {React.createElement(relationComponent, {
+                entityId: entity.id as string,
+                entityType: entitySchema.entityType,
+                fieldSchema: fieldSchema,
+                relationDefinition: relationDefinition,
+                value: relationValue,
+                onChange: handleRelationChange,
+                readonly: placement.readonly
+            })}
         </FieldWrapper>
     );
 }

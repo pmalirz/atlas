@@ -197,7 +197,7 @@ export type ConditionOperator = typeof CONDITION_OPERATORS[keyof typeof CONDITIO
 export interface ConditionSchema {
     field: string;
     operator: ConditionOperator;
-    value?: any; // Value can be anything depending on the field type
+    value?: unknown; // Value can be anything depending on the field type
 }
 
 // ─────────────────────────────────────────────────────────────

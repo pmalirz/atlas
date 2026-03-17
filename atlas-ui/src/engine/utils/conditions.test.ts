@@ -55,7 +55,7 @@ describe('evaluateCondition', () => {
     });
 
     it('should return true for unknown operators', () => {
-        const condition: ConditionSchema = { field: 'status', operator: 'unknown' as any, value: 'active' };
+        const condition: ConditionSchema = { field: 'status', operator: 'unknown' as ConditionOperator, value: 'active' };
         expect(evaluateCondition(condition, { status: 'active' })).toBe(true);
     });
 });

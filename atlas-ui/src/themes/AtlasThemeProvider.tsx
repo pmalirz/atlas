@@ -20,6 +20,7 @@ import { applyThemeToDocument } from './apply-theme';
 /**
  * Context for Atlas theme management.
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const AtlasThemeContext = createContext<AtlasThemeContextValue | null>(
     null
 );

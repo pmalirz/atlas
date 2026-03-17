@@ -21,9 +21,9 @@ export interface TypeDefinition {
 /**
  * Normalize options to EnumOption[] format.
  */
-function normalizeOptions(options: any[] | undefined): EnumOption[] | undefined {
+function normalizeOptions(options: unknown[] | undefined): EnumOption[] | undefined {
     if (!options) return undefined;
-    return options.map(opt => typeof opt === 'string' ? { key: opt } : opt);
+    return options.map(opt => typeof opt === 'string' ? { key: opt } : opt as EnumOption);
 }
 
 /**

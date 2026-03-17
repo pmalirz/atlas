@@ -5,6 +5,7 @@ import { EntityData } from '../schema/common';
 import { RelationFieldRenderer } from './RelationFieldRenderer';
 import { FieldWrapper } from './FieldWrapper';
 import { useRbac } from '@/auth/RbacContext';
+import React from 'react';
 
 interface FieldRendererProps {
     fieldKey: string;
@@ -12,7 +13,7 @@ interface FieldRendererProps {
     entity: EntityData;
     entitySchema: EntitySchema;
     placement: FieldPlacementSchema;
-    onUpdate: (field: string, value: any) => void;
+    onUpdate: (field: string, value: unknown) => void;
 }
 
 /**
@@ -80,7 +81,7 @@ export function FieldRenderer({
 
     // Standard field rendering
     const componentKey = placement.component ?? `field:${fieldSchema.type}`;
-    const Component = registry.getField(componentKey.replace('field:', ''));
+    const component = registry.getField(componentKey.replace('field:', ''));
 
     return (
         <FieldWrapper
@@ -90,19 +91,17 @@ export function FieldRenderer({
             required={fieldSchema.required}
             className={gridClasses}
         >
-            {Component ? (
-                <Component
-                    value={entity[fieldKey] as never}
-                    onChange={(value) => {
-                        if (isReadonly) return;
-                        onUpdate(fieldKey, value);
-                    }}
-                    fieldSchema={fieldSchema}
-                    placement={placement}
-                    valueStyles={placement.valueStyles}
-                    readonly={isReadonly}
-                />
-            ) : (
+            {component ? React.createElement(component, {
+                value: entity[fieldKey] as never,
+                onChange: (value) => {
+                    if (isReadonly) return;
+                    onUpdate(fieldKey, value);
+                },
+                fieldSchema: fieldSchema,
+                placement: placement,
+                valueStyles: placement.valueStyles,
+                readonly: isReadonly
+            }) : (
                 <div className="atlas-field-error border border-destructive p-2 rounded">
                     Unknown component type: {placement.component ?? fieldSchema.type}
                 </div>
