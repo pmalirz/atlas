@@ -102,7 +102,7 @@ export function FieldRenderer({
                 valueStyles: placement.valueStyles,
                 readonly: isReadonly
             }) : (
-                <div className="atlas-field-error border border-destructive p-2 rounded">
+                <div className="rounded border border-destructive p-2 text-xs text-destructive">
                     Unknown component type: {placement.component ?? fieldSchema.type}
                 </div>
             )}

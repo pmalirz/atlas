@@ -4,11 +4,9 @@ import { useAuth } from '@/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-
 import { Checkbox } from '@/components/ui/checkbox';
-import { ParticlesBackground } from '@/components/ui/particles-background';
+import { AuthBrandingPanel } from '@/components/layout/AuthBrandingPanel';
 
 type AuthMode = 'login' | 'register';
 
@@ -53,13 +51,11 @@ export function LoginPage() {
     if (!authConfig && !authLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-muted/30">
-                <Card className="w-[400px]">
-                    <CardContent className="pt-6">
-                        <Alert variant="destructive">
-                            <AlertDescription>Unable to connect to authentication service.</AlertDescription>
-                        </Alert>
-                    </CardContent>
-                </Card>
+                <div className="w-[400px] rounded-lg border bg-card p-6">
+                    <Alert variant="destructive">
+                        <AlertDescription>Unable to connect to authentication service.</AlertDescription>
+                    </Alert>
+                </div>
             </div>
         );
     }
@@ -72,9 +68,9 @@ export function LoginPage() {
             <div className="flex flex-col items-center justify-center lg:justify-start min-h-screen bg-background p-8 lg:px-12 lg:pt-32 xl:px-24">
                 <div className="w-full max-w-[420px] space-y-8" data-testid="auth-card">
                     <div className="space-y-2 text-center lg:text-left">
-                        <h1 className="text-3xl font-bold tracking-tight">WELCOME BACK</h1>
+                        <h1 className="text-3xl font-bold tracking-tight font-display">Welcome Back</h1>
                         <p className="text-muted-foreground text-base">
-                            Welcome back! Please enter your details.
+                            Enter your credentials to continue.
                         </p>
                     </div>
 
@@ -86,7 +82,7 @@ export function LoginPage() {
 
                     {isNativeAuth ? (
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* Mode toggle (kept for functionality, but could be hidden or restyled if strictly following design) */}
+                            {/* Mode toggle */}
                             <div className="grid grid-cols-2 gap-1 rounded-lg bg-muted p-1">
                                 <button
                                     type="button"
@@ -138,6 +134,7 @@ export function LoginPage() {
                                         type="email"
                                         placeholder="Enter your email"
                                         required
+                                        autoFocus
                                         autoComplete="email"
                                         className="h-12 bg-muted/30 border-input/60"
                                         data-testid="auth-email-input"
@@ -235,30 +232,10 @@ export function LoginPage() {
                 </div>
             </div>
 
-            {/* Right Side: Gradient & Branding */}
-            <div className="hidden lg:flex relative h-full w-full bg-slate-50 items-center justify-center p-12 overflow-hidden">
-                <div className="absolute inset-0 w-full h-full bg-slate-50 z-0" />
-
-                {/* Animated Particles Background */}
-                <ParticlesBackground
-                    className="absolute inset-0 z-0"
-                    particleColor="rgba(147, 51, 234, 0.3)" // Purple-600 with opacity
-                    lineColor="rgba(147, 51, 234, 0.15)"    // Purple-600 lighter opacity
-                    particleCount={80}
-                />
-
-                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03] z-0" />
-
-                <div className="relative z-10 max-w-lg text-center space-y-6">
-                    <h1 className="text-5xl font-bold tracking-tighter text-slate-900">
-                        Atlas Platform
-                    </h1>
-                    <p className="text-xl text-slate-600 font-light leading-relaxed">
-                        Unleash the power of <span className="font-semibold text-purple-700">dynamic</span>,<br />
-                        <span className="font-semibold text-purple-700">low-code</span> innovation.
-                    </p>
-                </div>
-            </div>
+            {/* Right Side: Branding */}
+            <AuthBrandingPanel
+                subtitle={<>Unleash the power of <span className="font-semibold text-primary">dynamic</span>,<br /><span className="font-semibold text-primary">low-code</span> innovation.</>}
+            />
         </div>
     );
 }

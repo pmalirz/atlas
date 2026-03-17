@@ -1,5 +1,6 @@
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { TableViewSchema, EntitySchema, SortSchema } from '../schema/types';
 import { Link } from 'react-router-dom';
 import { getTenantSlug } from '@/api/client';
@@ -44,11 +45,11 @@ export function TableRenderer({
     };
 
     return (
-        <table className="atlas-table">
-            <thead className="atlas-table-header">
-                <tr className="atlas-table-row">
+        <Table>
+            <TableHeader className="bg-muted/50">
+                <TableRow>
                     {schema.columns.map(column => (
-                        <th key={column.field} className="atlas-table-header-cell" style={{ width: column.width }}>
+                        <TableHead key={column.field} style={{ width: column.width }}>
                             {column.sortable ? (
                                 <Button
                                     variant="ghost"
@@ -70,21 +71,19 @@ export function TableRenderer({
                             ) : (
                                 column.header
                             )}
-                        </th>
+                        </TableHead>
                     ))}
-                </tr>
-            </thead>
-            <tbody>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
                 {entities.map(entity => (
-                    <tr
+                    <TableRow
                         key={entity.id as string}
-                        className="atlas-table-row"
                         data-testid={testIds.tableRow(entityType, entity.id as string)}
                     >
                         {schema.columns.map((column, index) => (
-                            <td
+                            <TableCell
                                 key={column.field}
-                                className="atlas-table-cell"
                                 data-testid={testIds.tableCell(entityType, column.field)}
                             >
                                 {index === 0 ? (
@@ -97,18 +96,18 @@ export function TableRenderer({
                                 ) : (
                                     formatCellValue(entity, column, entitySchema)
                                 )}
-                            </td>
+                            </TableCell>
                         ))}
-                    </tr>
+                    </TableRow>
                 ))}
                 {entities.length === 0 && (
-                    <tr className="atlas-table-row">
-                        <td colSpan={schema.columns.length} className="atlas-table-cell text-center py-8">
+                    <TableRow>
+                        <TableCell colSpan={schema.columns.length} className="py-8 text-center">
                             No items found
-                        </td>
-                    </tr>
+                        </TableCell>
+                    </TableRow>
                 )}
-            </tbody>
-        </table>
+            </TableBody>
+        </Table>
     );
 }

@@ -1,6 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap");
 
 @tailwind base;
@@ -144,7 +143,7 @@
 
   .atlas-sidebar-item {
     @apply flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium;
-    @apply text-sidebar-foreground transition-colors;
+    @apply text-sidebar-foreground transition-colors duration-150;
   }
 
   .atlas-sidebar-item:hover {
@@ -156,302 +155,23 @@
   }
 
   /* ---------------------------------------------------------------------------
-   * CARDS
+   * LEGACY NOTICE
+   * ---------------------------------------------------------------------------
+   * Atlas component-level classes (atlas-card, atlas-field, atlas-btn, atlas-table, etc.)
+   * are deprecated. New UI should use shadcn primitives in src/components/ui directly.
+   * Keep atlas-* usage limited to layout composition classes above.
    * --------------------------------------------------------------------------- */
+}
 
-  .atlas-card {
-    @apply rounded-lg border border-border p-4;
-    background: var(--gradient-card, hsl(var(--card)));
-    box-shadow: var(--shadow-sm);
+/* ---------------------------------------------------------------------------
+ * KEYFRAMES
+ * --------------------------------------------------------------------------- */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-
-  .atlas-card:hover {
-    box-shadow: var(--shadow-md);
-  }
-
-  .atlas-card-header {
-    @apply flex items-center justify-between pb-3 mb-3 border-b border-border;
-  }
-
-  .atlas-card-title {
-    @apply text-lg font-semibold text-card-foreground;
-  }
-
-  .atlas-card-description {
-    @apply text-sm text-muted-foreground mt-1;
-  }
-
-  .atlas-card-content {
-    @apply text-card-foreground;
-  }
-
-  .atlas-card-footer {
-    @apply flex items-center justify-end gap-2 pt-3 mt-3 border-t border-border;
-  }
-
-  /* ---------------------------------------------------------------------------
-   * SECTIONS
-   * --------------------------------------------------------------------------- */
-
-  .atlas-section {
-    @apply rounded-lg border border-border bg-card p-4 mb-4;
-    box-shadow: var(--shadow-xs);
-  }
-
-  .atlas-section-header {
-    @apply flex items-center justify-between pb-3 mb-3;
-  }
-
-  .atlas-section-title {
-    @apply text-base font-semibold text-card-foreground;
-  }
-
-  .atlas-section-description {
-    @apply text-sm text-muted-foreground;
-  }
-
-  .atlas-section-content {
-    @apply space-y-4;
-  }
-
-  .atlas-section--collapsible {
-    @apply cursor-pointer;
-  }
-
-  /* ---------------------------------------------------------------------------
-   * FIELDS
-   * --------------------------------------------------------------------------- */
-
-  .atlas-field {
-    @apply space-y-1.5;
-  }
-
-  .atlas-field-label {
-    @apply text-sm font-medium text-foreground;
-  }
-
-  .atlas-field-label--required::after {
-    content: " *";
-    @apply text-destructive;
-  }
-
-  .atlas-field-input {
-    @apply w-full rounded-md border border-input bg-background px-3 py-2;
-    @apply text-foreground placeholder:text-muted-foreground;
-    @apply focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent;
-    @apply disabled:cursor-not-allowed disabled:opacity-50;
-    box-shadow: var(--shadow-2xs);
-  }
-
-  .atlas-field-input:hover:not(:disabled) {
-    @apply border-muted-foreground/30;
-  }
-
-  .atlas-field-description {
-    @apply text-xs text-muted-foreground;
-  }
-
-  .atlas-field-error {
-    @apply text-xs text-destructive;
-  }
-
-  .atlas-field--error .atlas-field-input {
-    @apply border-destructive focus:ring-destructive;
-  }
-
-  /* ---------------------------------------------------------------------------
-   * BUTTONS
-   * --------------------------------------------------------------------------- */
-
-  .atlas-btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2;
-    @apply text-sm font-medium transition-colors;
-    @apply focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
-    @apply disabled:pointer-events-none disabled:opacity-50;
-  }
-
-  .atlas-btn-primary {
-    @apply atlas-btn text-primary-foreground;
-    background: var(--gradient-primary, hsl(var(--primary)));
-  }
-
-  .atlas-btn-primary:hover:not(:disabled) {
-    filter: brightness(1.1);
-  }
-
-  .atlas-btn-secondary {
-    @apply atlas-btn bg-secondary text-secondary-foreground;
-  }
-
-  .atlas-btn-secondary:hover:not(:disabled) {
-    @apply bg-secondary/80;
-  }
-
-  .atlas-btn-outline {
-    @apply atlas-btn border border-input bg-background text-foreground;
-  }
-
-  .atlas-btn-outline:hover:not(:disabled) {
-    @apply bg-accent text-accent-foreground;
-  }
-
-  .atlas-btn-ghost {
-    @apply atlas-btn text-foreground;
-  }
-
-  .atlas-btn-ghost:hover:not(:disabled) {
-    @apply bg-accent text-accent-foreground;
-  }
-
-  .atlas-btn-destructive {
-    @apply atlas-btn bg-destructive text-destructive-foreground;
-  }
-
-  .atlas-btn-destructive:hover:not(:disabled) {
-    @apply bg-destructive/90;
-  }
-
-  .atlas-btn-icon {
-    @apply atlas-btn p-2;
-  }
-
-  /* ---------------------------------------------------------------------------
-   * TABLES
-   * --------------------------------------------------------------------------- */
-
-  .atlas-table {
-    @apply w-full border-collapse;
-  }
-
-  .atlas-table-header {
-    @apply bg-muted/50;
-  }
-
-  .atlas-table-header-cell {
-    @apply px-4 py-3 text-left text-sm font-medium text-muted-foreground;
-    @apply border-b border-border;
-  }
-
-  .atlas-table-row {
-    @apply border-b border-border transition-colors;
-  }
-
-  .atlas-table-row:hover {
-    @apply bg-muted/30;
-  }
-
-  .atlas-table-cell {
-    @apply px-4 py-3 text-sm text-foreground;
-  }
-
-  /* ---------------------------------------------------------------------------
-   * BADGES & TAGS
-   * --------------------------------------------------------------------------- */
-
-  .atlas-badge {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5;
-    @apply text-xs font-medium;
-  }
-
-  .atlas-badge-primary {
-    @apply atlas-badge bg-primary/10 text-primary;
-  }
-
-  .atlas-badge-secondary {
-    @apply atlas-badge bg-secondary text-secondary-foreground;
-  }
-
-  .atlas-badge-success {
-    @apply atlas-badge bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400;
-  }
-
-  .atlas-badge-warning {
-    @apply atlas-badge bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400;
-  }
-
-  .atlas-badge-error {
-    @apply atlas-badge bg-destructive/10 text-destructive;
-  }
-
-  /* ---------------------------------------------------------------------------
-   * DIALOGS & MODALS
-   * --------------------------------------------------------------------------- */
-
-  .atlas-dialog-overlay {
-    @apply fixed inset-0 bg-black/50 backdrop-blur-sm;
-  }
-
-  .atlas-dialog {
-    @apply fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
-    @apply w-full max-w-lg rounded-lg border border-border bg-card p-6;
-    box-shadow: var(--shadow-xl);
-  }
-
-  .atlas-dialog-header {
-    @apply mb-4;
-  }
-
-  .atlas-dialog-title {
-    @apply text-lg font-semibold text-card-foreground;
-  }
-
-  .atlas-dialog-description {
-    @apply text-sm text-muted-foreground mt-1;
-  }
-
-  .atlas-dialog-content {
-    @apply py-4;
-  }
-
-  .atlas-dialog-footer {
-    @apply flex justify-end gap-2 pt-4;
-  }
-
-  /* ---------------------------------------------------------------------------
-   * TOOLTIPS & POPOVERS
-   * --------------------------------------------------------------------------- */
-
-  .atlas-tooltip {
-    @apply rounded-md bg-popover px-3 py-1.5 text-sm text-popover-foreground;
-    box-shadow: var(--shadow-md);
-  }
-
-  .atlas-popover {
-    @apply rounded-lg border border-border bg-popover p-4;
-    box-shadow: var(--shadow-lg);
-  }
-
-  /* ---------------------------------------------------------------------------
-   * NAVIGATION
-   * --------------------------------------------------------------------------- */
-
-  .atlas-tabs {
-    @apply border-b border-border;
-  }
-
-  .atlas-tab {
-    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium;
-    @apply text-muted-foreground transition-colors;
-    @apply border-b-2 border-transparent -mb-px;
-  }
-
-  .atlas-tab:hover {
-    @apply text-foreground;
-  }
-
-  .atlas-tab--active {
-    @apply text-primary border-primary;
-  }
-
-  /* ---------------------------------------------------------------------------
-   * UTILITIES
-   * --------------------------------------------------------------------------- */
-
-  .atlas-divider {
-    @apply border-t border-border my-4;
-  }
-
-  .atlas-skeleton {
-    @apply animate-pulse rounded-md bg-muted;
+  to {
+    opacity: 1;
   }
 }

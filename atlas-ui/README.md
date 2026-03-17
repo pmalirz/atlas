@@ -48,6 +48,13 @@ For a deep dive into how to configure the UI, see the [**UI Engine Guide**](../d
 - **`TileRenderer`**: Renders individual entity cards in the browse view.
 - **`TableRenderer`**: Renders the entity data table in the browse view.
 
+## 🎛️ UI Composition Standards
+
+- Use shadcn primitives from `src/components/ui` as the default building blocks for cards, fields, tables, dialogs, badges, and buttons.
+- Keep `atlas-*` classes for layout composition only (`atlas-page`, `atlas-content`, `atlas-sidebar*`).
+- Avoid introducing new component-level `atlas-*` classes; compose behavior with shadcn + Tailwind utility classes instead.
+- Treat legacy component-level `atlas-*` styles as compatibility-only and migrate them when touching related code.
+
 ## 🛠️ Getting Started
 
 ### Prerequisites

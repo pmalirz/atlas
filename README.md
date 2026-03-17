@@ -43,8 +43,11 @@
 | **Schema-Driven UI** | UI layouts, forms, and views adapt automatically based on backend JSON configuration |
 | **Direction-Aware Relation Editing** | Relation direction is inferred from relation definitions (fromEntityType/toEntityType) with optional side override, and attributed relations are editable from both sides |
 | **Relation Visualization** | Interactive, force-directed graph views for exploring complex entity relationships |
+| **Operational Dashboard** | Dynamic dashboard cards, quick create actions, and recent-item insights adapt to tenant menu configuration and entity metadata |
+| **Consistent UI Composition** | shadcn primitives are the first-class component layer, while `atlas-*` classes are reserved for layout composition only |
 | **Audit & Compliance** | Built-in audit logging for all data changes, supporting DORA and compliance requirements |
 | **RBAC-Aware Editing UX** | Field-level permissions are enforced in UI and API with tenant-scoped RBAC endpoints; non-writable fields stay visible in read-only mode |
+| **Theme-Aware Auth UX** | Login, forgot/reset password, and email verification pages share a reusable branding panel with theme-integrated visuals and improved page-level transitions |
 | **Ready-to-Use Seeds** | Bootstrap your project with pre-built templates (e.g., EAP - Enterprise Application Portfolio) |
 | **Full-Stack TypeScript** | End-to-end type safety with shared contracts between frontend and backend |
 | **Pluggable Auth** | [Native and extensible authentication](./docs/AUTHENTICATION.md) supporting multiple providers |

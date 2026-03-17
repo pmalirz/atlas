@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ParticlesBackground } from '@/components/ui/particles-background';
+import { AuthBrandingPanel } from '@/components/layout/AuthBrandingPanel';
 import * as authApi from '@/api/auth.api';
 import { CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 
@@ -43,7 +43,7 @@ export function VerifyEmailPage() {
                             <Loader2 className="w-8 h-8 text-primary animate-spin" />
                         </div>
                         <div className="space-y-2">
-                            <h1 className="text-3xl font-bold tracking-tight">Verifying Email</h1>
+                            <h1 className="text-3xl font-bold tracking-tight font-display">Verifying Email</h1>
                             <p className="text-muted-foreground text-base">
                                 Please wait while we verify your email address...
                             </p>
@@ -58,7 +58,7 @@ export function VerifyEmailPage() {
                             <CheckCircle2 className="w-8 h-8 text-green-600" />
                         </div>
                         <div className="space-y-2">
-                            <h1 className="text-3xl font-bold tracking-tight">Email Verified!</h1>
+                            <h1 className="text-3xl font-bold tracking-tight font-display">Email Verified!</h1>
                             <p className="text-muted-foreground text-base">
                                 Your email has been verified successfully. You can now use all features.
                             </p>
@@ -80,7 +80,7 @@ export function VerifyEmailPage() {
                             <XCircle className="w-8 h-8 text-red-600" />
                         </div>
                         <div className="space-y-2">
-                            <h1 className="text-3xl font-bold tracking-tight">Verification Failed</h1>
+                            <h1 className="text-3xl font-bold tracking-tight font-display">Verification Failed</h1>
                             <p className="text-muted-foreground text-base">
                                 {error || 'This verification link is invalid or has expired.'}
                             </p>
@@ -88,6 +88,7 @@ export function VerifyEmailPage() {
                         <div className="flex flex-col gap-3">
                             <Button
                                 variant="outline"
+                                className="h-12"
                                 onClick={async () => {
                                     try {
                                         await authApi.resendVerification();
@@ -114,13 +115,13 @@ export function VerifyEmailPage() {
                             <XCircle className="w-8 h-8 text-red-600" />
                         </div>
                         <div className="space-y-2">
-                            <h1 className="text-3xl font-bold tracking-tight">Invalid Link</h1>
+                            <h1 className="text-3xl font-bold tracking-tight font-display">Invalid Link</h1>
                             <p className="text-muted-foreground text-base">
                                 This email verification link is invalid.
                             </p>
                         </div>
                         <Link to="../login">
-                            <Button variant="outline" className="w-full">
+                            <Button variant="outline" className="w-full h-12">
                                 Go to Login
                             </Button>
                         </Link>
@@ -138,25 +139,10 @@ export function VerifyEmailPage() {
                 </div>
             </div>
 
-            {/* Right Side: Gradient & Branding */}
-            <div className="hidden lg:flex relative h-full w-full bg-slate-50 items-center justify-center p-12 overflow-hidden">
-                <div className="absolute inset-0 w-full h-full bg-slate-50 z-0" />
-                <ParticlesBackground
-                    className="absolute inset-0 z-0"
-                    particleColor="rgba(147, 51, 234, 0.3)"
-                    lineColor="rgba(147, 51, 234, 0.15)"
-                    particleCount={80}
-                />
-                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03] z-0" />
-                <div className="relative z-10 max-w-lg text-center space-y-6">
-                    <h1 className="text-5xl font-bold tracking-tighter text-slate-900">
-                        Atlas Platform
-                    </h1>
-                    <p className="text-xl text-slate-600 font-light leading-relaxed">
-                        Verify your email to unlock all features.
-                    </p>
-                </div>
-            </div>
+            {/* Right Side: Branding */}
+            <AuthBrandingPanel
+                subtitle="Verify your email to unlock the full potential of Atlas."
+            />
         </div>
     );
 }
