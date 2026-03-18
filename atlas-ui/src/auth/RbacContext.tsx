@@ -19,26 +19,33 @@ export function RbacProvider({ children }: { children: React.ReactNode }) {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (!isAuthenticated) {
-            setUserWithRoles(null);
-            setIsLoading(false);
-            return;
-        }
-
         let isMounted = true;
-        setIsLoading(true);
 
-        rbacApi.getMyRoles()
-            .then(data => {
+        const loadRoles = async () => {
+            if (!isAuthenticated) {
+                if (isMounted) {
+                    setUserWithRoles(null);
+                    setIsLoading(false);
+                }
+                return;
+            }
+
+            if (isMounted) {
+                setIsLoading(true);
+            }
+
+            try {
+                const data = await rbacApi.getMyRoles();
                 if (isMounted) setUserWithRoles(data);
-            })
-            .catch(err => {
+            } catch (err) {
                 console.error('Error fetching RBAC roles:', err);
                 if (isMounted) setUserWithRoles(null);
-            })
-            .finally(() => {
+            } finally {
                 if (isMounted) setIsLoading(false);
-            });
+            }
+        };
+
+        loadRoles();
 
         return () => { isMounted = false; };
     }, [isAuthenticated]);

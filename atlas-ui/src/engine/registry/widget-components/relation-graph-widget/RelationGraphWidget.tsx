@@ -113,24 +113,33 @@ export function RelationGraphWidget({
     const { definitions } = useRelationDefinitions();
 
     // State for visible relation types (inverse of excluded)
-    const [visibleRelations, setVisibleRelations] = useState<string[]>([]);
-    const initializedRef = useRef(false);
+    const [visibleRelations, setVisibleRelations] = useState<string[]>(() => {
+        if (definitions.length > 0) {
+            const schemaExclusions = new Set(schemaConfig?.excludeRelations ?? []);
+            return definitions
+                .map(d => d.relationType)
+                .filter(rt => !schemaExclusions.has(rt));
+        }
+        return [];
+    });
+
+    // We use state to track if we've initialized yet to handle async definitions loading.
+    const [isInitialized, setIsInitialized] = useState(definitions.length > 0);
 
     // Fullscreen expand state (must be declared before any early returns)
     const [isExpanded, setIsExpanded] = useState(false);
 
     // Initialize visible relations when definitions load (only once)
-    useEffect(() => {
-        if (definitions.length > 0 && !initializedRef.current) {
-            initializedRef.current = true;
-            // Start with all relations visible, minus any schema-configured exclusions
-            const schemaExclusions = new Set(schemaConfig?.excludeRelations ?? []);
-            const initialVisible = definitions
-                .map(d => d.relationType)
-                .filter(rt => !schemaExclusions.has(rt));
-            setVisibleRelations(initialVisible);
-        }
-    }, [definitions, schemaConfig?.excludeRelations]);
+    // using "adjusting state during render" pattern to avoid set-state-in-effect warning
+    if (definitions.length > 0 && !isInitialized) {
+        setIsInitialized(true);
+        // Start with all relations visible, minus any schema-configured exclusions
+        const schemaExclusions = new Set(schemaConfig?.excludeRelations ?? []);
+        const initialVisible = definitions
+            .map(d => d.relationType)
+            .filter(rt => !schemaExclusions.has(rt));
+        setVisibleRelations(initialVisible);
+    }
 
     // Build options for MultiSelect
     const relationOptions = useMemo(() => {
@@ -197,8 +206,8 @@ export function RelationGraphWidget({
         // Only update if the key changed
         if (layoutKey !== prevLayoutKeyRef.current) {
             prevLayoutKeyRef.current = layoutKey;
-            setNodes(layoutedNodes as any);
-            setEdges(layoutedEdges as any);
+            setNodes(layoutedNodes as unknown as Node[]);
+            setEdges(layoutedEdges as unknown as Edge[]);
         }
     }, [layoutedNodes, layoutedEdges, setNodes, setEdges]);
 
@@ -335,4 +344,3 @@ export function RelationGraphWidget({
         </>
     );
 }
-

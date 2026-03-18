@@ -4,7 +4,7 @@ export type { FieldSchema };
 
 type ComponentCategory = 'field' | 'section' | 'layout' | 'relation' | 'widget';
 
-interface ComponentEntry<P = any> {
+interface ComponentEntry<P = unknown> {
     component: React.ComponentType<P>;
     category: ComponentCategory;
     description?: string;
@@ -146,7 +146,7 @@ class ComponentRegistry {
     override<P>(key: string, component: React.ComponentType<P>): void {
         const existing = this.components.get(key);
         if (existing) {
-            this.components.set(key, { ...existing, component: component as React.ComponentType<any> });
+            this.components.set(key, { ...existing, component: component as React.ComponentType<unknown> });
         } else {
             console.warn(`Cannot override non-existent component: ${key}`);
         }
