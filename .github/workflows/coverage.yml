@@ -47,10 +47,10 @@ jobs:
     - name: Fix E2E Coverage Paths
       run: |
         if [ -f ./atlas-e2e/coverage/lcov.info ]; then
-          sed -i 's|SF:/app/|SF:|g' ./atlas-e2e/coverage/lcov.info
+          sudo sed -i 's|SF:/app/|SF:|g' ./atlas-e2e/coverage/lcov.info
         fi
         if [ -f ./atlas-server/coverage-e2e/lcov.info ]; then
-          sed -i 's|SF:/app/|SF:|g' ./atlas-server/coverage-e2e/lcov.info
+          sudo sed -i 's|SF:/app/|SF:|g' ./atlas-server/coverage-e2e/lcov.info
         fi
         
     - name: Upload coverage reports to Codecov
