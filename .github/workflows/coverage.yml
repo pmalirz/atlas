@@ -54,6 +54,8 @@ jobs:
         # Fix native V8 raw coverage dump 'file:///app/' URIs directly
         if [ -d ./atlas-server/coverage-e2e/tmp ]; then
           find ./atlas-server/coverage-e2e/tmp -name "*.json" -type f -exec sed -i "s|file:///app/|file://${{ github.workspace }}/|g" {} +
+          # We MUST build the server locally so c8 can parse physical `dist/*.js.map` files!
+          npm run build -w atlas-server
           cd ./atlas-server && npx -y c8 report --reporter=lcov --reporter=text --temp-directory=./coverage-e2e/tmp --reports-dir=./coverage-e2e || true
         fi
 
