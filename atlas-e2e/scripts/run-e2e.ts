@@ -25,7 +25,8 @@ function startBackgroundProcess(command: string, args: string[], env: Record<str
     const child = spawn(command, args, {
         stdio: 'inherit',
         shell: process.platform === 'win32',
-        env: { ...process.env, ...env }
+        env: { ...process.env, ...env },
+        detached: process.platform !== 'win32' // Create a new process group on Linux/Mac
     });
     return child;
 }
@@ -60,8 +61,18 @@ async function main() {
 
     const cleanup = () => {
         if (serverProcess && !serverProcess.killed) {
-            console.log(`\n\x1b[33m> Sending SIGTERM to Server Process...\x1b[0m`);
-            serverProcess.kill('SIGTERM');
+            console.log(`\n\x1b[33m> Sending SIGINT to Server Process Tree...\x1b[0m`);
+            try {
+                if (process.platform === 'win32') {
+                    // Windows uses standard kill
+                    serverProcess.kill('SIGINT');
+                } else if (serverProcess.pid) {
+                    // Linux/Mac: Send signal to the entire process group to penetrate 'npx' wrapper!
+                    process.kill(-serverProcess.pid, 'SIGINT');
+                }
+            } catch (e) {
+                console.log(`\x1b[31mFailed to kill process group: ${e}\x1b[0m`);
+            }
         }
     };
 
