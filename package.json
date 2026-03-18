@@ -18,9 +18,9 @@
     "build:all": "npm run build:shared && npm run build:ui && npm run build:server",
     "lint:ui": "npm run lint -w atlas-ui",
     "lint:server": "npm run lint -w atlas-server",
-    "test:e2e": "docker compose -f docker-compose.e2e.yml up --build --abort-on-container-exit --exit-code-from e2e-test-runner",
+    "test:e2e": "npx tsx atlas-e2e/scripts/run-e2e.ts",
     "clean:test:e2e": "docker compose -f docker-compose.e2e.yml down -v",
-    "test:e2e:clean": "npm run clean:test:e2e && npm run test:e2e"
+    "test:e2e:clean": "npm run test:e2e"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",

@@ -1,0 +1,29 @@
+coverage:
+  status:
+    project:
+      default:
+        # The main total project coverage score
+        target: auto
+        threshold: 2%
+      
+      backend:
+        # This will create a separate "Backend Coverage" status check on your PRs!
+        target: auto
+        flags:
+          - backend
+
+      frontend:
+        # This will create a separate "Frontend Coverage" status check on your PRs!
+        target: auto
+        flags:
+          - frontend
+
+flags:
+  backend:
+    paths:
+      - "atlas-server/"
+      - "atlas-shared/"
+  
+  frontend:
+    paths:
+      - "atlas-ui/"

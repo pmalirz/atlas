@@ -41,34 +41,16 @@ jobs:
       working-directory: ./atlas-ui
       run: npm run test:cov
       
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      
     - name: Run E2E Tests with Coverage
       run: npm run test:e2e:clean
       
-    - name: Fix Docker File Permissions
-      run: |
-        sudo chown -R $USER:$USER ./atlas-e2e/coverage || true
-        sudo chown -R $USER:$USER ./atlas-server/coverage-e2e || true
 
-    - name: Generate Missing E2E Coverage Report
-      run: |
-        # Fix native V8 raw coverage dump 'file:///app/' URIs directly
-        if [ -d ./atlas-server/coverage-e2e/tmp ]; then
-          find ./atlas-server/coverage-e2e/tmp -name "*.json" -type f -exec sed -i "s|file:///app/|file://${{ github.workspace }}/|g" {} +
-          # We MUST build the server locally so c8 can parse physical `dist/*.js.map` files!
-          npm run build -w atlas-server
-          cd ./atlas-server && npx -y c8 report --reporter=lcov --reporter=text --temp-directory=./coverage-e2e/tmp --reports-dir=./coverage-e2e || true
-        fi
-
-    - name: Fix E2E Coverage Paths
-      run: |
-        if [ -f ./atlas-e2e/coverage/lcov.info ]; then
-          sed -i 's|SF:/app/|SF:|g' ./atlas-e2e/coverage/lcov.info
-        fi
-        if [ -f ./atlas-server/coverage-e2e/lcov.info ]; then
-          sed -i 's|SF:/app/|SF:|g' ./atlas-server/coverage-e2e/lcov.info
-        fi
         
     - name: Upload coverage reports to Codecov
+      if: always()
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
