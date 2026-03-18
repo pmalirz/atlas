@@ -51,13 +51,13 @@ jobs:
 
     - name: Generate Missing E2E Coverage Report
       run: |
-        # V8 raw coverage dump has 'file:///app/' URIs. Symlink /app to workspace so c8 can resolve source code mappings
-        sudo ln -sfn ${{ github.workspace }} /app
-        # Manually force report generation in case Docker killed the c8 child process too early
+        # Fix native V8 raw coverage dump 'file:///app/' URIs directly
         if [ -d ./atlas-server/coverage-e2e/tmp ]; then
-          npx -y c8 report --reporter=lcov --reporter=text --temp-directory=./atlas-server/coverage-e2e/tmp --reports-dir=./atlas-server/coverage-e2e || true
+          find ./atlas-server/coverage-e2e/tmp -name "*.json" -type f -exec sed -i "s|file:///app/|file://${{ github.workspace }}/|g" {} +
+          # We MUST build the server locally so c8 can parse physical `dist/*.js.map` files!
+          npm run build -w atlas-server
+          cd ./atlas-server && npx -y c8 report --reporter=lcov --reporter=text --temp-directory=./coverage-e2e/tmp --reports-dir=./coverage-e2e || true
         fi
-        sudo rm -f /app
 
     - name: Fix E2E Coverage Paths
       run: |
