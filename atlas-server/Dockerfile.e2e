@@ -30,8 +30,7 @@ RUN npm run build -w atlas-server
 # Expose API port
 EXPOSE 3000
 
-# Run migrations, seed with EAP data, then start the server
-# Run migrations (creates triggers), seed with E2E data, then start the server
+# Run migrations, seed with E2E data, then start the server wrapped with c8 for coverage
 CMD npx prisma migrate deploy --schema=atlas-server/prisma/schema.prisma && \
     npm run db:seed:e2e -w atlas-server && \
-    npm run start:prod -w atlas-server
+    cd atlas-server && exec npx -y c8 --reporter=lcov --reporter=text --reports-dir=./coverage-e2e node dist/main

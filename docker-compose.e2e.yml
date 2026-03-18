@@ -64,6 +64,8 @@ services:
       timeout: 10s
       retries: 10
       start_period: 30s
+    volumes:
+      - ./atlas-server/coverage-e2e:/app/atlas-server/coverage-e2e
 
   # E2E Test Runner - runs API and UI tests against live api-server
   e2e-test-runner:

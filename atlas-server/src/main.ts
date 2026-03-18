@@ -7,6 +7,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Enable shutdown hooks for graceful exit (required for e2e coverage via c8)
+  app.enableShutdownHooks();
+
   // Enable cookie parsing for HttpOnly auth cookies
   app.use(cookieParser());
 
