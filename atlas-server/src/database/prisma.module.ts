@@ -51,13 +51,13 @@ import { TenantContextService } from '../common/services/tenant-context.service'
                     }
 
                     // Execute operation ON THE TRANSACTION CLIENT
-                    // Dynamic execution requires 'any' cast because tx is strictly typed
+                    // Dynamic execution requires 'unknown' cast because tx is strictly typed
                     // Model name in extension is usually Capitalized (e.g. 'Entity'), but client prop is camelCase (e.g. 'entity')
                     if (model) {
                       const modelName = model.charAt(0).toLowerCase() + model.slice(1);
-                      return await (tx as Record<string, any>)[modelName][operation](args);
+                      return await (tx as unknown as Record<string, Record<string, (args: unknown) => Promise<unknown>>>)[modelName][operation](args);
                     } else {
-                      return await (tx as Record<string, any>)[operation](args);
+                      return await (tx as unknown as Record<string, (args: unknown) => Promise<unknown>>)[operation](args);
                     }
                   });
                 } catch (error: unknown) {

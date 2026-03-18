@@ -91,13 +91,13 @@ export class AttributeAccessInterceptor implements NestInterceptor {
 
     // 2. Intercept Response Payload (Read operations)
     return next.handle().pipe(
-      map((data: Record<string, any>) => {
+      map((data: Record<string, unknown>) => {
         // data could be a single EntityResponse or a PaginatedResponse
         if (!data) return data;
 
         if (data.data && Array.isArray(data.data)) {
           // Paginated list
-          data.data = data.data.map((entity: Record<string, any>) => {
+          data.data = data.data.map((entity: Record<string, unknown>) => {
             if (entity.attributes) {
               entity.attributes = filterAttributes(entity.attributes as Record<string, unknown>);
             }
