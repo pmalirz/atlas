@@ -44,10 +44,19 @@ jobs:
     - name: Run E2E Tests with Coverage
       run: npm run test:e2e:clean
       
+    - name: Fix E2E Coverage Paths
+      run: |
+        if [ -f ./atlas-e2e/coverage/lcov.info ]; then
+          sed -i 's|SF:/app/|SF:|g' ./atlas-e2e/coverage/lcov.info
+        fi
+        if [ -f ./atlas-server/coverage-e2e/lcov.info ]; then
+          sed -i 's|SF:/app/|SF:|g' ./atlas-server/coverage-e2e/lcov.info
+        fi
+        
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: pmalirz/atlas
         fail_ci_if_error: false
-        files: ./atlas-server/coverage/lcov.info,./atlas-ui/coverage/lcov.info,./atlas-e2e/coverage/lcov.info
+        files: ./atlas-server/coverage/lcov.info,./atlas-ui/coverage/lcov.info,./atlas-e2e/coverage/lcov.info,./atlas-server/coverage-e2e/lcov.info
