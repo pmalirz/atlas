@@ -34,10 +34,10 @@ export function AuthBrandingPanel({ subtitle }: AuthBrandingPanelProps) {
 
             {/* Content */}
             <div className="relative z-10 max-w-lg text-center space-y-6">
-                <h2 className="text-5xl font-bold tracking-tighter text-foreground font-display">
+                <h2 className="text-5xl font-bold tracking-tighter text-white font-display">
                     Atlas Platform
                 </h2>
-                <p className="text-xl text-muted-foreground font-light leading-relaxed">
+                <p className="text-xl text-gray-200 font-light leading-relaxed">
                     {subtitle}
                 </p>
             </div>
