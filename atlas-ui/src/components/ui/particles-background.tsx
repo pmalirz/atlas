@@ -49,20 +49,26 @@ export function ParticlesBackground({
 
         function resize() {
             const parent = canvas!.parentElement;
-            if (parent) {
-                width = parent.clientWidth;
-                height = parent.clientHeight;
-                dpr = Math.min(window.devicePixelRatio || 1, 2);
-                canvas!.width = Math.round(width * dpr);
-                canvas!.height = Math.round(height * dpr);
-                canvas!.style.width = width + 'px';
-                canvas!.style.height = height + 'px';
-                ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-                cx = width / 2;
-                cy = height / 2;
-                initParticles();
-                resizeTrail();
-            }
+            if (!parent) return false;
+
+            const nextWidth = parent.clientWidth;
+            const nextHeight = parent.clientHeight;
+
+            if (nextWidth < 2 || nextHeight < 2) return false;
+
+            width = nextWidth;
+            height = nextHeight;
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvas!.width = Math.round(width * dpr);
+            canvas!.height = Math.round(height * dpr);
+            canvas!.style.width = width + 'px';
+            canvas!.style.height = height + 'px';
+            ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+            cx = width / 2;
+            cy = height / 2;
+            initParticles();
+            resizeTrail();
+            return true;
         }
 
         // ── Simplex-style noise (2D) ──
@@ -362,8 +368,9 @@ export function ParticlesBackground({
             }
 
             if (needsResize) {
-                needsResize = false;
-                resize();
+                if (resize()) {
+                    needsResize = false;
+                }
             }
 
             if (!lastTime) lastTime = timestamp;
@@ -617,25 +624,33 @@ export function ParticlesBackground({
             ctx!.fillRect(0, 0, width, height);
         }
 
+        const handleWindowResize = () => {
+            needsResize = true;
+        };
+
+        const handleCanvasClick = (e: MouseEvent) => {
+            const rect = canvas!.getBoundingClientRect();
+            wavePos = (e.clientX - rect.left) / width;
+            waveDir = Math.random() < 0.5 ? 1 : -1;
+            wavePhase = 1 - wavePhase;
+            waveCycleTime = 0;
+        };
+
+        const handleCanvasTouchStart = (e: TouchEvent) => {
+            e.preventDefault();
+            const rect = canvas!.getBoundingClientRect();
+            wavePos = (e.touches[0].clientX - rect.left) / width;
+            waveDir = Math.random() < 0.5 ? 1 : -1;
+            wavePhase = 1 - wavePhase;
+            waveCycleTime = 0;
+        };
+
         // Event listeners
-        window.addEventListener('resize', () => { needsResize = true; });
+        window.addEventListener('resize', handleWindowResize);
         
         if (!prefersReducedMotion) {
-            canvas!.addEventListener('click', (e) => {
-                const rect = canvas!.getBoundingClientRect();
-                wavePos = (e.clientX - rect.left) / width;
-                waveDir = Math.random() < 0.5 ? 1 : -1;
-                wavePhase = 1 - wavePhase; // toggle order/chaos
-                waveCycleTime = 0;
-            });
-            canvas!.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                const rect = canvas!.getBoundingClientRect();
-                wavePos = (e.touches[0].clientX - rect.left) / width;
-                waveDir = Math.random() < 0.5 ? 1 : -1;
-                wavePhase = 1 - wavePhase;
-                waveCycleTime = 0;
-            }, { passive: false });
+            canvas!.addEventListener('click', handleCanvasClick);
+            canvas!.addEventListener('touchstart', handleCanvasTouchStart, { passive: false });
         }
 
         // Visibility handling
@@ -646,15 +661,15 @@ export function ParticlesBackground({
         document.addEventListener('visibilitychange', handleVisibilityChange);
 
         // Initialize
-        resize();
+        needsResize = !resize();
 
         // Start render loop
         animationFrameId = requestAnimationFrame(render);
 
         return () => {
-            window.removeEventListener('resize', () => { needsResize = true; });
-            canvas!.removeEventListener('click', () => {});
-            canvas!.removeEventListener('touchstart', () => {});
+            window.removeEventListener('resize', handleWindowResize);
+            canvas!.removeEventListener('click', handleCanvasClick);
+            canvas!.removeEventListener('touchstart', handleCanvasTouchStart);
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             cancelAnimationFrame(animationFrameId);
         };
