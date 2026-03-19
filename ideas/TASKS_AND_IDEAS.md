@@ -4,7 +4,6 @@ This document maintains a backlog of ideas for the Atlas platform. Each idea is 
 
 ## Must Have
 
-- **[L] RBAC system**: Fine-grained Role-Based Access Control on entities and specific attributes.
 - **[L] Configurable workflow and rule engine**: flexible engine to define custom business logic and state transitions.
 - **[L] Reporting / analysis possibilities**: Tools to easily define reports and charts against the dynamic data model.
 - **[M] Concurrency Control Strategy**: Choice of strategy for handling simultaneous edits (optimistic locking vs. PostgreSQL JSONB per-attribute merging).
@@ -30,3 +29,4 @@ This document maintains a backlog of ideas for the Atlas platform. Each idea is 
 
 - **[S] Auth & Registration**: User authentication and registration system.
 - **[M] Audit Log**: Full history of all operations on entities, relations, and schemas.
+- **[L] RBAC system**: Fine-grained Role-Based Access Control on entities and specific attributes.
