@@ -2,7 +2,7 @@
 
 NestJS backend API for the App Atlas generic entity/relationship service (dynamic schema, no hardcoded models).
 
-Latest workspace update: auth-facing UI pages share a theme-aware branding panel, dashboard cards/actions/recent items derive from runtime menu/entity data with RBAC-aware quick-create actions, Atlas UI now includes responsive mobile sidebar navigation with route-close + skip-link accessibility support, UI renderers remain standardized on shadcn primitives with layout-only atlas classes, and server API contracts remain unchanged.
+Latest workspace update: auth-facing UI pages share a theme-aware branding panel, dashboard cards/actions/recent items derive from runtime menu/entity data with RBAC-aware quick-create actions, Atlas UI now includes responsive mobile sidebar navigation with route-close + skip-link accessibility support, theme presets can now bind mode-aware shader backgrounds for authenticated main content (with Chromatic Silver dark mode using `aurora-veil`), UI renderers remain standardized on shadcn primitives with layout-only atlas classes, and server API contracts remain unchanged.
 
 ## Quick Start
 

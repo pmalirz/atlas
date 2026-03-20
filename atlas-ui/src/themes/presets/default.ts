@@ -141,7 +141,12 @@ const defaultTheme: AtlasTheme = {
             // Dark steel accent
             accent: 'linear-gradient(135deg, hsl(220 10% 22%) 0%, hsl(220 10% 18%) 100%)',
         }
-    }
+    },
+    shaders: {
+        dark: {
+            mainBackground: 'aurora-veil',
+        },
+    },
 };
 
 export default defaultTheme;

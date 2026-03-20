@@ -1,12 +1,22 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Menu } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
+import { ThemeShaderBackground } from '@/components/ui/theme-shader-background';
 import { cn } from '@/lib/utils';
+import { useAtlasTheme } from '@/themes';
+import { getShaderPreset } from '@/themes/shaders';
 import { Sidebar } from './Sidebar';
 
 export function AppLayout() {
     const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+    const { resolvedTheme } = useTheme();
+    const { currentTheme } = useAtlasTheme();
+
+    const colorMode = resolvedTheme === 'dark' ? 'dark' : 'light';
+    const mainShaderId = currentTheme.shaders?.[colorMode]?.mainBackground;
+    const mainShader = mainShaderId ? getShaderPreset(mainShaderId) : undefined;
 
     const closeMobileNav = () => {
         setIsMobileNavOpen(false);
@@ -68,8 +78,15 @@ export function AppLayout() {
                     <div className="w-10" aria-hidden="true" />
                 </header>
 
-                <main id="atlas-main-content" className="flex-1 overflow-auto animate-in fade-in duration-200">
-                    <div className="atlas-content container mx-auto">
+                <main id="atlas-main-content" className="relative flex-1 overflow-auto animate-in fade-in duration-200">
+                    {mainShader ? (
+                        <ThemeShaderBackground
+                            shader={mainShader}
+                            className="absolute inset-0 z-0 opacity-90"
+                        />
+                    ) : null}
+
+                    <div className="atlas-content container relative z-10 mx-auto">
                         <Outlet />
                     </div>
                 </main>

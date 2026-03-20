@@ -116,6 +116,14 @@ export interface TypographyTokens {
 }
 
 /**
+ * Available shader slots that UI surfaces can consume.
+ */
+export interface ThemeShaderSlots {
+    /** Shader rendered behind the authenticated app main content area. */
+    mainBackground?: string;
+}
+
+/**
  * Complete Atlas theme definition.
  */
 export interface AtlasTheme {
@@ -147,6 +155,15 @@ export interface AtlasTheme {
     gradients?: {
         light?: Partial<GradientTokens>;
         dark?: Partial<GradientTokens>;
+    };
+
+    /**
+     * Optional theme-bound shader assignments by color mode.
+     * Values reference IDs from the shader registry.
+     */
+    shaders?: {
+        light?: ThemeShaderSlots;
+        dark?: ThemeShaderSlots;
     };
 }
 
