@@ -175,6 +175,7 @@ class ComponentRegistry {
 // PLACEHOLDER COMPONENTS (fallbacks)
 // ─────────────────────────────────────────────────────────────
 
+// eslint-disable-next-line react-refresh/only-export-components
 function PlaceholderField({ fieldSchema }: FieldComponentProps) {
     return (
         <div className="p-2 border border-dashed rounded text-sm text-muted-foreground" >
@@ -183,6 +184,7 @@ function PlaceholderField({ fieldSchema }: FieldComponentProps) {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function PlaceholderSection({ schema, children }: SectionComponentProps) {
     return (
         <div className="p-4 border border-dashed rounded" >
@@ -192,10 +194,12 @@ function PlaceholderSection({ schema, children }: SectionComponentProps) {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function PlaceholderLayout({ children }: LayoutComponentProps) {
     return <div className="space-y-4" > {children} </div>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function PlaceholderRelation({ fieldSchema }: RelationComponentProps) {
     return (
         <div className="p-2 border border-dashed rounded text-sm text-muted-foreground">
@@ -204,6 +208,7 @@ function PlaceholderRelation({ fieldSchema }: RelationComponentProps) {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function PlaceholderWidget({ schema }: WidgetComponentProps) {
     return (
         <div className="p-4 border border-dashed rounded text-sm text-muted-foreground text-center">

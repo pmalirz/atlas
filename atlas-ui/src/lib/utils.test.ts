@@ -12,7 +12,8 @@ describe('cn', () => {
     });
 
     it('should handle conditional classes', () => {
-        expect(cn('btn', false && 'btn-primary', 'btn-secondary')).toBe('btn btn-secondary');
+        const isPrimary = false;
+        expect(cn('btn', isPrimary && 'btn-primary', 'btn-secondary')).toBe('btn btn-secondary');
     });
 
     it('should handle empty inputs', () => {

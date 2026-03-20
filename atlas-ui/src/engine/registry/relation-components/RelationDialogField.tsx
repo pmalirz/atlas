@@ -1,6 +1,6 @@
 /**
  * RelationDialogField - Popover-based relation editor with attributes
- * 
+ *
  * Used for relations that have additional attributes defined in RelationDefinition.attributeSchema:
  * - app_owned_by (with ownershipRole attribute)
  * - interface_connects (with direction attribute)
@@ -95,14 +95,14 @@ export function RelationDialogField({
     // Fetch available entities
     const { entities: availableEntities = [], loading: entitiesLoading } = useEntities(targetEntityType || '');
 
-    // Get attribute schema
-    const rawAttributeSchema: RelationAttributeSchema[] = relationDefinition?.attributeSchema || [];
-
     // Fetch type definitions for all typeRefs in attribute schema
     const { types: typeDefinitions } = useTypeDefinitions();
 
     // Resolve typeRef to options dynamically from server
     const attributeSchema = useMemo<RelationAttributeSchema[]>(() => {
+        // Get attribute schema
+        const rawAttributeSchema: RelationAttributeSchema[] = relationDefinition?.attributeSchema || [];
+
         return rawAttributeSchema.map(attr => {
             if (attr.options) {
                 // Already has options, use them directly
@@ -117,7 +117,7 @@ export function RelationDialogField({
             }
             return attr;
         });
-    }, [rawAttributeSchema, typeDefinitions]);
+    }, [relationDefinition?.attributeSchema, typeDefinitions]);
 
 
     // Filter out already-linked entities
