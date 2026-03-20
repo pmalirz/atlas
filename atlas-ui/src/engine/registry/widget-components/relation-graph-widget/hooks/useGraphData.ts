@@ -49,7 +49,7 @@ export function getEntityColor(str: string): string {
         hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
 
-    // HSL: 
+    // HSL:
     // Hue: 0-360 based on hash
     // Saturation: 70-90% (Vibrant)
     // Lightness: 80% (Pastel)
@@ -74,7 +74,9 @@ export function useGraphData(
 
     // Stabilize config values to prevent unnecessary re-renders
     const maxDepth = config?.maxDepth ?? 3;
-    const excludeRelations = config?.excludeRelations ?? [];
+    const rawExcludeRelations = config?.excludeRelations ?? [];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const excludeRelations = useMemo(() => rawExcludeRelations, [rawExcludeRelations.join(',')]);
 
     // Track initialization to prevent multiple fetches
     const initializedRef = useRef(false);
@@ -190,7 +192,7 @@ export function useGraphData(
                 return next;
             });
         }
-    }, [nodesMap, expandedNodes, loadingNodes, maxDepth, getRelationLabel]);
+    }, [nodesMap, expandedNodes, loadingNodes, maxDepth, getRelationLabel, excludeRelations]);
 
     // Initial load - only once per entityId
     useEffect(() => {
@@ -297,7 +299,7 @@ export function useGraphData(
         }
 
         loadInitialData();
-    }, [entityId, entityType, entityName]); // Minimal stable dependencies
+    }, [entityId, entityType, entityName, excludeRelations]); // Minimal stable dependencies
 
     // Build final nodes with expand callbacks and loading state
     const nodes = useMemo(() => {

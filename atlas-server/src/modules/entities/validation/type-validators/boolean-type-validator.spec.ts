@@ -17,13 +17,17 @@ describe('BooleanTypeValidator', () => {
         });
 
         it('should not support other types', () => {
-            const testCases: unknown[] = ['string', 'number', 'text', 'date', undefined];
+            const testCases: string[] = ['string', 'number', 'text', 'date'];
             testCases.forEach(type => {
                 const context: ValidatorContext = {
-                    field: { key: 'field', displayName: 'Field', type: type as any },
+                    field: { key: 'field', displayName: 'Field', type: type as 'string' | 'number' | 'text' | 'date' },
                 };
                 expect(validator.supports(context)).toBe(false);
             });
+            const undefinedContext: ValidatorContext = {
+                field: { key: 'field', displayName: 'Field', type: undefined as any },
+            };
+            expect(validator.supports(undefinedContext)).toBe(false);
         });
     });
 

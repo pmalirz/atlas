@@ -24,13 +24,17 @@ describe('DateTypeValidator', () => {
         });
 
         it('should not support other types', () => {
-            const testCases: unknown[] = ['string', 'number', 'boolean', 'text', undefined];
+            const testCases: string[] = ['string', 'number', 'boolean', 'text'];
             testCases.forEach(type => {
                 const context: ValidatorContext = {
-                    field: { key: 'field', displayName: 'Field', type: type as any },
+                    field: { key: 'field', displayName: 'Field', type: type as 'string' | 'number' | 'boolean' | 'text' },
                 };
                 expect(validator.supports(context)).toBe(false);
             });
+            const undefinedContext: ValidatorContext = {
+                field: { key: 'field', displayName: 'Field', type: undefined as any },
+            };
+            expect(validator.supports(undefinedContext)).toBe(false);
         });
     });
 

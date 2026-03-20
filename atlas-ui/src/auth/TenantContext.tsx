@@ -68,6 +68,7 @@ export function TenantProvider({ children }: TenantProviderProps) {
  * useTenant - Access the current tenant context.
  * Must be used within a TenantProvider.
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useTenant(): TenantContextType {
     const context = useContext(TenantContext);
     if (context === undefined) {
