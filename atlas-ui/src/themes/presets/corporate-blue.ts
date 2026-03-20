@@ -110,11 +110,13 @@ const corporateBlue: AtlasTheme = {
         xl: '0 20px 25px -5px hsl(0 0% 0% / 0.1), 0 8px 10px -6px hsl(0 0% 0% / 0.1)',
         '2xl': '0 25px 50px -12px hsl(0 0% 0% / 0.25)',
     },
-    gradients: {
+    gradients: {    
         light: {
-            sidebarHeader: 'linear-gradient(to right, hsl(210 20% 96%), hsl(210 20% 94%))',
+            background: 'linear-gradient(to bottom right, hsl(210 20% 98%), hsl(210, 51%, 86%))',
+            sidebarHeader: 'linear-gradient(to right, hsl(209, 100%, 95%), hsl(210 20% 94%))',
         },
         dark: {
+            background: 'linear-gradient(to bottom right, hsl(222 47% 11%), hsl(222 47% 8%))',
             sidebarHeader: 'linear-gradient(to right, hsl(210 25% 12%), hsl(210 25% 10%))',
         },
     },
