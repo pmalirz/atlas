@@ -49,6 +49,7 @@
 | **Audit & Compliance** | Built-in audit logging for all data changes, supporting DORA and compliance requirements |
 | **RBAC-Aware Editing UX** | Field-level permissions are enforced in UI and API with tenant-scoped RBAC endpoints; non-writable fields stay visible in read-only mode |
 | **Theme-Aware Auth UX** | Login, forgot/reset password, and email verification pages share a reusable branding panel with theme-integrated visuals and improved page-level transitions |
+| **Theme-Bound Main Shaders** | Theme presets can assign GLSL shader backgrounds per light/dark mode (for example, Chromatic Silver dark mode uses an `aurora-veil` shader behind authenticated main content) |
 | **Ready-to-Use Seeds** | Bootstrap your project with pre-built templates (e.g., EAP - Enterprise Application Portfolio) |
 | **Full-Stack TypeScript** | End-to-end type safety with shared contracts between frontend and backend |
 | **Pluggable Auth** | [Native and extensible authentication](./docs/AUTHENTICATION.md) supporting multiple providers |
