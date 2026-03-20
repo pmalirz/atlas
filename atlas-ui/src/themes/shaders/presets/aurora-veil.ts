@@ -13,7 +13,6 @@ uniform float u_time;
 uniform vec2 u_res;
 uniform float u_auroraSpeed;
 uniform float u_auroraIntensity;
-uniform vec2 u_mouse;
 
 #define NUM_BG_STARS 120
 
@@ -125,71 +124,39 @@ float crystalPattern(vec2 uv, float t) {
 
 void main() {
   vec2 uv = (gl_FragCoord.xy - u_res * 0.5) / min(u_res.x, u_res.y);
-  if (u_mouse.x > 0.0) {
-    vec2 mNorm = (u_mouse - u_res * 0.5) / min(u_res.x, u_res.y);
-    uv += (mNorm - uv) * 0.25;
-  }
 
   float t = u_time * u_auroraSpeed;
 
-  vec3 col = vec3(0.012, 0.010, 0.022);
-  col += vec3(0.012, 0.010, 0.018) * smoothstep(0.5, -0.3, uv.y);
+  vec3 col = vec3(0.012);
+  col += vec3(0.012) * smoothstep(0.5, -0.3, uv.y);
 
   float starField = bgStars(uv, u_time);
-  vec3 starColor = vec3(0.9, 0.88, 0.8);
+  vec3 starColor = vec3(0.88);
   col += starColor * starField;
 
   float r1 = auroraRibbon(uv, t, 0.0, 0.22, 2.5, 0.28, 0.0);
-  vec3 r1color = mix(
-    vec3(0.15, 0.95, 0.35),
-    vec3(0.10, 0.75, 0.55),
-    0.5 + 0.5 * sin(uv.y * 3.5 + t * 0.3)
-  );
-  r1color = mix(r1color, vec3(0.55, 0.20, 0.80), smoothstep(0.25, 0.65, uv.y) * 0.4);
+  vec3 r1color = vec3(0.55);
+  r1color = mix(r1color, vec3(0.38), smoothstep(0.25, 0.65, uv.y) * 0.4);
 
   float r2 = auroraRibbon(uv, t * 0.9, 0.35, 0.18, 2.8, 0.24, 2.1);
-  vec3 r2color = mix(
-    vec3(0.20, 0.90, 0.30),
-    vec3(0.30, 0.80, 0.25),
-    0.5 + 0.5 * sin(uv.y * 4.0 - t * 0.4 + 1.0)
-  );
-  r2color = mix(r2color, vec3(0.65, 0.25, 0.75), smoothstep(0.3, 0.6, uv.y) * 0.35);
+  vec3 r2color = vec3(0.53);
+  r2color = mix(r2color, vec3(0.45), smoothstep(0.3, 0.6, uv.y) * 0.35);
 
   float r3 = auroraRibbon(uv, t * 0.75, -0.30, 0.16, 3.0, 0.22, 4.3);
-  vec3 r3color = mix(
-    vec3(0.60, 0.15, 0.70),
-    vec3(0.80, 0.20, 0.55),
-    0.5 + 0.5 * sin(uv.y * 5.0 + t * 0.2 + 2.0)
-  );
-  r3color = mix(r3color, vec3(0.20, 0.70, 0.40), smoothstep(0.1, -0.1, uv.y) * 0.3);
+  vec3 r3color = vec3(0.48);
+  r3color = mix(r3color, vec3(0.45), smoothstep(0.1, -0.1, uv.y) * 0.3);
 
   float r4 = auroraRibbon(uv, t * 0.6, 0.15, 0.30, 1.8, 0.35, 1.0);
-  vec3 r4color = mix(
-    vec3(0.10, 0.65, 0.25),
-    vec3(0.05, 0.50, 0.35),
-    0.5 + 0.5 * sin(uv.y * 2.0 + t * 0.15)
-  );
+  vec3 r4color = vec3(0.40);
 
   float r5 = auroraRibbon(uv, t * 1.1, -0.10, 0.10, 3.5, 0.18, 5.7);
-  vec3 r5color = mix(
-    vec3(0.30, 1.0, 0.50),
-    vec3(0.50, 0.30, 0.90),
-    0.5 + 0.5 * sin(uv.y * 6.0 + t * 0.5 + 3.0)
-  );
+  vec3 r5color = vec3(0.60);
 
   float r6 = auroraRibbon(uv, t * 0.65, 0.55, 0.14, 2.2, 0.20, 3.5);
-  vec3 r6color = mix(
-    vec3(0.45, 0.10, 0.65),
-    vec3(0.70, 0.15, 0.50),
-    0.5 + 0.5 * sin(uv.y * 3.0 - t * 0.3 + 1.5)
-  );
+  vec3 r6color = vec3(0.45);
 
   float r7 = auroraRibbon(uv, t * 0.5, -0.20, 0.35, 1.5, 0.30, 6.2);
-  vec3 r7color = mix(
-    vec3(0.08, 0.55, 0.20),
-    vec3(0.12, 0.45, 0.30),
-    0.5 + 0.5 * sin(uv.y * 2.5 + t * 0.1 + 4.0)
-  );
+  vec3 r7color = vec3(0.32);
 
   float i1 = r1 * 1.4 * u_auroraIntensity;
   float i2 = r2 * 1.1 * u_auroraIntensity;
@@ -207,11 +174,7 @@ void main() {
 
   float glowY = smoothstep(-0.3, 0.0, uv.y) * smoothstep(0.75, 0.25, uv.y);
   float totalAurora = i1 + i2 + i3 + i4 + i5 + i6 + i7;
-  vec3 atmosphericGlow = mix(
-    vec3(0.06, 0.15, 0.06),
-    vec3(0.10, 0.05, 0.12),
-    0.5 + 0.5 * sin(t * 0.15)
-  ) * glowY * min(totalAurora, 2.5) * 0.4;
+  vec3 atmosphericGlow = vec3(0.11) * glowY * min(totalAurora, 2.5) * 0.4;
 
   col += auroraLight + atmosphericGlow;
   col -= starColor * starField * clamp(totalAurora * 0.5, 0.0, 1.0);
@@ -225,8 +188,8 @@ void main() {
     crystalUV.x += t * 0.02;
 
     float crystal = crystalPattern(crystalUV, u_time);
-    vec3 iceColor = vec3(0.06, 0.08, 0.12);
-    vec3 iceCrystalColor = vec3(0.18, 0.22, 0.32);
+    vec3 iceColor = vec3(0.09);
+    vec3 iceCrystalColor = vec3(0.24);
     vec3 iceSurface = mix(iceColor, iceCrystalColor, crystal * 0.5);
 
     vec2 reflUV = vec2(uv.x, -uv.y - groundLine * 2.0);
@@ -238,7 +201,7 @@ void main() {
 
     float reflStrength = smoothstep(0.25, 0.0, perspY) * 0.6;
     float sparkle = pow(crystal, 3.0) * reflStrength;
-    vec3 sparkleColor = vec3(0.9, 0.85, 0.7) * sparkle * 0.3;
+    vec3 sparkleColor = vec3(0.82) * sparkle * 0.3;
 
     iceSurface += reflectionColor * reflStrength + sparkleColor;
     col = mix(col, iceSurface, groundFade);
@@ -246,11 +209,7 @@ void main() {
 
   float horizonDist = abs(uv.y - groundLine);
   float horizonGlow = exp(-horizonDist * horizonDist / 0.003);
-  vec3 horizonColor = mix(
-    vec3(0.10, 0.20, 0.08),
-    vec3(0.12, 0.08, 0.18),
-    0.5 + 0.5 * sin(t * 0.2)
-  ) * min(totalAurora, 3.0) * 0.35 + vec3(0.02, 0.03, 0.04);
+  vec3 horizonColor = vec3(0.14) * min(totalAurora, 3.0) * 0.35 + vec3(0.03);
   col += horizonColor * horizonGlow;
 
   float dist = length(uv * vec2(0.7, 0.9));
@@ -269,4 +228,8 @@ export const auroraVeilShader: ShaderPreset = {
     label: 'Aurora Veil',
     vertexSource,
     fragmentSource,
+    defaults: {
+        u_auroraSpeed: 0.15,
+        u_auroraIntensity: 1,
+    },
 };

@@ -13,7 +13,6 @@ uniform float u_time;
 uniform vec2 u_res;
 uniform float u_dripSpeed;
 uniform float u_blobCount;
-uniform vec2 u_mouse;
 
 #define MAX_BLOBS 12
 
@@ -91,24 +90,7 @@ void main() {
   vec3 col = vec3(0.025, 0.018, 0.015) * (1.0 - bgDist * 0.3);
   col = max(col, vec3(0.0));
 
-  float mouseField = 0.0;
-  if (u_mouse.x > 0.0) {
-    vec2 mUV = (u_mouse - u_res * 0.5) / u_res.y;
-    float mr = 0.06;
-    float md = length(uv - mUV);
-    mouseField = (mr * mr) / (md * md + 0.0001);
-
-    for (int i = 0; i < 3; i++) {
-      float fi = float(i);
-      float angle = t * speed * 1.5 + fi * 2.094;
-      vec2 offset = vec2(cos(angle), sin(angle)) * 0.08;
-      float smr = 0.03;
-      float smd = length(uv - mUV - offset);
-      mouseField += (smr * smr) / (smd * smd + 0.0001);
-    }
-  }
-
-  float field = metaballField(uv, t, speed, count) + mouseField;
+  float field = metaballField(uv, t, speed, count);
   float tendrils = tendrilField(uv, t, speed);
   float combinedField = field + tendrils * 0.6;
 
@@ -179,4 +161,8 @@ export const neonDripShader: ShaderPreset = {
     label: 'Neon Drip',
     vertexSource,
     fragmentSource,
+    defaults: {
+        u_dripSpeed: 0.5,
+        u_blobCount: 1,
+    },
 };

@@ -116,15 +116,16 @@ export function ThemeShaderBackground({ shader, className }: ThemeShaderBackgrou
 
         const uTime = gl.getUniformLocation(program, 'u_time');
         const uRes = gl.getUniformLocation(program, 'u_res');
-        const uDripSpeed = gl.getUniformLocation(program, 'u_dripSpeed');
-        const uBlobCount = gl.getUniformLocation(program, 'u_blobCount');
-        const uAuroraSpeed = gl.getUniformLocation(program, 'u_auroraSpeed');
-        const uAuroraIntensity = gl.getUniformLocation(program, 'u_auroraIntensity');
-        const uMouse = gl.getUniformLocation(program, 'u_mouse');
+
+        // Collect all other uniforms from shader defaults
+        const uniformLocations = new Map<string, WebGLUniformLocation | null>();
+        if (shader.defaults) {
+            for (const name of Object.keys(shader.defaults)) {
+                uniformLocations.set(name, gl.getUniformLocation(program, name));
+            }
+        }
 
         let dpr = Math.min(window.devicePixelRatio || 1, 2);
-        let mouseX = -1;
-        let mouseY = -1;
         let needsResize = true;
         let running = true;
         let frameId = 0;
@@ -152,17 +153,6 @@ export function ThemeShaderBackground({ shader, className }: ThemeShaderBackgrou
             }
         };
 
-        const onMouseMove = (event: MouseEvent) => {
-            const rect = canvas.getBoundingClientRect();
-            mouseX = (event.clientX - rect.left) * dpr;
-            mouseY = (rect.height - (event.clientY - rect.top)) * dpr;
-        };
-
-        const onMouseLeave = () => {
-            mouseX = -1;
-            mouseY = -1;
-        };
-
         const onResize = () => {
             needsResize = true;
         };
@@ -180,19 +170,31 @@ export function ThemeShaderBackground({ shader, className }: ThemeShaderBackgrou
             }
 
             if (uTime) gl.uniform1f(uTime, prefersReducedMotion ? 0 : timestamp * 0.001);
-            if (uDripSpeed) gl.uniform1f(uDripSpeed, 0.5);
-            if (uBlobCount) gl.uniform1f(uBlobCount, 1);
-            if (uAuroraSpeed) gl.uniform1f(uAuroraSpeed, 0.5);
-            if (uAuroraIntensity) gl.uniform1f(uAuroraIntensity, 1);
-            if (uMouse) gl.uniform2f(uMouse, mouseX, mouseY);
+
+            // Apply shader defaults
+            if (shader.defaults) {
+                for (const [name, value] of Object.entries(shader.defaults)) {
+                    const location = uniformLocations.get(name);
+                    if (!location) continue;
+                    if (typeof value === 'number') {
+                        gl.uniform1f(location, value);
+                    } else if (Array.isArray(value)) {
+                        if (value.length === 2) {
+                            gl.uniform2f(location, value[0], value[1]);
+                        } else if (value.length === 3) {
+                            gl.uniform3f(location, value[0], value[1], value[2]);
+                        } else if (value.length === 4) {
+                            gl.uniform4f(location, value[0], value[1], value[2], value[3]);
+                        }
+                    }
+                }
+            }
 
             gl.drawArrays(gl.TRIANGLES, 0, 3);
             frameId = requestAnimationFrame(render);
         };
 
         window.addEventListener('resize', onResize);
-        canvas.addEventListener('mousemove', onMouseMove);
-        canvas.addEventListener('mouseleave', onMouseLeave);
         document.addEventListener('visibilitychange', onVisibilityChange);
 
         resize();
@@ -201,8 +203,6 @@ export function ThemeShaderBackground({ shader, className }: ThemeShaderBackgrou
         return () => {
             cancelAnimationFrame(frameId);
             window.removeEventListener('resize', onResize);
-            canvas.removeEventListener('mousemove', onMouseMove);
-            canvas.removeEventListener('mouseleave', onMouseLeave);
             document.removeEventListener('visibilitychange', onVisibilityChange);
             gl.deleteBuffer(buffer);
             gl.deleteProgram(program);
