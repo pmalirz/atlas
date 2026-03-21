@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Request, UnauthorizedException } from '@nestjs/common';
 import { RbacService } from './rbac.service';
 import { AuthGuard } from '../auth/guards/auth.guard';
 
@@ -23,7 +23,9 @@ export class RbacController {
   async getMyRoles(@Request() req: { user: { sub?: string; id?: string; tenantId: string } }) {
     const userId = req.user.sub || req.user.id;
     const tenantId = req.user.tenantId;
-    // We expect userId to be defined, but TypeScript requires a string
-    return this.rbacService.getUserRoles(userId as string, tenantId);
+    if (!userId) {
+      throw new UnauthorizedException('User ID not found in request');
+    }
+    return this.rbacService.getUserRoles(userId, tenantId);
   }
 }

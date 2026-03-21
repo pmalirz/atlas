@@ -2,8 +2,12 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { DefinitionsService } from './definitions.service';
 
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/guards/auth.guard';
+
 @ApiTags('definitions')
 @Controller(':slug/definitions')
+@UseGuards(AuthGuard)
 export class DefinitionsController {
     constructor(private readonly definitionsService: DefinitionsService) { }
 

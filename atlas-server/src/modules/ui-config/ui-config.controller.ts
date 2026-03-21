@@ -2,8 +2,12 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { UIConfigService } from './ui-config.service';
 
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/guards/auth.guard';
+
 @ApiTags('ui-config')
 @Controller(':slug/ui-config')
+@UseGuards(AuthGuard)
 export class UIConfigController {
     constructor(private readonly uiConfigService: UIConfigService) { }
 

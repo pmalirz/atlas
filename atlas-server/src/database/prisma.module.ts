@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { ClsService, ClsModule } from 'nestjs-cls';
 import { PrismaService } from './prisma.service';
+import { Prisma } from '@prisma/client';
 import { EntityRepository } from './entity.repository';
 import { RelationRepository } from './relation.repository';
 import { TenantContextService } from '../common/services/tenant-context.service';
@@ -27,7 +28,7 @@ import { TenantContextService } from '../common/services/tenant-context.service'
         return client.$extends({
           query: {
             $allModels: {
-              async $allOperations({ model, operation, args, query }) {
+              async $allOperations({ model, operation, args, query }: { model: string | undefined, operation: string, args: Record<string, unknown>, query: (args: Record<string, unknown>) => Promise<unknown> }) {
                 const userId = cls.get('userId');
                 const requestId = cls.get('requestId');
 
@@ -44,7 +45,7 @@ import { TenantContextService } from '../common/services/tenant-context.service'
                 // Wrap in interactive transaction to ensure set_config applies to the query
                 // Handle nested transactions by catching the error and falling back to direct execution
                 try {
-                  return await client.$transaction(async (tx) => {
+                  return await client.$transaction(async (tx: Prisma.TransactionClient) => {
                     await tx.$executeRaw`SELECT set_config('app.current_user_id', ${userId}, true)`;
                     if (requestId) {
                       await tx.$executeRaw`SELECT set_config('app.request_id', ${requestId}, true)`;

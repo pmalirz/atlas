@@ -32,7 +32,7 @@ describe('DateTypeValidator', () => {
                 expect(validator.supports(context)).toBe(false);
             });
             const undefinedContext: ValidatorContext = {
-                field: { key: 'field', displayName: 'Field', type: undefined as any },
+                field: { key: 'field', displayName: 'Field', type: undefined as unknown as 'date' },
             };
             expect(validator.supports(undefinedContext)).toBe(false);
         });
