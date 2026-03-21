@@ -41,3 +41,4 @@ atlas-server/coverage-e2e
 atlas-e2e/coverage
 atlas-ui/coverage
 
+coverage/

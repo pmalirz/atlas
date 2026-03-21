@@ -68,6 +68,14 @@ app-atlas/
 └── docs/            # Detailed documentation
 ```
 
+## 🛠️ Code Quality & Architecture
+
+Atlas strictly adheres to modern TypeScript, React, and NestJS best practices:
+- **Strict Type Safety:** Fully typed across the monorepo with `strict` mode enabled, using `unknown` over `any` with Zod for robust runtime boundaries.
+- **NestJS Best Practices:** Extensive use of Guards for authentication/RBAC, Pipes for validation, and robust Dependency Injection for cleanly separated logic.
+- **React Standards:** Functional components, proper memoization (`useMemo`, `useCallback`), and extensive use of hooks to prevent unnecessary re-renders.
+- **Security by Design:** Parameterized database queries via Prisma to prevent SQL injections, OWASP Top 10 mitigations, and comprehensive multi-tenancy protections.
+
 ---
 
 ## 🚀 Quick Start

@@ -25,7 +25,7 @@ describe('BooleanTypeValidator', () => {
                 expect(validator.supports(context)).toBe(false);
             });
             const undefinedContext: ValidatorContext = {
-                field: { key: 'field', displayName: 'Field', type: undefined as any },
+                field: { key: 'field', displayName: 'Field', type: undefined as unknown as 'boolean' },
             };
             expect(validator.supports(undefinedContext)).toBe(false);
         });

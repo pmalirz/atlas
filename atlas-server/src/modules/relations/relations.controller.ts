@@ -20,8 +20,12 @@ import {
 import { RelationsService } from './relations.service';
 import { CreateRelationDto, UpdateRelationDto, GetRelationsDto, GetRelationGraphDto } from './dto';
 
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/guards/auth.guard';
+
 @ApiTags('relations')
 @Controller(':slug/relations')
+@UseGuards(AuthGuard)
 export class RelationsController {
   constructor(private readonly relationsService: RelationsService) { }
 
