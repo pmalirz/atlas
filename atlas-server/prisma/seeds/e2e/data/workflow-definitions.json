@@ -1,0 +1,29 @@
+[
+    {
+        "name": "Book Status Workflow",
+        "entityType": "book",
+        "field": "status",
+        "config": {
+            "transitions": [
+                {
+                    "name": "Borrow",
+                    "from": ["available"],
+                    "to": "borrowed",
+                    "condition": "true"
+                },
+                {
+                    "name": "Return",
+                    "from": ["borrowed"],
+                    "to": "available",
+                    "condition": "true"
+                },
+                {
+                    "name": "Archive",
+                    "from": ["available", "borrowed"],
+                    "to": "archived",
+                    "condition": "$auth.roles && $auth.roles.includes('Admin')"
+                }
+            ]
+        }
+    }
+]

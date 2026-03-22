@@ -27,6 +27,7 @@ import { GetEntityQueryDto } from './dto/get-entity.dto';
 import { EntityResponse, PaginatedResponse } from './dto/entity-response.dto';
 import { EntityAccessGuard } from './guards/entity-access.guard';
 import { AttributeAccessInterceptor } from './interceptors/attribute-access.interceptor';
+import { WorkflowValidationInterceptor } from '../workflows/workflows.interceptor';
 
 @ApiTags('entities')
 @Controller(':slug/entities/:entityType')
@@ -76,6 +77,7 @@ export class EntitiesController {
   }
 
   @Patch(':id')
+  @UseInterceptors(WorkflowValidationInterceptor)
   @ApiOperation({ summary: 'Update entity' })
   @ApiParam({ name: 'id', description: 'Entity UUID' })
   @ApiResponse({ status: 200, description: 'Entity updated successfully' })

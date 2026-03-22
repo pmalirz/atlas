@@ -38,6 +38,7 @@ model Tenant {
   relationDefinitions RelationDefinition[]
   uiEntityConfigs     UIEntityConfig[]
   uiGlobalConfigs     UIGlobalConfig[]
+  workflowDefinitions WorkflowDefinition[]
   roles               Role[]
   userRoles           UserRole[]
 
@@ -363,6 +364,27 @@ model RelationDefinition {
   @@unique([relationType, tenantId], name: "relation_definitions_type_tenant_unique")
   @@index([tenantId], name: "relation_definitions_tenant_idx")
   @@map("relation_definitions")
+}
+
+/// Workflow rules governing state transitions for specific entity fields
+model WorkflowDefinition {
+  id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  entityType String @map("entity_type")
+  field      String // The JSON attribute this workflow governs (e.g., "status")
+  config     Json   @default("{}") // The State Machine transitions JSON
+  
+  // Multi-tenancy
+  tenantId   String @map("tenant_id") @db.Uuid
+  tenant     Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([name, tenantId], name: "workflow_definitions_name_tenant_unique")
+  @@index([tenantId], name: "workflow_definitions_tenant_idx")
+  @@index([entityType], name: "workflow_definitions_entity_type_idx")
+  @@map("workflow_definitions")
 }
 
 // =============================================================================

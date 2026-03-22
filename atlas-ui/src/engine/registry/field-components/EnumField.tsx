@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/select';
 import type { FieldComponentProps } from '../component-registry';
 import { ReadOnlyField } from './shared/ReadOnlyField';
+import { useAllowedTransitions } from '@/hooks/useWorkflows';
 
 export function EnumField({
     value,
@@ -16,9 +17,19 @@ export function EnumField({
     placement,
     valueStyles,
     readonly,
-    disabled
+    disabled,
+    entityContext
 }: FieldComponentProps<string>) {
-    const options = fieldSchema.options ?? [];
+    // Determine allowed transitions
+    const { data: allowedTransitionsMap } = useAllowedTransitions(entityContext?.type, entityContext?.id);
+    const allowedForField = allowedTransitionsMap?.[fieldSchema.key];
+
+    // Options filtered by workflow restrictions. Ensure current value is always visible 
+    // so we don't break the UI rendering if it's not a valid 'To' state anymore.
+    const rawOptions = fieldSchema.options ?? [];
+    const options = allowedForField && !readonly
+        ? rawOptions.filter(o => allowedForField.includes(o.key) || o.key === value)
+        : rawOptions;
 
     // Get style for current value
     const currentStyle = value ? valueStyles?.[value] : undefined;

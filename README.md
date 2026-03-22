@@ -52,6 +52,7 @@
 | **Theme-Bound Main Shaders** | Theme presets can assign GLSL shader backgrounds per light/dark mode (for example, Chromatic Silver dark mode uses an `aurora-veil` shader behind authenticated main content) |
 | **Ready-to-Use Seeds** | Bootstrap your project with pre-built templates (e.g., EAP - Enterprise Application Portfolio) |
 | **Full-Stack TypeScript** | End-to-end type safety with shared contracts between frontend and backend |
+| **Workflow Engine** | [Rule-based state machine](./docs/WORKFLOW_ENGINE.md) for governing field-level transitions with JavaScript conditions, RBAC integration, and automatic enforcement |
 | **Pluggable Auth** | [Native and extensible authentication](./docs/AUTHENTICATION.md) supporting multiple providers |
 | **Email Integration** | [Pluggable email system](./docs/EMAIL_SETUP.md) for verification and password resets (Nodemailer, SMTP) |
 
@@ -105,6 +106,7 @@ Detailed documentation is available in the [`docs/`](./docs) directory:
 
 - [**Data Model Guide**](./docs/DATA_MODEL.md) — Understanding the generic Entity-Relation architecture
 - [**UI Engine Guide**](./docs/UI_ENGINE_GUIDE.md) — Configuring the schema-driven UI system, widgets, and menus
+- [**Workflow Engine Guide**](./docs/WORKFLOW_ENGINE.md) — Rule-based state machines for field transitions with conditions and RBAC
 - [**Theme System Guide**](./docs/THEME_SYSTEM.md) — How to switch, customize, and extend themes
 - [**Authentication Guide**](./docs/AUTHENTICATION.md) — User registration, login, password reset, and email verification
 - [**RBAC Guide**](./docs/RBAC.md) — Role-Based Access Control with entity and attribute-level permissions

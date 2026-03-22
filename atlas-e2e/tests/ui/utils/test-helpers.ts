@@ -6,8 +6,20 @@ import { withTenantUiPath } from '../../utils/tenant-paths';
 // ─────────────────────────────────────────────────────────────
 
 // Well-known test user credentials (matches E2E seed in e2e-auth.ts)
-const TEST_EMAIL = 'e2e-admin@atlas.local';
-const TEST_PASSWORD = 'admin';
+export type TestUserCredentials = {
+    email: string;
+    password: string;
+};
+
+export const ADMIN_TEST_USER_CREDENTIALS: TestUserCredentials = {
+    email: 'e2e-admin@atlas.local',
+    password: 'admin',
+};
+
+export const REGULAR_TEST_USER_CREDENTIALS: TestUserCredentials = {
+    email: 'e2e-regular-user@atlas.local',
+    password: 'regular',
+};
 
 /**
  * Login with the seeded test user via the UI login page.
@@ -18,12 +30,22 @@ export async function loginTestUser(page: Page): Promise<void> {
     // First, navigate to the app to be able to check localStorage
     await page.goto(withTenantUiPath('/'));
 
-    // Check if already authenticated on this page's context
-    const hasUser = await page.evaluate(() => {
-        return !!localStorage.getItem('atlas_auth_user');
+    // Check if already authenticated on this page's context with requested user
+    const currentUserEmail = await page.evaluate(() => {
+        const storedUser = localStorage.getItem('atlas_auth_user');
+        if (!storedUser) {
+            return null;
+        }
+
+        try {
+            const parsed = JSON.parse(storedUser) as { email?: unknown };
+            return typeof parsed.email === 'string' ? parsed.email : null;
+        } catch {
+            return null;
+        }
     });
 
-    if (hasUser) {
+    if (currentUserEmail === ADMIN_TEST_USER_CREDENTIALS.email) {
         // Already logged in on this page, just wait for load
         await waitForPageLoad(page);
         return;
@@ -42,8 +64,8 @@ export async function loginTestUser(page: Page): Promise<void> {
     }
 
     // Fill login form with seeded test user credentials
-    await page.getByTestId('auth-email-input').fill(TEST_EMAIL);
-    await page.getByTestId('auth-password-input').fill(TEST_PASSWORD);
+    await page.getByTestId('auth-email-input').fill(ADMIN_TEST_USER_CREDENTIALS.email);
+    await page.getByTestId('auth-password-input').fill(ADMIN_TEST_USER_CREDENTIALS.password);
 
     // Submit login
     await page.getByTestId('auth-submit-btn').click();

@@ -28,6 +28,15 @@ function invalidateEntityQueries(queryClient: QueryClient, entityType: string, i
 }
 
 /**
+ * Helper to invalidate workflow transition queries for an entity
+ */
+function invalidateWorkflowQueries(queryClient: QueryClient, entityType: string, id?: string) {
+    if (id) {
+        queryClient.invalidateQueries({ queryKey: ['workflows', 'allowed-transitions', entityType, id] });
+    }
+}
+
+/**
  * Hook to fetch list of entities
  */
 export function useEntities(entityType: string, options?: { search?: string; skip?: number; take?: number }): UseEntitiesResult {
@@ -92,6 +101,7 @@ export function useUpdateEntity(entityType: string) {
             entitiesApi.update(entityType, id, data),
         onSuccess: (_, variables) => {
             invalidateEntityQueries(queryClient, entityType, variables.id);
+            invalidateWorkflowQueries(queryClient, entityType, variables.id);
         },
     });
 }

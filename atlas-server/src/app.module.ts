@@ -13,6 +13,7 @@ import { AuthModule, AuthGuard } from './modules/auth';
 import { EmailModule } from './modules/email';
 import { TenantModule } from './modules/tenant';
 import { RbacModule } from './modules/rbac/rbac.module';
+import { WorkflowsModule } from './modules/workflows/workflows.module';
 import { ClsModule } from 'nestjs-cls';
 import { randomUUID } from 'crypto';
 import { AuditContextInterceptor, TenantScopeInterceptor } from './common/interceptors';
@@ -64,6 +65,7 @@ import { AuditContextInterceptor, TenantScopeInterceptor } from './common/interc
     UIConfigModule,
     EntitiesModule,
     RbacModule,
+    WorkflowsModule,
   ],
   controllers: [AppController],
   providers: [
