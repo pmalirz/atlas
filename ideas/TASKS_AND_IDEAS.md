@@ -11,6 +11,7 @@ This document maintains a backlog of ideas for the Atlas platform. Each idea is 
 
 ## Should Have
 
+- **[L] Advanced RBAC Data Policies**: Allow users to define `updateConditions` / `deleteConditions` for an entity type based on its active state (e.g., updates are disabled if status is "Pending Approval").
 - **[S] MCP agent**: Expose the platform via the Model Context Protocol (MCP) to allow interaction with external AI agents.
 - **[M] Bulk editing in browser**: In-browser bulk editing capability where multiple entities can be edited simultaneously in a table/grid view.
 - **[M] Developer portal**: A dedicated portal for developers (similar to [InnerSource Commons](https://patterns.innersourcecommons.org/p/innersource-portal)).

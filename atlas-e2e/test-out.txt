@@ -1,0 +1,15 @@
+  console.log
+    [Auth Helper] API_BASE_URL: http://localhost:3000
+
+      at getAuthToken (tests/api/helpers/auth-helper.ts:42:13)
+
+  console.log
+    [Auth Helper] Logging in user: e2e-admin@atlas.local
+
+      at getAuthToken (tests/api/helpers/auth-helper.ts:43:13)
+
+  console.log
+    [Auth Helper] Trying login...
+
+      at getAuthToken (tests/api/helpers/auth-helper.ts:47:17)
+

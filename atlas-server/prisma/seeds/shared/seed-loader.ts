@@ -107,6 +107,7 @@ export async function seedModel(
             password_reset_tokens,
             users,
             audit_events,
+            workflow_definitions,
             relations,
             entities,
             entity_definitions,
@@ -132,6 +133,10 @@ export async function seedModel(
     console.log('🔗 Seeding relation definitions...');
     const relDefs = await seedRelationDefinitions(prisma, tenantId, dataDir);
     console.log(`   Created ${relDefs.length} relation definitions\n`);
+
+    // 4.5 Workflow Definitions
+    const wfCount = await seedWorkflowDefinitions(prisma, tenantId, dataDir);
+    console.log(`   Created ${wfCount} workflow definitions\n`);
 
     // 5. Entity instances (auto-discover entity-*.json files)
     const allEntities = await discoverAndSeedEntities(prisma, tenantId, dataDir);
@@ -235,6 +240,35 @@ export async function seedRelationDefinitions(
             });
         }),
     );
+}
+
+// ============================================================================
+// Workflow Definition Seeder
+// ============================================================================
+
+export async function seedWorkflowDefinitions(
+    prisma: PrismaClient,
+    tenantId: string,
+    dataDir: string,
+): Promise<number> {
+    const wfs = loadJson<any[]>(dataDir, 'workflow-definitions.json');
+    if (!wfs || wfs.length === 0) return 0;
+    
+    console.log('🔄 Seeding workflow definitions...');
+    let count = 0;
+    for (const wf of wfs) {
+        await prisma.workflowDefinition.create({
+            data: {
+                tenantId,
+                name: wf.name,
+                entityType: wf.entityType,
+                field: wf.field,
+                config: wf.config as Prisma.InputJsonValue,
+            }
+        });
+        count++;
+    }
+    return count;
 }
 
 // ============================================================================

@@ -100,7 +100,8 @@ export function FieldRenderer({
                 fieldSchema: fieldSchema,
                 placement: placement,
                 valueStyles: placement.valueStyles,
-                readonly: isReadonly
+                readonly: isReadonly,
+                entityContext: entity.id ? { id: entity.id as string, type: entitySchema.entityType } : undefined
             }) : (
                 <div className="rounded border border-destructive p-2 text-xs text-destructive">
                     Unknown component type: {placement.component ?? fieldSchema.type}

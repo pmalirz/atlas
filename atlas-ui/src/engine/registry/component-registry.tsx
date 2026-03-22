@@ -25,6 +25,7 @@ export interface FieldComponentProps<T = unknown> {
     readonly?: boolean;
     disabled?: boolean;
     error?: string;
+    entityContext?: { id: string; type: string };
 }
 
 export interface SectionComponentProps {
