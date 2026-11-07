@@ -1,15 +1,16 @@
 {
   "version": 1,
   "skills": {
+    "accessibility": {
+      "source": "addyosmani/web-quality-skills",
+      "sourceType": "github",
+      "skillPath": "skills/accessibility/SKILL.md",
+      "computedHash": "612f913bcb03f0787b103c848cd7664b676a9aaf31f25d3270cc69cf5caaab95"
+    },
     "clean-code": {
       "source": "sickn33/antigravity-awesome-skills",
       "sourceType": "github",
       "computedHash": "14ba8e7d8477723eca6d48a79a1924337f4a1f5f1c7ab9b0a7acc073268ecd5a"
-    },
-    "context7": {
-      "source": "am-will/codex-skills",
-      "sourceType": "github",
-      "computedHash": "9cfc98a08e8de60c57e2413c27bfdeb94f1e5a07dba44d4cbf3460d7f537669a"
     },
     "design-md": {
       "source": "google-labs-code/stitch-skills",
@@ -31,25 +32,17 @@
       "sourceType": "github",
       "computedHash": "063a0e6448123cd359ad0044cc46b0e490cc7964d45ef4bb9fd842bd2ffbca67"
     },
-    "jq-json-processing": {
-      "source": "laurigates/claude-plugins",
+    "nestjs-best-practices": {
+      "source": "kadajett/agent-nestjs-skills",
       "sourceType": "github",
-      "computedHash": "cc8244129cc15472a8711aff6a50f1fa7f24a0f0bfc873677506610b04f4ccee"
+      "skillPath": "skills/nestjs-best-practices/SKILL.md",
+      "computedHash": "58f8a630637be3acce1f118c747d68160346ada8a43d76cb52a5b4c4edaa2d37"
     },
-    "nestjs-expert": {
-      "source": "sickn33/antigravity-awesome-skills",
+    "prd": {
+      "source": "github/awesome-copilot",
       "sourceType": "github",
-      "computedHash": "db72897ee0ae63aebce4a4e23cc5f81f919137907052127f0169bc379d6194b1"
-    },
-    "planner": {
-      "source": "am-will/codex-skills",
-      "sourceType": "github",
-      "computedHash": "ab1d97975dcf20cebe27960f1b0abd7e2db16fa31261aebe29342eca33076f91"
-    },
-    "prisma-expert": {
-      "source": "sickn33/antigravity-awesome-skills",
-      "sourceType": "github",
-      "computedHash": "1f638daa21876d30497d5474c55fa3c67044708f03554093c6f4cc9a7dd5bc33"
+      "skillPath": "skills/prd/SKILL.md",
+      "computedHash": "1f3e1f005fc40fda85d250ae906c8ee4f7e8e833e23adfeca6542c19609fd7cd"
     },
     "shadcn": {
       "source": "shadcn/ui",
@@ -65,6 +58,12 @@
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
       "computedHash": "3462ec83f862abb2d532953df33a4dbf87f4616849da5d4b5cc7c13601aaf997"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a"
     }
   }
 }
